@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "mobile",
-    "slug": "mobile",
+    "name": "ServiFind",
+    "slug": "ServiFind",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -14,6 +14,14 @@
     "assetBundlePatterns": [
       "**/*"
     ],
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "The app accesses your photos to let you share them with your friends."
+        }
+      ]
+    ],
     "ios": {
       "supportsTablet": true
     },
@@ -21,10 +29,23 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.zekis.ServiFind"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "owner": "zekis",
+    "extra": {
+      "eas": {
+        "projectId": "c20fd6b4-f7e5-43be-9932-87904e5d32fa"
+      }
+    },
+    "runtimeVersion": {
+      "policy": "sdkVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/c20fd6b4-f7e5-43be-9932-87904e5d32fa"
     }
   }
 }
