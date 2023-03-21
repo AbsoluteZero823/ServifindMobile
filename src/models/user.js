@@ -22,9 +22,11 @@ export const User = types.model('User', {
     logout(){
         self.id = null;
         self.name = null;
+        
         self.age = null;
         self.gender = null;
         self.contact = null;
+
         self.email = null;
         self.avatar = null;
         self.role = null;
@@ -33,7 +35,17 @@ export const User = types.model('User', {
         self.isAdmin = false;
         self.resetPasswordToken = null;
         self.resetPasswordExpire = null;
+    },
+    setGender(gender){
+      self.gender = gender;
+    },
+    setContacts(contact){
+      self.contact = contact;
+    },
+    setAge(age){
+      self.age = parseInt(age);
     }
+    
 })).views((self) => ({
     get UserDetails(){
       return self;

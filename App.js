@@ -1,5 +1,4 @@
 import 'react-native-gesture-handler';
-
 import { useColorScheme } from "react-native";
 import { Provider } from "react-native-paper";
 
@@ -11,9 +10,11 @@ export default function App() {
   const scheme = useColorScheme();
   // Incorporating Themes into the App
   return (
-    <Provider>
-      <StatusBar style='dark'/>
-      <NavigationStack/>
-    </Provider>
+      <Provider>
+        <StatusBar style='dark'/>
+        <NavigationStack/>
+      </Provider>
+    
+    
   );
 }

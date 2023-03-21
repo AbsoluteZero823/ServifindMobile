@@ -7,7 +7,7 @@ const Auth = types
     isAuthenticated: types.optional(types.boolean,false),
     role: types.optional(types.string,'customer'),
     isLoading: types.optional(types.boolean,false),
-    UserType: types.maybe(types.enumeration(['Client','Freelancer'])),
+    UserType: types.maybe(types.enumeration(['Client','Freelancer','customer'])),
 })
 .actions((self) => ({
     letmeload(){

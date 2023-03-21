@@ -1,15 +1,15 @@
 import React, { useState, useContext } from 'react';
-import { View } from 'react-native';
-import { Button, Card, Text, TextInput, HelperText, Portal, Modal } from 'react-native-paper';
 import { observer } from 'mobx-react';
+import { useNavigation } from '@react-navigation/native';
+
+import { View } from 'react-native';
+import { Button, Card, Text, TextInput, HelperText, Portal, Modal, Checkbox } from 'react-native-paper';
 import Loading from '../../components/loading';
 import Error from '../../components/err/error';
 import styles from '../../components/authentication/authentication.css';
 import { login } from '../../../services/apiendpoints';
+
 import UserStore, { User } from '../../models/user';
-
-import { useNavigation } from '@react-navigation/native';
-
 import AuthStore from '../../models/authentication';
 
 const LoginPage = observer(() => {
@@ -17,6 +17,7 @@ const LoginPage = observer(() => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
+    const [checked, setchecked] = useState(false);
     const [validationErrors, setValidationErrors] = useState({});
     const [visible, setVisible] = useState(false);
     const [visiblePassword, setVisiblePassword] = useState(false);
@@ -27,7 +28,6 @@ const LoginPage = observer(() => {
     const AuthContext = useContext(AuthStore);
 
     async function handleLoginForm(){
-        AuthContext.letmeload();
         const errors = {};
         if (!email) {
             errors.email = 'Email is required';
@@ -37,22 +37,21 @@ const LoginPage = observer(() => {
         if (!password || password.length < 6) {
             errors.password = '6 Character Minimum';
         }
-        if (validationErrors.email) {
-            errors.email = validationErrors.email;
-        }
-        if (validationErrors.password) {
-            errors.password = validationErrors.password;
-        }
         if (Object.keys(errors).length > 0) {
             setValidationErrors(errors);
-            AuthContext.donewithload();
             return;
         }else{
+            AuthContext.letmeload();
             const response = await login(email, password);
             if (response.success === false && response.error) {
+                const errors = {};
+                errors.email = 'Check your Email Spelling and Try Again';
+                errors.password = 'Check your Password Spelling and Try Again';
                 setErrorCode(response.error.statusCode);
                 setErrorMessage(response.errMessage);
                 setVisible(true);
+                setValidationErrors(errors);
+                AuthContext.donewithload();
             }else if(response.success === true && response.token){
                 const UserInstance = User.create({
                     id: response.user._id,
@@ -69,11 +68,11 @@ const LoginPage = observer(() => {
                     AuthContext.donewithload();
                     AuthContext.loggedin(response.token, response.user.role);
                 }
-                
             }
         }
     }
     return (
+        
         <View style={styles.container}>
         <Loading/>
         <Portal>
@@ -91,7 +90,7 @@ const LoginPage = observer(() => {
                     label='Email'
                     placeholder='JuanDelaCruz@gmail.com'
                     value={email}
-                    onChangeText={(text) => setEmail(text)}
+                    onChangeText={(text) => {validationErrors.email ? setValidationErrors('') : setEmail(text)}}
                     left={<TextInput.Icon icon="account-outline"/>}
                     mode='outlined'
                     error={validationErrors.email}
@@ -107,7 +106,7 @@ const LoginPage = observer(() => {
                     label='Password'
                     placeholder='Password'
                     value={password}
-                    onChangeText={(text) => setPassword(text)}
+                    onChangeText={(text) => {validationErrors.password ? setValidationErrors('') : setPassword(text)}}
                     left={<TextInput.Icon icon="lock-outline"/>}
                     mode='outlined'
                     secureTextEntry={!visiblePassword}
@@ -119,18 +118,23 @@ const LoginPage = observer(() => {
                     {validationErrors.password}
                     </HelperText>
                 )}
+                <View style={{flexDirection:'row', alignItems:'center', justifyContent:'space-between'}}>
+                        <Button mode='text' textColor='deeppink' onPress={() => {console.log("Forgot")}}>
+                        Forgot Password?
+                        </Button>
+                        <Checkbox.Item label="Remember Me" color='deeppink' uncheckedColor='deeppink' onPress={() => {setchecked(!checked)}} status={checked ? 'checked' : 'unchecked'}/>
+                </View>
                 <Button style={styles.inputbutton} icon='login' onPress={() => {handleLoginForm()}} buttonColor='deeppink' textColor='white'>Login</Button>
+                <View style={{flexDirection:'row', alignItems:'center', justifyContent:'center'}}>
+                    <Text>Don't have an account?</Text>
+                    <Button mode='text' textColor='deeppink' onPress={() => {navigation.navigate('Register')}}>
+                    Register!
+                    </Button>
+                </View>
             </Card.Content>
-            <Card.Actions>
-            <View style={{flexDirection:'row', alignItems:'center',flex: 1, justifyContent:'center'}}>
-                <Text>Don't have an account?</Text>
-                <Button mode='text' textColor='deeppink' onPress={() => {navigation.navigate('Register');}}>
-                Register
-                </Button>
-            </View>
-            </Card.Actions>
         </Card>
         </View>
+        
     );
   }); 
 export default LoginPage;

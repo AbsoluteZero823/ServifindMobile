@@ -13,13 +13,10 @@ const styles = StyleSheet.create({
       alignItems:'center'
     },
     registrationpage:{
-        height: "50%",
         width: "90%",
-
         minHeight: 300,
-        maxHeight: 300,
         minWidth: 300,
-        maxWidth: 300,
+        maxWidth: 340,
         
         alignSelf:'center',
         justifyContent: 'center',

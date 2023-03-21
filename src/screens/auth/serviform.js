@@ -12,36 +12,39 @@ import AuthStore from '../../models/authentication';
 
 const ServiForm = observer(() => {
     const AuthContext = useContext(AuthStore);
-    console.log(AuthContext);
-    
     const navigation = useNavigation();
     // Initializing Segmented Value
-    const [value, setValue] = useState('login');
+    const [value, setValue] = useState(['login']);
+    const [active, setActive] = useState('login');
+    console.log(value);
+    console.log(active)
     // Segmented Button Setup
     const buttons = [
         {
             value: 'login',
             label: 'Login',
-            checkedColor: 'deeppink',
-            disabled : value === 'login' ? false : true,
+            uncheckedColor: 'white',
+            style: {backgroundColor: active === 'login' ? 'deeppink' : value.includes('login') ? 'salmon' : 'transparent'},
+            disabled : value.includes('login') ? false : true,
         },
         {
             value: 'details',
             label: 'Details',
-            checkedColor: 'deeppink',
-            disabled : value === 'details' ? false : true,
+            uncheckedColor: 'white',
+            style: {backgroundColor: active === 'details' ? 'deeppink' : value.includes('details') ? 'salmon' : 'transparent'},
+            disabled : value.includes('details') ? false : true,
         },
         ];
         if (AuthContext.WhatUserType === 'Freelancer') {
         buttons.push({
             value: 'payments',
             label: 'Payments',
-            checkedColor: 'deeppink',
-            disabled : value === 'payments' ? false : true,
+            uncheckedColor: 'white',
+            style: {backgroundColor: active === 'payments' ? 'deeppink' : value.includes('payments') ? 'salmon' : 'transparent'},
+            disabled : value.includes('payments') ? false : true,
         });
         }
-    // Data to be filled in
-    const [id, setId] = useState('');
+    // Data to be filled in the form
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
@@ -70,7 +73,6 @@ const ServiForm = observer(() => {
         if (password !== confirmpassword) {
             errors.confirmpassword = 'Passwords do not match';
         }
-        setValidationErrors(errors);
         AuthContext.donewithload();
         if (Object.keys(errors).length > 0) {
             setValidationErrors(errors);
@@ -105,7 +107,6 @@ const ServiForm = observer(() => {
         if (!avatar) {
             errors.avatar = 'Avatar is required';
         }
-        setValidationErrors(errors);
         AuthContext.donewithload();
         if (Object.keys(errors).length > 0) {
             setValidationErrors(errors);
@@ -125,7 +126,9 @@ const ServiForm = observer(() => {
             let name = firstName + ' ' + lastName;
             const response = await register(email, password, name, contact, gender, age, avatar);
             if(response.success === true){
-                login(email, password);
+                alert("Your Account has been created, A confirmation link has been sent to your email account!.");
+                navigation.navigate('Landingpage');
+                // login(email, password);
                 // Authentication MST
             }else if(response.success === false && response.error.statusCode){
                 setErrorCode(response.error.statusCode);
@@ -188,13 +191,13 @@ const ServiForm = observer(() => {
             <Card.Content>
             <SegmentedButtons
                 value={value}
-                onValueChange={setValue}
+                onValueChange={(buttonvalue)=> setActive(buttonvalue)}
                 density='small'
                 buttons={buttons}
             />
                 <View>
                     {
-                        value === 'login' ? 
+                        active === 'login' ? 
                         <>
                         <TextInput
                             style={styles.input}
@@ -252,13 +255,13 @@ const ServiForm = observer(() => {
                             mode='contained' buttonColor='deeppink' textColor='white' 
                             onPress={()=>{
                                 const isValid = handleLoginForm(); 
-                                if (isValid) setValue('details');
+                                if (isValid) value.push('details'),setActive('details');
                                 }}
                             >
                                     Next
                         </Button>
                         </>
-                        : value === 'details' ? 
+                        : active === 'details' ? 
                         <>
                         <TextInput
                             style={styles.input}
@@ -381,7 +384,7 @@ const ServiForm = observer(() => {
                                 const isValid = handleDetailsForm();
                                 if (isValid){
                                     if(AuthContext.WhatUserType === 'Freelancer'){
-                                        setValue('payments');
+                                        value.push('payments'),setActive('payments');
                                     }else{
                                         registerClient();
                                     }
@@ -393,7 +396,7 @@ const ServiForm = observer(() => {
                                 }
                         </Button>
                         </>
-                        : value === 'payments' ? 
+                        : active === 'payments' ? 
                         <>
                         {/* <Button style={styles.inputbutton} icon='account-plus' mode='contained' buttonColor='deeppink' textColor='white' onPress={()=>{handleFormSubmit()}}>Create Account</Button> */}
                         </>
