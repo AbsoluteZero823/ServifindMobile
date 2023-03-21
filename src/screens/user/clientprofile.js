@@ -29,7 +29,7 @@ const ClientProfile = observer((props) => {
             if (Object.keys(errors).length > 0) {
                 setvalidationErrors(errors);
             } else {
-            const success = await update(UserContext.users[0].UserDetails);
+            const success = await update(UserContext.users[0].ProfileDetails);
             setisEditing(false);
             alert("Profile Updated Successfully");
             }

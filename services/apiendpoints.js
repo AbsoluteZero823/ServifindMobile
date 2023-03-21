@@ -42,9 +42,7 @@ export async function register(email, password, name, contact, gender, age, avat
 
 export async function update(props){
   try{
-    console.log(props);
-    const response = await axios.put(`${API_URL}/me/update`, {_id: props.id, props}, AxiosConfig);
-    console.log(response);
+    const response = await axios.put(`${API_URL}/me/update`, props, AxiosConfig);
     return response.data;
   }catch(error){
     console.log(error.response.data);

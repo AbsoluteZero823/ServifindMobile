@@ -50,6 +50,13 @@ export const User = types.model('User', {
     get UserDetails(){
       return self;
     },
+    get ProfileDetails(){
+      return ({
+        age : self.age,
+        gender : self.gender,
+        contact : self.contact,
+      })
+    }
 }));
 
 const UserStore = createContext({users: []});
