@@ -61,7 +61,7 @@ export const JobsHeader = observer((props) => {
         <View style={{ flexDirection:'row', marginHorizontal:10}}>
             <Avatar.Icon icon='home-outline' size={20} style={{backgroundColor:'transparent'}} color='deeppink'/>
             <TouchableOpacity onPress={()=>{backtoHome()}}>
-                <Text>Project Catalog</Text>
+                <Text>Categories</Text>
             </TouchableOpacity>
             <Avatar.Icon icon='chevron-double-right' size={20} style={{backgroundColor:'transparent'}} color='deeppink'/>
             {

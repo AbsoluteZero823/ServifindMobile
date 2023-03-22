@@ -15,7 +15,7 @@ const NavigationStack = observer(() => {
   const AuthContext = useContext(AuthStore);
   const [DrawerActive, setDrawerActive] = useState(false);
   const [AppbarTitle, setAppbarTitle] = useState("Browse Talent");
-  const [active, setActive] = useState('first');
+  const [active, setActive] = useState('Home');
   const [activeCategory, setActiveCategory] = useState([]);
   const drawer = useRef(null);
   return (

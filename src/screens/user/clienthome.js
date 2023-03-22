@@ -1,12 +1,17 @@
 import { observer } from 'mobx-react';
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { View, FlatList, SafeAreaView } from 'react-native';
-import { styles } from '../../components/user/user.css';
 import { Button, Card, IconButton, Text} from 'react-native-paper';
-import CategoryCard from '../../components/categorycard';
 
+import CategoryCard from '../../components/categorycard';
+import Loading from '../../components/loading';
+import { styles } from '../../components/user/user.css';
+
+import AuthStore from '../../models/authentication';
 import CategoryStore, { Category } from '../../models/category';
-const CategoryCollection = [
+import { getCategories } from '../../../services/apiendpoints';
+
+const CategoryTestCollection = [
   {
     _id: '635e432f462eafff9564f601',
     name:'Writing & Translation',
@@ -47,20 +52,41 @@ const CategoryCollection = [
 const TestRequestCollection = [
   // Empty Check
 ]
+
+
+
 const ClientHome = observer((props) => {
     const CategoryContext = useContext(CategoryStore);
-    // Using the CategoryCollection Loop through all objects in the array and instantiate as a Category object to be pushed to CategoryStore Array
-    CategoryCollection.map(category => {
-      const existingCategory = CategoryContext.categories.find(c => c.id === category._id);
-      if (!existingCategory) {
-        CategoryContext.categories.push(Category.create({id: category._id, name: category.name}));
-      }
-    });
+    const AuthContext = useContext(AuthStore);
+    const [categorycollection, setcategorycollection] = useState();
+    useEffect(() => {
+      AuthContext.letmeload();
+      async function getData(){
+        try{
+          const categoryCollection = await getCategories();
+          CategoryContext.categories = [];
+          if(categoryCollection.success){
+            categoryCollection.categories.map((category) => {
+              CategoryContext.categories.push(Category.create(category));
+            })
+          };
+          setcategorycollection(CategoryContext.categories);
+          setTimeout(() => {
+            AuthContext.donewithload();
+          },2000);
+        }catch(error){
+          console.log(error);
+        }}
+      getData();
+      
+    }, []);
+    
     return (
       <View style={styles.container}>
+        <Loading/>
           <View style={{flex:1}}>
             <FlatList
-            data={CategoryCollection}
+            data={categorycollection}
             style={{overflow:'hidden'}}
             horizontal={true}
             showsHorizontalScrollIndicator={false}
@@ -73,7 +99,7 @@ const ClientHome = observer((props) => {
               <Card.Content>
                 <SafeAreaView>
                   <FlatList
-                    data={CategoryCollection}
+                    data={CategoryTestCollection}
                     keyExtractor={(item) => item._id}
                     horizontal={true}
                     showsHorizontalScrollIndicator={false}

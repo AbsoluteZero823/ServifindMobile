@@ -44,6 +44,9 @@ export const User = types.model('User', {
     },
     setAge(age){
       self.age = parseInt(age);
+    },
+    setAvatar(avatar){
+      self.avatar = avatar;
     }
     
 })).views((self) => ({

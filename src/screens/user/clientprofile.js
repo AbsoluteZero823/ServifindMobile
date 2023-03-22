@@ -1,13 +1,14 @@
 import React, { useContext, useState } from 'react';
+import * as ImagePicker from 'expo-image-picker';
 import { observer } from 'mobx-react';
-import { View, StyleSheet, ImageBackground, ScrollView, TouchableOpacity} from 'react-native';
-import { Button, Card, Text, Avatar, Divider, TextInput, RadioButton, HelperText} from 'react-native-paper';
+import { View, TouchableOpacity} from 'react-native';
+import { Button, Card, Text, Avatar, Divider, TextInput, RadioButton, HelperText, IconButton, SegmentedButtons} from 'react-native-paper';
 import { styles  } from '../../components/user/user.css';
 import Loading from '../../components/loading';
 
 import UserStore from '../../models/user';
 import AuthStore from '../../models/authentication';
-import { update } from '../../../services/apiendpoints';
+import { update, updatePassword, updateProfile } from '../../../services/apiendpoints';
 
 const ClientProfile = observer((props) => {
     const [isEditing, setisEditing ] = useState(false);
@@ -29,14 +30,104 @@ const ClientProfile = observer((props) => {
             if (Object.keys(errors).length > 0) {
                 setvalidationErrors(errors);
             } else {
-            const success = await update(UserContext.users[0].ProfileDetails);
-            setisEditing(false);
-            alert("Profile Updated Successfully");
-            }
+            const response = await updateProfile(UserContext.users[0].ProfileDetails);
+            if (response.success) {
+                setisEditing(false);
+                alert("Profile Updated Successfully");
+            }else{
+                alert(response);
+            }}
             AuthContext.donewithload();
         }, 2000);
         
     }
+    const [ value, setValue ] = useState('');
+    // Values
+    const [ oldconfirmPassword, setoldconfirmPassword ] = useState('');
+    const [ newPassword, setnewPassword ] = useState('');
+    const [ newconfirmPassword, setnewconfirmPassword ] = useState('');
+    
+    // Visibility
+    const [ oldconfirmPasswordVisibility, setoldconfirmPasswordVisibility ] = useState(false);
+    const [ newPasswordVisibility, setnewPasswordVisibility ] = useState(false);
+    const [ newconfirmPasswordVisibility, setnewconfirmPasswordVisibility ] = useState(false);
+
+    
+    function passwordhandler(){
+        AuthContext.letmeload();
+        const errors = {};
+        if(oldconfirmPassword.length < 6 ){
+            errors.oldconfirmPassword = 'This is required!';
+        }
+        if(newPassword.length < 6){
+            errors.newPassword = 'Password must be atleast 6 characters';
+        }
+        if(newPassword === oldconfirmPassword){
+            errors.oldconfirmPassword = "Old Password can't be the same as the new one.";
+            errors.newPassword = "New Password can't be the same as the old one.";
+        }
+        if(newconfirmPassword < 6){
+            errors.newconfirmPassword = 'Password must be atleast 6 characters';
+        }
+        if(newconfirmPassword !== newPassword && (newconfirmPassword.length !== newPassword.length || newconfirmPassword.length === newPassword.length) ){
+            errors.newPassword='Password Mismatch!';
+            errors.newconfirmPassword = 'Password Mismatch!';
+        }
+        setTimeout(async () => {
+            if (Object.keys(errors).length > 0) {
+                setvalidationErrors(errors);
+            } else {
+                const response = await updatePassword({oldPassword: oldconfirmPassword, password: newPassword});
+                if (response.success) {
+                    setisPassword(false);
+                    setoldconfirmPassword('');
+                    setnewPassword('');
+                    setnewconfirmPassword('');
+                    alert("Password Updated Successfully");
+                }else{
+                    alert(response.errMessage);
+                    errors.oldconfirmPassword = response.errMessage;
+                    setvalidationErrors(errors);
+                }
+            }
+            AuthContext.donewithload();
+        }, 2000);
+    }
+
+    async function pickImage(){
+        AuthContext.letmeload();
+        try{
+            let result = await ImagePicker.launchImageLibraryAsync({
+                mediaTypes: ImagePicker.MediaTypeOptions.Images,
+                base64: true,
+                allowsEditing: true,
+                aspect: [4, 3],
+                quality: 1,
+            });
+            if (!result.canceled) {
+                let typePrefix;
+                if (result.assets[0].type === "image") {
+                    // Autoconverts to jpeg
+                    typePrefix = "data:image/jpeg;base64,";
+                } else {
+                    alert("Unsupported file format. Please select a JPEG or PNG file.");
+                    return;
+                }
+                const uploadresponse = await updateProfile({avatar: typePrefix + result.assets[0].base64});
+                if (uploadresponse.success) {
+                    UserContext.users[0].setAvatar(uploadresponse.user.avatar);
+                    alert("Profile Picture Successfully");
+                }else{
+                    alert(uploadresponse);
+                }
+                console.log(uploadresponse);
+              }
+        }catch(error){
+            console.log(error);
+        }
+        AuthContext.donewithload();
+      };
+
     return (
         <View style={styles.container}>
             <Loading/>
@@ -45,7 +136,7 @@ const ClientProfile = observer((props) => {
                     <Avatar.Image size={100} style={{backgroundColor:'deeppink', borderColor:'lightpink'}} source={{uri: UserContext.users[0]?.UserDetails?.avatar?.url}}/>
                     {
                         isEditing ? 
-                        <TouchableOpacity style={{position:'absolute', right:-10, bottom:-10}} onPress={()=>{console.log("WOO!")}}>
+                        <TouchableOpacity style={{position:'absolute', right:-10, bottom:-10}} onPress={()=>pickImage()}>
                             <Avatar.Icon size={38} icon="camera" style={{backgroundColor:'salmon'}} color='white'/>
                         </TouchableOpacity>
                         : <></>
@@ -60,16 +151,25 @@ const ClientProfile = observer((props) => {
                         subtitle={UserContext.users[0]?.UserDetails?.email}
                         style={{textAlign:'center'}}
                         right={(props) => 
-                            // style={{position:'absolute', top:-25, left:-40}}
-                            <TouchableOpacity style={{position:'absolute', top:-25, left:-40}} onPress={()=>{isEditing ? updatehandler() : setisEditing(!isEditing)}}>
-                                <Avatar.Icon icon={isEditing ? 'check' : 'pencil'} size={28} color='white' style={{backgroundColor: isEditing ? 'green' : 'salmon'}}/>
-                            </TouchableOpacity>
+                            <View>
+                                <TouchableOpacity style={{position:'absolute', top:-25, left:-40}} onPress={()=>setisEditing(!isEditing)}>
+                                    <Avatar.Icon icon={isEditing ? 'window-close' : 'pencil'} size={28} color='white' style={{backgroundColor: isEditing ? 'maroon' : 'salmon'}}/>
+                                </TouchableOpacity>
+                                {
+                                    isEditing ? 
+                                <TouchableOpacity style={{position:'absolute', top:-25, left:-80}} onPress={()=>updatehandler()}>
+                                    <Avatar.Icon icon='check' size={28} color='white' style={{backgroundColor: 'green'}}/>
+                                </TouchableOpacity> 
+                                : <></>
+                                }
+                            </View>
                         }
                         />
                     <Card.Content>
+                        {/* PROFILE DETAILS */}
                         {
                             isEditing ? 
-                            <>
+                            <View>
                             <RadioButton.Group
                                 onValueChange={(value) => UserContext.users[0].setGender(value)}
                                 value={UserContext.users[0]?.UserDetails?.gender}
@@ -121,7 +221,7 @@ const ClientProfile = observer((props) => {
                                 {
                                     validationErrors.contact && <HelperText type='error'>{validationErrors.contact}</HelperText>
                                 }
-                            </>
+                            </View>
                             :
                             <View  style={{flexDirection:'row'}}>
                                 <Avatar.Icon size={24} style={{backgroundColor:'transparent'}} color='black' icon={UserContext.users[0]?.UserDetails?.gender ? UserContext.users[0]?.UserDetails?.gender === 'Male' ? 'gender-male' : UserContext.users[0]?.UserDetails?.gender === 'Female' ? "gender-female" : "help-circle-outline"  : "help-circle-outline"}/>
@@ -132,18 +232,90 @@ const ClientProfile = observer((props) => {
                             </View>
                         }
                         <Divider/>
+                        {/* PASSWORD */}
                         <View style={{marginVertical:10}}>
-                            {
-                                isPassword ? 
-                                <View>
-                                    <TextInput mode='outlined' label='Old Password'/>
-                                    <TextInput mode='outlined' label='New Password'/>
-                                    <TextInput mode='outlined' label='Confirm Password'/>
-                                    <Button icon='check' style={{marginVertical:8}} mode='outlined' onPress={()=>{setisPassword(!isPassword)}} buttonColor='green' textColor='white'>Update Password</Button>
-                                </View>
-                                : 
-                                <Button icon='lock' mode='outlined' onPress={()=>{setisPassword(!isPassword)}} buttonColor='salmon' textColor='white'>Change Password</Button>
-                            }
+                        {
+                            isPassword ? 
+                            <View>
+                                <TextInput 
+                                    mode='outlined' 
+                                    label='Old Password'
+                                    dense={true}
+                                    placeholder='Old Password'
+                                    value={oldconfirmPassword}
+                                    onChangeText={(text) => (setvalidationErrors(''), setoldconfirmPassword(text))}
+                                    error={validationErrors.oldconfirmPassword}
+                                    secureTextEntry={!oldconfirmPasswordVisibility}
+                                    right={<TextInput.Icon icon={oldconfirmPasswordVisibility ? 'eye-off-outline' : 'eye-outline'} onPress={() => setoldconfirmPasswordVisibility(!oldconfirmPasswordVisibility)} />}
+                                />
+                                {
+                                    validationErrors.oldconfirmPassword && <HelperText type='error'>{validationErrors.oldconfirmPassword}</HelperText>
+                                }
+                                <TextInput 
+                                    mode='outlined' 
+                                    label='New Password'
+                                    dense={true}
+                                    placeholder='New Password'
+                                    value={newPassword}
+                                    onChangeText={(text) => (setvalidationErrors(''), setnewPassword(text))}
+                                    error={validationErrors.newPassword}
+                                    secureTextEntry={!newPasswordVisibility}
+                                    right={<TextInput.Icon icon={newPasswordVisibility ? 'eye-off-outline' : 'eye-outline'} onPress={()=>(setnewPasswordVisibility(!newPasswordVisibility))} />}
+                                />
+                                {
+                                    validationErrors.newPassword && <HelperText type='error'>{validationErrors.newPassword}</HelperText>
+                                }
+                                <TextInput 
+                                    mode='outlined' 
+                                    label='Confirm Password'
+                                    dense={true}
+                                    placeholder='Confirm Password'
+                                    value={newconfirmPassword}
+                                    onChangeText={(text) => (setvalidationErrors(''), setnewconfirmPassword(text))}
+                                    error={validationErrors.newconfirmPassword}
+                                    secureTextEntry={!newconfirmPasswordVisibility}
+                                    right={<TextInput.Icon icon={newconfirmPasswordVisibility ? 'eye-off-outline' : 'eye-outline'} onPress={()=>(setnewconfirmPasswordVisibility(!newconfirmPasswordVisibility))} />}
+                                />
+                                {
+                                    validationErrors.newconfirmPassword && <HelperText type='error'>{validationErrors.newconfirmPassword}</HelperText>
+                                }
+                                <SegmentedButtons
+                                value={value}
+                                onValueChange={setValue}
+                                style={{marginVertical:10}}
+                                buttons={[
+                                    {
+                                      value: 'cancel',
+                                      icon: 'window-close',
+                                      label: 'Cancel',
+                                      style: {backgroundColor:'salmon'},
+                                      checkedColor: 'white',
+                                      uncheckedColor: 'white',
+                                      onPress: () => {
+                                        setisPassword(false);
+                                        setvalidationErrors('');
+                                        setoldconfirmPasswordVisibility(false);
+                                        setnewPasswordVisibility(false);
+                                        setnewconfirmPasswordVisibility(false);
+                                      }
+                                    },
+                                    {
+                                      value: 'save',
+                                      icon: 'check',
+                                      label: 'Save',
+                                      style: {backgroundColor:'green'},
+                                      checkedColor: 'white',
+                                      uncheckedColor: 'white',
+                                      onPress: () => {
+                                          passwordhandler();
+                                      }
+                                    },
+                                  ]}
+                                />
+                            </View>
+                            : 
+                            <Button icon='lock' mode='outlined' onPress={()=>{setisPassword(!isPassword)}} buttonColor='salmon' textColor='white'>Change Password</Button>
+                        }
                         </View>
                     </Card.Content>
                 </Card>

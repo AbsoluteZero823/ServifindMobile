@@ -7,11 +7,10 @@ import UserStore from '../../models/user';
 import { styles } from '../../components/user/user.css';
 
 const ClientJobs = observer((props) => {
+    console.log(props.params);
     return (
         <View style={styles.container}>
-            <View>
-              <Text>WOOO!</Text>
-            </View>
+            <ImageBackground source={require('../../../assets/pngegg.png')} resizeMethod='resize' resizeMode='cover' style={{flex:1, margin:-50}}/>
         </View>
     )
 })
