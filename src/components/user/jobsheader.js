@@ -1,5 +1,6 @@
 import { observer } from 'mobx-react';
 import React, { useContext, useState } from 'react';
+import { useEffect } from 'react';
 import { View, StyleSheet, ImageBackground, FlatList, TouchableOpacity} from 'react-native';
 import { Button, Card, Text, Avatar} from 'react-native-paper';
 import CategoryStore from '../../models/category';
@@ -7,8 +8,9 @@ import CategoryStore from '../../models/category';
 export const JobsHeader = observer((props) => {
     const CategoryContext = useContext(CategoryStore);
     const [active, setActive] = useState('');
-    const [ setAppbarTitle, setDrawerActive, activeCategory, setActiveCategory ] = props.params.props;
-    if(activeCategory.length > 0 && !active ){
+    const activeCategory = props.params.props[2];
+    const setActiveCategory = props.params.props[3];
+    if(activeCategory.length > 0 && !active){
         setActive(activeCategory[0].name);
     }
     function pushtoactiveCategory(item){

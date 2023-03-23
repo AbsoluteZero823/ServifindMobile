@@ -9,7 +9,7 @@ const AxiosConfig = {
         'Authorization': `Bearer ${AuthStore._currentValue.token}`
     }
 }
-// THIS IS ALL FOR USER MODIFICATION
+// USER AUTHENTICATION AND MODIFICATION (working)
 export async function login(email, password) {
   try {
     const response = await axios.post(`${API_URL}/login`, {
@@ -57,7 +57,7 @@ export async function updatePassword(props){
   }
 }
 
-// FETCHING CATEGORIES
+// FETCHING CATEGORIES (Working)
 export async function getCategories(){
   try{
     const categoryresponse = await axios.get(`${API_URL}/categories`, AxiosConfig);
@@ -83,5 +83,37 @@ export async function getServices(){
     return serviceresponse.data;
   }catch(error){
     console.log(error);
+  }
+}
+
+// FETCHING INQUIRIES
+export async function getmyInquiries(){
+  try{
+    const inquiriesresponse = await axios.get(`${API_URL}/my-inquiries`, AxiosConfig);
+    return inquiriesresponse.data;
+  }catch(error){
+    console.log(error);
+  }
+}
+
+// FETCHING REQUESTS
+export async function getmyRequests(){
+  try{
+    const requestresponse = await axios.get(`${API_URL}/myrequests`, AxiosConfig);
+    return requestresponse.data;
+  }catch(error){
+    console.log(error);
+  }
+}
+
+export async function createmyRequest(props){
+  try{
+    let data = props;
+    data.request_status = 'waiting';
+    data.created_At = new Date();
+    const requestresponse = await axios.post(`${API_URL}/request/new`, data, AxiosConfig);
+    return requestresponse.data;
+  }catch(error){
+    return error.response.data;
   }
 }

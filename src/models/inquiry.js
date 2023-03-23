@@ -1,9 +1,10 @@
 import { types } from 'mobx-state-tree';
+import { createContext } from 'react';
 import User from './user';
 import Freelancer from './freelancer';
 import Service from './service';
 
-const Inquiry = types.model('Inquiry', {
+export const Inquiry = types.model('Inquiry', {
   id: types.identifier,
   instruction: types.string,
   attachments: types.string,
@@ -25,6 +26,8 @@ const Inquiry = types.model('Inquiry', {
   },
 }));
 
-export default Inquiry;
+const InquiryStore = createContext({inquiries: []});
+
+export default InquiryStore;
 
 // In this MST model schema, we define properties for instruction, attachments, customer, freelancer, service, and status. We also define views for customerName, freelancerName, and serviceName, which return the names of the related models. Note that we also define separate models for User, Freelancer, and Service, which are used as references in the Inquiry model schema.

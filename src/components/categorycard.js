@@ -6,16 +6,16 @@ import styles from "./authentication/authentication.css";
 import { useNavigation } from "@react-navigation/native";
 
 export default function CategoryCard(props){
-    const [setAppbarTitle, setActive, activeCategory, setActiveCategory] = props.params;
+    const [setAppbarTitle, setActive, activeCategory] = props.params;
     const navigation = useNavigation();
     return (
-    <TouchableOpacity onPress={()=>(
+    <TouchableOpacity onPress={()=>{
         setAppbarTitle('Jobs'),
         setActive('Jobs'),
-        activeCategory.push(props.category),
+        activeCategory.push(props.category)
         navigation.navigate('ClientJobs')
-        )}>
-        <Card style={{alignSelf:'center', minHeight: 140, maxHeight: 150, marginHorizontal:10, minWidth: 220, borderColor:'deeppink', borderWidth:1}}>
+        }}>
+        <Card style={{alignSelf:'center', minHeight: 140, maxHeight: 150, marginHorizontal:2.5, minWidth: 220, borderColor:'deeppink', borderWidth:1}}>
             <Card.Title title={props.category.name} titleStyle={{ color: 'deeppink' }} />
             <Card.Content>
                 <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent:'center' }}>
