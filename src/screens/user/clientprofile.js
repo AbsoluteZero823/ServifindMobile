@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import * as ImagePicker from 'expo-image-picker';
 import { observer } from 'mobx-react';
-import { View, TouchableOpacity} from 'react-native';
+import { View, TouchableOpacity, ScrollView} from 'react-native';
 import { Button, Card, Text, Avatar, Divider, TextInput, RadioButton, HelperText, IconButton, SegmentedButtons} from 'react-native-paper';
 import { styles  } from '../../components/user/user.css';
 import Loading from '../../components/loading';
@@ -129,7 +129,7 @@ const ClientProfile = observer((props) => {
       };
 
     return (
-        <View style={styles.container}>
+        <ScrollView style={styles.container}>
             <Loading/>
             <View style={{flex:1, alignItems:'center', alignSelf:'center'}}>
                 <View style={{flexDirection:'row', marginBottom:10}}>
@@ -319,8 +319,14 @@ const ClientProfile = observer((props) => {
                         </View>
                     </Card.Content>
                 </Card>
+                <Card style={{marginVertical:10}}>
+                    <Card.Title title='Payments'/>
+                </Card>
+                <Card style={{marginVertical:10}}>
+                    <Card.Title title='Reports'/>
+                </Card>
             </View>
-        </View>
+        </ScrollView>
     )
 })
 

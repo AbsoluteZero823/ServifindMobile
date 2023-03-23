@@ -49,11 +49,6 @@ const CategoryTestCollection = [
     freelancercount: '8000',
     servicescount: '1000',
   }]
-const TestRequestCollection = [
-  // Empty Check
-]
-
-
 
 const ClientHome = observer((props) => {
     const CategoryContext = useContext(CategoryStore);
@@ -73,9 +68,10 @@ const ClientHome = observer((props) => {
           setcategorycollection(CategoryContext.categories);
           setTimeout(() => {
             AuthContext.donewithload();
-          },2000);
+          },500);
         }catch(error){
           console.log(error);
+          AuthContext.donewithload();
         }}
       getData();
       
@@ -95,7 +91,7 @@ const ClientHome = observer((props) => {
           </View>
           <View style={{flex:1, padding:10}}>
             <Card style={[styles.cardStyle]}>
-              <Card.Title title={<Text variant='headlineSmall'>Your Job Drafts</Text>} right={(props) => <Button mode='text' textColor='deeppink'>See all drafts</Button>}/>
+              <Card.Title title={<Text variant='headlineSmall'>Your Contracts</Text>} right={(props) => <Button mode='text' textColor='deeppink'>See all contracts</Button>}/>
               <Card.Content>
                 <SafeAreaView>
                   <FlatList

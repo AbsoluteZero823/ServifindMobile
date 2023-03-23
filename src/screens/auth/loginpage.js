@@ -53,21 +53,13 @@ const LoginPage = observer(() => {
                 setValidationErrors(errors);
                 AuthContext.donewithload();
             }else if(response.success === true && response.token){
-                const UserInstance = User.create({
-                    id: response.user._id,
-                    email: response.user.email,
-                    name: response.user.name,
-                    contact: response.user.contact,
-                    gender: response.user.gender,
-                    role: response.user.role,
-                    age: response.user.age,
-                    avatar: response.user.avatar,
-                })
                 if(UserContext.users.length === 0){
-                    UserContext.users.push(UserInstance);
-                    AuthContext.donewithload();
+                    UserContext.users.push(User.create(response.user));
                     AuthContext.loggedin(response.token, response.user.role);
+                }else{
+                    alert('An Error has occured!');
                 }
+                AuthContext.donewithload();
             }
         }
     }

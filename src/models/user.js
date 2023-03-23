@@ -2,7 +2,7 @@ import { types } from 'mobx-state-tree';
 import { createContext } from 'react';
 
 export const User = types.model('User', {
-  id: types.maybeNull(types.identifier),
+  _id: types.maybeNull(types.identifier),
   name: types.maybeNull(types.string),
   age: types.maybeNull(types.number),
   gender: types.maybeNull(types.enumeration(['Male', 'Female'])),
@@ -14,7 +14,7 @@ export const User = types.model('User', {
   })),
   role: types.optional(types.string, 'customer'),
   status: types.optional(types.string, 'activated'),
-  createdAt: types.optional(types.Date, () => new Date()),
+  createdAt: types.optional(types.string, 'Unknown'),
   isAdmin: types.optional(types.boolean, false),
   resetPasswordToken: types.maybeNull(types.string),
   resetPasswordExpire: types.maybeNull(types.Date),
@@ -48,7 +48,6 @@ export const User = types.model('User', {
     setAvatar(avatar){
       self.avatar = avatar;
     }
-    
 })).views((self) => ({
     get UserDetails(){
       return self;

@@ -7,7 +7,7 @@ const Rating = types.model("Rating", {
   id: types.identifier,
   rating: types.number,
   comment: types.string,
-  created_At: types.optional(types.Date, new Date()),
+  created_At: types.optional(types.string, 'Some Date'),
   user: types.reference(types.late(() => User)),
   service_id: types.reference(types.late(() => Service)),
   transaction_id: types.reference(types.late(() => Transaction))

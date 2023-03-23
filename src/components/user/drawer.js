@@ -41,31 +41,11 @@ export const UserDrawer = (props) => {
         label={<Text style={{color:'white', fontWeight:'600', fontSize:14}}>Chat</Text>}
         active={active === 'Chat'}
         onPress={() => {
-          setAppbarTitle('Messages')
+          setAppbarTitle('Chat')
           setActive('Chat');
           navigation.navigate('ClientChat');
         }} />
       <View style={{flex:1, justifyContent:'flex-end'}}>
-      <Drawer.CollapsedItem 
-        focusedIcon="credit-card-chip-outline"
-        unfocusedIcon="credit-card-outline"
-        label={<Text style={{color:'white', fontWeight:'600', fontSize:14}}>Payment</Text>}
-        active={active === 'Payment'}
-        onPress={() => {
-          setAppbarTitle('Transactions');
-          setActive('Payment');
-          // No redirects yet
-        }} />
-      <Drawer.CollapsedItem 
-        focusedIcon="account-alert-outline"
-        unfocusedIcon="account-alert"
-        label={<Text style={{color:'white', fontWeight:'600', fontSize:14}}>Reports</Text>}
-        active={active === 'Report'}
-        onPress={() => {
-          setAppbarTitle('Reports');
-          setActive('Report');
-          navigation.navigate('ClientReports');
-        }} />
         <Drawer.CollapsedItem 
           focusedIcon="account-cog-outline"
           unfocusedIcon="account-cog"

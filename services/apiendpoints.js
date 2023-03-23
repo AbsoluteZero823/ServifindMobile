@@ -75,3 +75,13 @@ export async function getSingleCategory(id){
     console.log(error);
   }
 }
+
+// FETCHING SERVICES
+export async function getServices(){
+  try{
+    const serviceresponse = await axios.get(`${API_URL}/services`, AxiosConfig);
+    return serviceresponse.data;
+  }catch(error){
+    console.log(error);
+  }
+}
