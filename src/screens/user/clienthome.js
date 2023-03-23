@@ -14,6 +14,7 @@ import CategoryStore, { Category } from '../../models/category';
 import InquiryStore, { Inquiry } from '../../models/inquiry';
 import RequestStore, { Request } from '../../models/request';
 import { getCategories, getmyInquiries, getmyRequests } from '../../../services/apiendpoints';
+import { FAB } from '../../components/user/fab';
 
 const ClientHome = observer((props) => {
   const navigation = useNavigation();
@@ -50,7 +51,6 @@ const ClientHome = observer((props) => {
           };
           setInquiryCollection(InquiryContext.inquiries);
           const requestCollection = await getmyRequests();
-          console.log(requestCollection);
           RequestContext.requests = [];
           if(requestCollection.success){
            requestCollection.requests?.map((request) => {
@@ -89,15 +89,17 @@ const ClientHome = observer((props) => {
           </View>
           <View style={{flex: 4, padding:5}}>
             <Card style={[styles.cardStyle]}>
-              <Card.Title title={<Text variant='headlineSmall'>Your Postings</Text>} right={(props) => <Button mode='text' textColor='deeppink'>See all postings</Button>}/>
+              <Card.Title title={<Text variant='headlineSmall'>Your Job Posts</Text>} right={(props) => <Button mode='text' textColor='deeppink' onPress={()=>(setActive('Jobs'), setAppbarTitle('Job Posting'),navigation.navigate('ClientJobPosting'))}>See all postings</Button>}/>
               <Card.Content style={{justifyContent:'center'}}>
               <FlatList
-                data={RequestCollection}
-                style={{overflow:'hidden'}}
+                data={RequestCollection.filter((request) => request.request_status === 'waiting')}
+                style={{overflow:'scroll', marginBottom:70}}
+                showsVerticalScrollIndicator={false}
                 keyExtractor={(item) => item._id}
                 renderItem={({item}) => (
-                  <Card style={{backgroundColor:'mistyrose', width:'100%', marginVertical:5}}>
-                    <Card.Title title={item.name} subtitle={<Text style={{color:'grey'}}>Descriptions......</Text>} right={(props) => <IconButton icon='arrange-bring-forward' mode='outlined' iconColor='black' style={{borderColor:'deeppink'}}/>}/>
+                  <Card style={{width:'100%', marginBottom:5, borderColor:'deeppink', borderWidth:1}}>
+                    <Card.Title title={item.description} subtitle={<Text style={{color:'grey'}}>{item.category.name}</Text>}
+                    right={(props) => <IconButton icon='open-in-new' iconColor='deeppink'/>}/>
                   </Card>
                 )}
                 ListEmptyComponent={() => (
@@ -123,8 +125,8 @@ const ClientHome = observer((props) => {
                     horizontal={InquiryContext.inquiries.length > 0 ? true : false}
                     showsHorizontalScrollIndicator={false}
                     renderItem={({item}) => (
-                      <Card style={{backgroundColor:'mistyrose', marginHorizontal:10, marginBottom:5}}>
-                        <Card.Title title={item.name} subtitle={<Text style={{color:'grey'}}>Descriptions......</Text>} right={(props) => <IconButton icon='arrange-bring-forward' mode='outlined' iconColor='black' style={{borderColor:'deeppink'}}/>}/>
+                      <Card style={{marginHorizontal:10, marginBottom:5, borderColor:'deeppink', borderWidth:1}}>
+                        <Card.Title title={item.name} subtitle={<Text style={{color:'grey'}}>Descriptions......</Text>} right={(props) => <IconButton icon='open-in-new' mode='outlined' iconColor='black' style={{borderColor:'deeppink'}}/>}/>
                       </Card>
                     )}
                     ListEmptyComponent={() => (
@@ -144,6 +146,7 @@ const ClientHome = observer((props) => {
               </Card.Content>
             </Card>
           </View>
+          <FAB/>
       </View>
     );
   });

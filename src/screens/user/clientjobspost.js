@@ -1,15 +1,14 @@
 import { observer } from 'mobx-react';
 import React, { useContext, useState } from 'react';
 import { View, StyleSheet, ImageBackground, FlatList} from 'react-native';
-import { Button, Card, Text, Avatar, Portal, Modal, IconButton, TextInput, Menu, List} from 'react-native-paper';
-
-import { styles } from '../../components/user/user.css';
-import UserStore from '../../models/user';
-import RequestStore from '../../models/request';
-import CategoryStore from '../../models/category';
-import AuthStore from '../../models/authentication';
 import { useNavigation } from '@react-navigation/native';
+import { Button, Card, Text, Avatar, Portal, Modal, IconButton, TextInput, Menu, List} from 'react-native-paper';
 import { createmyRequest } from '../../../services/apiendpoints';
+
+import UserStore, { User } from '../../models/user';
+import RequestStore, { Request } from '../../models/request';
+import CategoryStore, { Category } from '../../models/category';
+import AuthStore from '../../models/authentication';
 import Loading from '../../components/loading';
 
 
@@ -37,6 +36,15 @@ const ClientJobsRequest = observer(() => {
                 setmainVisible(false);
                 navigation.navigate('ClientHome');
                 alert('Job Request Uploaded Successfully');
+                const request = requestresponse.addeddata[0];
+                RequestContext.requests.push(Request.create({
+                    _id: request._id,
+                    category: Category.create(request.category),
+                    description: request.description,
+                    created_At: new Date(request.created_At),
+                    request_status: request.request_status,
+                    requested_by: User.create(request.requested_by),
+                }));
             }else{
                 alert(requestresponse.errMessage);
             }
@@ -77,7 +85,7 @@ const ClientJobsRequest = observer(() => {
                             dense={true}
                             onChangeText={(text) => setDescription(text)}
                             style={{marginVertical:5}}
-                            right={<TextInput.Icon icon="window-close" iconColor='deeppink'/>}
+                            right={<TextInput.Icon icon="window-close" iconColor='deeppink' onPress={()=>setDescription('')}/>}
                             numberOfLines={5}
                         />
                     </Card.Content>

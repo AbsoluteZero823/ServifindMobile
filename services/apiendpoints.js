@@ -117,3 +117,21 @@ export async function createmyRequest(props){
     return error.response.data;
   }
 }
+
+export async function editmyRequest(data){
+  try{
+    const editresponse = await axios.put(`${API_URL}/myrequest/edit/${data._id}`, data, AxiosConfig);
+    return editresponse.data;
+  }catch(error){
+    return error.response.data
+  }
+}
+
+export async function cancelmyRequest(id){
+  try{
+    const cancelresponse = await axios.put(`${API_URL}/myrequest/cancel/${id}`, AxiosConfig);
+    return cancelresponse.data;
+  }catch(error){
+    return error.response.data
+  }
+}

@@ -6,7 +6,6 @@ container: {
     width:'100%',
     padding: 5,
     alignContent:'center',
-    backgroundColor:'mistyrose',
 },
 header: {
     fontSize: 24,

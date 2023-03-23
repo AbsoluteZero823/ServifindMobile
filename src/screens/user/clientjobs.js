@@ -1,8 +1,8 @@
 
 import React, { useContext, useState } from 'react';
 import { observer } from 'mobx-react';
-import { View, StyleSheet, ImageBackground, FlatList, TouchableOpacity, RefreshControl,} from 'react-native';
-import { Button, Card, Text, Avatar, AnimatedFAB, SegmentedButtons} from 'react-native-paper';
+import { View, FlatList, TouchableOpacity, RefreshControl,} from 'react-native';
+import { Card, Text, Avatar} from 'react-native-paper';
 
 import ServiceStore, {ServiceModel} from '../../models/service';
 import { Category } from '../../models/category';
@@ -13,6 +13,7 @@ import { styles } from '../../components/user/user.css';
 import { useEffect } from 'react';
 import { getServices } from '../../../services/apiendpoints';
 import { useNavigation } from '@react-navigation/native';
+import { FAB } from '../../components/user/fab';
 
 const ClientJobs = observer((props) => {
     const navigation = useNavigation();
@@ -127,14 +128,7 @@ const ClientJobs = observer((props) => {
                     </Card>
                 )}    
             />
-            <AnimatedFAB
-                icon='plus'
-                label='Create Job'
-                style={{position:'absolute', bottom:40, right:20}}
-                color='black'
-                variant='tertiary'
-                onPress={() => console.log('Open Create Job Modal')}
-            />
+            <FAB/>
         </View>
         </>
     )

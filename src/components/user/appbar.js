@@ -13,7 +13,6 @@ export const CustomAppBar = observer((props) => {
     const [AppbarTitle, setActive, setAppbarTitle, drawer, DrawerActive, setDrawerActive, jobsearchquery, setjobsearchquery, jobsearchmenu, jobsearch, setjobsearch] = props.passed;
     return (
         <Appbar.Header style={{justifyContent:'flex-end', backgroundColor:'transparent'}}>
-            
             {
                 AppbarTitle === 'Jobs' ?   
                 <Appbar.Content title={
