@@ -68,7 +68,12 @@ export const UserDrawer = (props) => {
               {
                 text: 'Yes', 
                 onPress: () => {
-                  console.log('Switching Out');
+                  if (UserContext.users[0].UserDetails.role === 'freelancer'){
+                    AuthContext.setUserType('freelancer');
+                  }else if(UserContext.users[0].UserDetails.role === 'customer'){
+                    alert("We need you to register first as a Freelancer");
+                    navigation.navigate('ClientFreelancerRegistration');
+                  }
                 }}]);
           }} />
         <Drawer.CollapsedItem 

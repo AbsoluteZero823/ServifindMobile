@@ -45,7 +45,7 @@ export default Jobpostcard = (passeddata) => {
             <Card key={item._id} style={{margin:5}}>
                 <Card.Title 
                     title={item.category.name} 
-                    subtitle={format(item.created_At, 'MMMM. dd (E), yyyy')}
+                    subtitle={format(item.created_At, 'MMMM. dd, yyyy')}
                     left={() => (
                         <Avatar.Icon 
                             icon={item.request_status === 'waiting' ? 'clock-outline' : item.request_status === 'granted' ? 'check-decagram-outline' : 'cancel'} 

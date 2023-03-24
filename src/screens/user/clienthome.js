@@ -1,6 +1,6 @@
 import { observer } from 'mobx-react';
 import React, { useContext, useEffect, useState, useCallback} from 'react';
-import { View, FlatList, SafeAreaView, RefreshControl} from 'react-native';
+import { View, FlatList, SafeAreaView, RefreshControl, TouchableOpacity} from 'react-native';
 import { Button, Card, IconButton, Text} from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 
@@ -119,10 +119,12 @@ const ClientHome = observer((props) => {
                 showsVerticalScrollIndicator={false}
                 keyExtractor={(item) => item._id}
                 renderItem={({item}) => (
-                  <Card style={{width:'100%', marginBottom:5, borderColor:'deeppink', borderWidth:1}}>
-                    <Card.Title title={item.description} subtitle={<Text style={{color:'grey'}}>{item.category.name}</Text>}
-                    right={(props) => <IconButton icon='open-in-new' iconColor='deeppink'/>}/>
-                  </Card>
+                  <TouchableOpacity onPress={()=>navigation.navigate('ClientSingleJobPosts',{_id: item._id})}>
+                    <Card style={{width:'100%', marginBottom:5, borderColor:'deeppink', borderWidth:1}}>
+                      <Card.Title title={item.description} subtitle={<Text style={{color:'grey'}}>{item.category.name}</Text>}
+                      right={(props) => <IconButton icon='open-in-new' iconColor='deeppink'/>}/>
+                    </Card>
+                  </TouchableOpacity>
                 )}
                 ListEmptyComponent={() => (
                 <SafeAreaView style={{alignItems:'center', alignSelf:'center', maxWidth: 300, marginBottom:20}}>

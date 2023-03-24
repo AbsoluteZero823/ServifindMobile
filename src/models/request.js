@@ -10,7 +10,13 @@ export const Request = types.model('Request', {
   created_At: types.Date,
   request_status: types.optional(types.enumeration(['waiting', 'cancelled', 'granted']), 'waiting'),
   requested_by: User,
-});
+})
+.actions(self => ({
+  setCancel(){
+    self.request_status = 'cancelled';
+  }
+}))
+;
 
 const RequestStore = createContext({requests: []});
 

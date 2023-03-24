@@ -55,7 +55,7 @@ const LoginPage = observer(() => {
             }else if(response.success === true && response.token){
                 if(UserContext.users.length === 0){
                     UserContext.users.push(User.create(response.user));
-                    AuthContext.loggedin(response.token, response.user.role);
+                    AuthContext.loggedin(response.token, 'customer');
                 }else{
                     alert('An Error has occured!');
                 }

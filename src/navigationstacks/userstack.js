@@ -11,6 +11,7 @@ import { JobsHeader } from '../components/user/jobsheader';
 import ClientJobsRequest from '../screens/user/clientjobspost';
 import ClientHomePostings from '../screens/user/clienthomejobposts';
 import ClientSingleJobPosts from '../screens/user/clienthomejobpost';
+import ClientFreelancerRegistration from '../screens/user/clientfreelancerregistration';
 
 const ClientStack = createNativeStackNavigator();
 export default function ClientNavigator(props) {
@@ -21,6 +22,7 @@ export default function ClientNavigator(props) {
         <ClientStack.Screen name="ClientPostaJob" component={ClientJobsRequest} options={{presentation:'transparentModal', contentStyle:{backgroundColor:'transparent'}}}/>
         <ClientStack.Screen name="ClientJobPosting" component={ClientHomePostings}/>
         <ClientStack.Screen name="ClientSingleJobPosts" component={ClientSingleJobPosts}/>
+        <ClientStack.Screen name="ClientFreelancerRegistration" component={ClientFreelancerRegistration}/>
       </ClientStack.Group>
       
       <ClientStack.Group screenOptions={{

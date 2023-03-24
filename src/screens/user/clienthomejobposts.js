@@ -86,6 +86,9 @@ const ClientHomePostings = observer(() => {
                         const hasSearchQuery = request.description.toLowerCase().includes(searchquery.toLowerCase());
                         const hasMenuActive = request.request_status.toLowerCase().includes(menuactive.toLowerCase());
                         return hasSearchQuery && hasMenuActive;
+                      }).sort((a, b) => {
+                        const statuses = ["waiting", "granted", "cancelled"];
+                        return statuses.indexOf(a.request_status) - statuses.indexOf(b.request_status);
                       })
                 }
                 keyExtractor={(item) => item._id}
