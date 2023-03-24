@@ -16,6 +16,7 @@ export async function login(email, password) {
       email: email,
       password: password
     }, AxiosConfig);
+    console.log(response.data)
     return response.data;
   } catch (error) {
     return error.response.data;
@@ -92,7 +93,16 @@ export async function getmyInquiries(){
     const inquiriesresponse = await axios.get(`${API_URL}/my-inquiries`, AxiosConfig);
     return inquiriesresponse.data;
   }catch(error){
-    console.log(error);
+    return error;
+  }
+}
+
+export async function createanInquiry(props){
+  try{
+    const inquiryresponse = await axios.post(`${API_URL}/inquiry/new`, props, AxiosConfig);
+    return inquiryresponse.data;
+  }catch(error){
+    return error;
   }
 }
 
@@ -100,6 +110,15 @@ export async function getmyInquiries(){
 export async function getmyRequests(){
   try{
     const requestresponse = await axios.get(`${API_URL}/myrequests`, AxiosConfig);
+    return requestresponse.data;
+  }catch(error){
+    console.log(error);
+  }
+}
+
+export async function getmySingleRequest(id){
+  try{
+    const requestresponse = await axios.get(`${API_URL}/myrequests/${id}`, AxiosConfig)
     return requestresponse.data;
   }catch(error){
     console.log(error);
@@ -114,7 +133,7 @@ export async function createmyRequest(props){
     const requestresponse = await axios.post(`${API_URL}/request/new`, data, AxiosConfig);
     return requestresponse.data;
   }catch(error){
-    return error.response.data;
+    return error;
   }
 }
 

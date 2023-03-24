@@ -28,7 +28,7 @@ export const UserDrawer = (props) => {
       <Drawer.CollapsedItem 
         focusedIcon="feature-search-outline"
         unfocusedIcon="feature-search"
-        label={<Text style={{color:'white', fontWeight:'600', fontSize:14}}>Jobs</Text>}
+        label={<Text style={{color:'white', fontWeight:'600', fontSize:14}}>Services</Text>}
         active={active === 'Jobs'}
         onPress={() => {
           setAppbarTitle('Jobs');

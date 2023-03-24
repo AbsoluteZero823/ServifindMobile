@@ -10,6 +10,7 @@ import ClientJobsFreelancer from '../screens/user/clientjobsfreelancer';
 import { JobsHeader } from '../components/user/jobsheader';
 import ClientJobsRequest from '../screens/user/clientjobspost';
 import ClientHomePostings from '../screens/user/clienthomejobposts';
+import ClientSingleJobPosts from '../screens/user/clienthomejobpost';
 
 const ClientStack = createNativeStackNavigator();
 export default function ClientNavigator(props) {
@@ -17,8 +18,9 @@ export default function ClientNavigator(props) {
     <ClientStack.Navigator initialRouteName='ClientHome' screenOptions={{headerShown: false, animation:'slide_from_right', navigationBarHidden:true, statusBarTranslucent:true, statusBarStyle:'dark', contentStyle:{backgroundColor:'mistyrose'}}}>
       <ClientStack.Group>
         <ClientStack.Screen name="ClientHome" children={() => <ClientHome params={props} />}/>
-        <ClientStack.Screen name="ClientPostaJob" component={ClientJobsRequest} options={{presentation:'transparentModal'}}/>
+        <ClientStack.Screen name="ClientPostaJob" component={ClientJobsRequest} options={{presentation:'transparentModal', contentStyle:{backgroundColor:'transparent'}}}/>
         <ClientStack.Screen name="ClientJobPosting" component={ClientHomePostings}/>
+        <ClientStack.Screen name="ClientSingleJobPosts" component={ClientSingleJobPosts}/>
       </ClientStack.Group>
       
       <ClientStack.Group screenOptions={{
@@ -27,7 +29,7 @@ export default function ClientNavigator(props) {
         }}>
         <ClientStack.Screen name="ClientJobs" children={() => <ClientJobs params={props} options={{headerShown: false}}/>}/>
         <ClientStack.Screen name="ClientFreelancer" component={ClientJobsFreelancer}/>
-        <ClientStack.Screen name="ClientSingleJob" component={ClientSingleJob} options={{presentation:'transparentModal', headerShown: false}}/>
+        <ClientStack.Screen name="ClientSingleJob" component={ClientSingleJob} options={{presentation:'transparentModal', headerShown: false, contentStyle:{backgroundColor:'transparent'}}}/>
       </ClientStack.Group>
       <ClientStack.Screen name="ClientChat" children={() => <ClientChat params={props} />}/>
       <ClientStack.Screen name="ClientReports" children={() => <ClientReports params={props} />}/>

@@ -6,16 +6,50 @@ import UserStore from '../../models/user';
 import { styles } from '../../components/user/user.css';
 import { useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
+import { createanInquiry } from '../../../services/apiendpoints';
+import AuthStore from '../../models/authentication';
+import LoadingScreen from '../../components/loading';
 
 const ClientSingleJob = observer(({route}) => {
+    const AuthContext = useContext(AuthStore);
     const data = route.params.item;
     const navigation = useNavigation();
     const [mainvisible, setmainVisible] = useState(true);
     const [Inquirevalue, setInquirevalue] = useState('');
     const [Inquirevisible, setInquirevisible] = useState(false);
     const hideModal = () => {setmainVisible(false), navigation.goBack()};
+
+    async function sendInquiry() {
+        AuthContext.letmeload();
+        let body = {};
+        body.instruction = Inquirevalue;
+        body.attachments = 'Placeholder';
+        body.freelancer = data.freelancer_id;
+        body.service_id = data._id;
+        try{
+            const sendresponse = await createanInquiry(body);
+            if(sendresponse.success){
+                setInquirevisible(false);
+                setmainVisible(false);
+                setInquirevalue('');
+                navigation.goBack();
+                alert("Inquiry sent successfully!");
+            }else{
+                setInquirevisible(false);
+                setmainVisible(false);
+                setInquirevalue('');
+                navigation.goBack();
+                alert("You probably have already sent an Inquiry to this Freelancer");
+            }
+        }catch(error){
+            console.log(error);
+        }
+        AuthContext.donewithload();
+    }
+
     return (
         <Portal>
+            <LoadingScreen/>
             <Modal visible={mainvisible} onDismiss={hideModal} contentContainerStyle={{marginHorizontal:10}}>
             <Card style={{marginTop:50}}>
                 <Card.Cover source={{uri: data.images.url}}/>
@@ -62,9 +96,8 @@ const ClientSingleJob = observer(({route}) => {
                         label='Message'
                         placeholder='Type here...'
                         dense={true}
-                        value={Inquirevalue}
                         onChangeText={(text) => setInquirevalue(text)}
-                        right={<TextInput.Icon icon='send' iconColor='green' onPress={()=>{setInquirevisible(false),console.log("Sent!")}}/>}
+                        right={<TextInput.Icon icon='send' iconColor='green' onPress={()=>{sendInquiry()}}/>}
                     />
                 </Card.Content>
             </Card>

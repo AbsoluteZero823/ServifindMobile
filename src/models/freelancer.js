@@ -1,7 +1,7 @@
 import { types } from 'mobx-state-tree';
 
 const Freelancer = types.model('Freelancer', {
-  id: types.identifier,
+  _id: types.identifier,
   approved_date: types.Date,
   isPremium: types.optional(types.string, 'false'),
   availability: types.optional(types.string, 'true'),

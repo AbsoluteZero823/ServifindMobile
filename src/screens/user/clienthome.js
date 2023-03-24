@@ -1,6 +1,6 @@
 import { observer } from 'mobx-react';
-import React, { useContext, useEffect, useState} from 'react';
-import { View, FlatList, SafeAreaView} from 'react-native';
+import React, { useContext, useEffect, useState, useCallback} from 'react';
+import { View, FlatList, SafeAreaView, RefreshControl} from 'react-native';
 import { Button, Card, IconButton, Text} from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 
@@ -15,6 +15,8 @@ import InquiryStore, { Inquiry } from '../../models/inquiry';
 import RequestStore, { Request } from '../../models/request';
 import { getCategories, getmyInquiries, getmyRequests } from '../../../services/apiendpoints';
 import { FAB } from '../../components/user/fab';
+import Freelancer from '../../models/freelancer';
+import { ServiceModel } from '../../models/service';
 
 const ClientHome = observer((props) => {
   const navigation = useNavigation();
@@ -30,52 +32,69 @@ const ClientHome = observer((props) => {
     const setAppbarTitle = props.params.props[0];
     const setActive = props.params.props[1];
     const setActiveCategory = props.params.props[3];
-    useEffect(() => {
+    async function getData(){
       AuthContext.letmeload();
-      async function getData(){
-        try{
-          const categoryCollection = await getCategories();
-          CategoryContext.categories = [];
-          if(categoryCollection.success){
-            categoryCollection.categories.map((category) => {
-              CategoryContext.categories.push(Category.create(category));
-            })
-          };
-          setCategoryCollection(CategoryContext.categories);
-          const inquiriesCollection = await getmyInquiries();
-          InquiryContext.inquiries = [];
-          if(inquiriesCollection.success){
-            inquiriesCollection.inquiries?.map((inquiry) => {
-              InquiryContext.inquiries.push(Inquiry.create(inquiry));
-            })
-          };
-          setInquiryCollection(InquiryContext.inquiries);
-          const requestCollection = await getmyRequests();
-          RequestContext.requests = [];
-          if(requestCollection.success){
-           requestCollection.requests?.map((request) => {
-             RequestContext.requests.push(Request.create({
-              _id: request._id,
-              category: Category.create(request.category),
-              description: request.description,
-              created_At: new Date(request.created_At),
-              request_status: request.request_status,
-              requested_by: User.create(request.requested_by),
+      try{
+        const categoryCollection = await getCategories();
+        CategoryContext.categories = [];
+        if(categoryCollection.success){
+          categoryCollection.categories.map((category) => {
+            CategoryContext.categories.push(Category.create(category));
+          })
+        };
+        setCategoryCollection(CategoryContext.categories);
+        const inquiriesCollection = await getmyInquiries();
+        InquiryContext.inquiries = [];
+        if(inquiriesCollection.success){
+          inquiriesCollection.inquiries?.map((inquiry) => {
+            InquiryContext.inquiries.push(Inquiry.create({
+              _id: inquiry._id,
+              instruction: inquiry.instruction,
+              attachments: inquiry.attachments,
+              customer: User.create(inquiry.customer),
+              freelancer: inquiry.freelancer,
+              service: ServiceModel.create(inquiry.service_id),
+              status: inquiry.status,
             }));
-           })
-          };
-          setRequestCollection(RequestContext.requests);
-          setTimeout(() => {
-            AuthContext.donewithload();
-          },500);
-        }catch(error){
-          console.log(error);
+          })
+        };
+        setInquiryCollection(InquiryContext.inquiries);
+        const requestCollection = await getmyRequests();
+        RequestContext.requests = [];
+        if(requestCollection.success){
+         requestCollection.requests?.map((request) => {
+           RequestContext.requests.push(Request.create({
+            _id: request._id,
+            category: Category.create(request.category),
+            description: request.description,
+            created_At: new Date(request.created_At),
+            request_status: request.request_status,
+            requested_by: User.create(request.requested_by),
+          }));
+         })
+        };
+        setRequestCollection(RequestContext.requests);
+        setTimeout(() => {
           AuthContext.donewithload();
-        }}
+        },500);
+      }catch(error){
+        console.log(error);
+        AuthContext.donewithload();
+      }}
+    useEffect(() => {
       getData();
-      
     }, []);
     
+    const [refreshing, setRefreshing] = useState(false);
+
+    const onRefresh = useCallback(async() => {
+      setRefreshing(true);
+      getData();
+      setTimeout(() => {
+        setRefreshing(false);
+      }, 2000);
+    }, []);
+
     return (
       <View style={styles.container}>
         <Loading/>
@@ -85,6 +104,9 @@ const ClientHome = observer((props) => {
             horizontal={true}
             showsHorizontalScrollIndicator={false}
             renderItem={({item}) => <CategoryCard key={item._id} category={item} params={props.params.props}/>}
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
             />
           </View>
           <View style={{flex: 4, padding:5}}>
@@ -110,23 +132,26 @@ const ClientHome = observer((props) => {
                   <Button mode='contained' buttonColor="salmon" style={{marginVertical:6, width:150}} onPress={()=>(navigation.navigate('ClientPostaJob'))}>Post a Job</Button>
                 </SafeAreaView>
                 )}
+                refreshControl={
+                  <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+                }
               />
               </Card.Content>
             </Card>
           </View>
           <View style={{flex:4, padding:5}}>
             <Card style={[styles.cardStyle]}>
-              <Card.Title title={<Text variant='headlineSmall'>Your Inquiries</Text>} right={(props) => <Button mode='text' textColor='deeppink'>See all inquiries</Button>}/>
+              <Card.Title title={<Text variant='headlineSmall'>Your Inquiries</Text>} right={(props) => <Button mode='text' textColor='deeppink' onPress={()=>(console.log("Empty"))}>See all inquiries</Button>}/>
               <Card.Content>
                 <SafeAreaView>
                   <FlatList
                     data={InquiryCollection}
                     keyExtractor={(item) => item._id}
-                    horizontal={InquiryContext.inquiries.length > 0 ? true : false}
-                    showsHorizontalScrollIndicator={false}
+                    showsVerticalScrollIndicator={false}
+                    style={{overflow:'hidden', marginBottom:70}}
                     renderItem={({item}) => (
-                      <Card style={{marginHorizontal:10, marginBottom:5, borderColor:'deeppink', borderWidth:1}}>
-                        <Card.Title title={item.name} subtitle={<Text style={{color:'grey'}}>Descriptions......</Text>} right={(props) => <IconButton icon='open-in-new' mode='outlined' iconColor='black' style={{borderColor:'deeppink'}}/>}/>
+                      <Card style={{marginHorizontal:5, marginBottom:5, borderColor:'deeppink', borderWidth:1}}>
+                        <Card.Title title={item.service.title} subtitle={<Text style={{color:'grey'}}>{item.service.category.name}</Text>} right={(props) => <IconButton icon='open-in-new' mode='outlined' iconColor='deeppink' style={{borderColor:'transparent'}}/>}/>
                       </Card>
                     )}
                     ListEmptyComponent={() => (
@@ -141,6 +166,9 @@ const ClientHome = observer((props) => {
                           navigation.navigate('ClientJobs'))}>View Services</Button>
                       </SafeAreaView> 
                     )}
+                    refreshControl={
+                      <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+                    }
                   />
                 </SafeAreaView>
               </Card.Content>

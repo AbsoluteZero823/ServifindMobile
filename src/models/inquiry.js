@@ -1,16 +1,16 @@
 import { types } from 'mobx-state-tree';
 import { createContext } from 'react';
-import User from './user';
+import { User } from './user';
 import Freelancer from './freelancer';
-import Service from './service';
+import { ServiceModel } from './service';
 
 export const Inquiry = types.model('Inquiry', {
-  id: types.identifier,
+  _id: types.identifier,
   instruction: types.string,
   attachments: types.string,
-  customer: types.reference(types.late(() => User)),
-  freelancer: types.reference(types.late(() => Freelancer)),
-  service: types.reference(types.late(() => Service)),
+  customer: User,
+  freelancer: types.string,
+  service: ServiceModel,
   status: types.optional(types.string, 'pending'),
 }).actions((self) => ({
   

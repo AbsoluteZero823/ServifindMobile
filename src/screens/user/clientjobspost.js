@@ -1,8 +1,8 @@
 import { observer } from 'mobx-react';
 import React, { useContext, useState } from 'react';
-import { View, StyleSheet, ImageBackground, FlatList} from 'react-native';
+import { View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { Button, Card, Text, Avatar, Portal, Modal, IconButton, TextInput, Menu, List} from 'react-native-paper';
+import { Button, Card, Portal, Modal, TextInput, List, HelperText} from 'react-native-paper';
 import { createmyRequest } from '../../../services/apiendpoints';
 
 import UserStore, { User } from '../../models/user';
@@ -26,13 +26,16 @@ const ClientJobsRequest = observer(() => {
     const [description, setDescription] = useState('');
     const [categoryName, setCategoryName] = useState('');
 
+    const [validationerrors, setvalidationerrors] = useState({});
+
     const hideModal = () => {setmainVisible(false), navigation.goBack()};
 
     async function requesthandler(){
-        AuthContext.letmeload();
+        if (category && description) {
+            AuthContext.letmeload();
         try{
             const requestresponse = await createmyRequest({category, description});
-            if(requestresponse){
+            if(requestresponse.success){
                 setmainVisible(false);
                 navigation.navigate('ClientHome');
                 alert('Job Request Uploaded Successfully');
@@ -46,12 +49,23 @@ const ClientJobsRequest = observer(() => {
                     requested_by: User.create(request.requested_by),
                 }));
             }else{
-                alert(requestresponse.errMessage);
+                alert('Something Went Wrong!');
             }
         }catch(error){
             console.log(error);
         }
         AuthContext.donewithload();
+        }else{
+            const errors = {};
+            if (!category) {
+                errors.category = 'Category is required';
+            }
+            if (!description) {
+                errors.description = 'Description is required';
+            }
+            setvalidationerrors(errors);
+            alert('Please fill all the fields');
+        }
     }
 
     return (
@@ -70,6 +84,7 @@ const ClientJobsRequest = observer(() => {
                             onChangeText={(text) => setCategoryName(text)}
                             right={<TextInput.Icon icon={expanded ? 'chevron-up' : 'chevron-down'} iconColor='deeppink' onPress={()=>setExpanded(!expanded)} />}
                             left={<TextInput.Icon icon='magnify' iconColor='deeppink'/>}
+                            error={validationerrors.category}
                         />
                         <View style={{backgroundColor:'darksalmon', marginHorizontal:2, borderBottomRightRadius:20, borderBottomLeftRadius:20}}>
                         {   expanded && CategoryCollection.filter((category)=>category.name.toLowerCase().includes(categoryName?.toLowerCase())).map((category) => {
@@ -78,6 +93,9 @@ const ClientJobsRequest = observer(() => {
                             )})
                         }
                         </View>
+                        {
+                            validationerrors.category && <HelperText type='error'>{validationerrors.category}</HelperText>
+                        }
                         <TextInput
                             mode='outlined'
                             label='Description'
@@ -87,7 +105,11 @@ const ClientJobsRequest = observer(() => {
                             style={{marginVertical:5}}
                             right={<TextInput.Icon icon="window-close" iconColor='deeppink' onPress={()=>setDescription('')}/>}
                             numberOfLines={5}
+                            error={validationerrors.description}
                         />
+                        {
+                            validationerrors.description && <HelperText type='error'>{validationerrors.description}</HelperText>
+                        }
                     </Card.Content>
                     <Card.Actions> 
                         <Button 
