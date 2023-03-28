@@ -7,9 +7,10 @@ import ClientNavigator from "./userstack";
 import FreelancerNavigator from "./freelancer";
 
 import { View, DrawerLayoutAndroid } from 'react-native';
+import { FreelancerDrawer } from '../components/freelancer/drawer';
 import { UserDrawer } from '../components/user/drawer';
 import AuthStore from '../models/authentication';
-import { CustomAppBar } from '../components/user/appbar';
+import { CustomAppBar } from '../components/appbar';
 
 const NavigationStack = observer(() => {
   const AuthContext = useContext(AuthStore);
@@ -18,6 +19,8 @@ const NavigationStack = observer(() => {
   const [active, setActive] = useState('Home');
   const [activeCategory, setActiveCategory] = useState([]);
   const [jobsearchquery, setjobsearchquery] = useState();
+
+  const [jobsearch, setjobsearch] = useState('Services');
   const [jobsearchmenu, setjobsearchmenu] = useState([
     {
       title:'Services',
@@ -28,17 +31,14 @@ const NavigationStack = observer(() => {
       icon:'account-group-outline'
     },
   ]);
-  const [jobsearch, setjobsearch] = useState('Services');
-
   const drawer = useRef(null);
   return (
     <NavigationContainer>
       {
-        AuthContext.amiauthenticated ? 
-          AuthContext.myrole === 'customer' ?
-          <View style={{flex:1, backgroundColor:'mistyrose'}}>
-            <CustomAppBar passed={[AppbarTitle, setActive, setAppbarTitle, drawer, DrawerActive, setDrawerActive, jobsearchquery, setjobsearchquery, jobsearchmenu, jobsearch, setjobsearch]} />
-            <View style={{flexDirection:'row', flex: 1}}>
+        AuthContext.amiauthenticated ?
+        <View style={{flex:1, backgroundColor:'mistyrose'}}>
+          <CustomAppBar passed={[AppbarTitle, setActive, setAppbarTitle, drawer, DrawerActive, setDrawerActive, jobsearchquery, setjobsearchquery, jobsearchmenu, jobsearch, setjobsearch]} />
+          <View style={{flexDirection:'row', flex: 1}}>
               <DrawerLayoutAndroid
                 ref={drawer}
                 drawerPosition='right'
@@ -46,16 +46,24 @@ const NavigationStack = observer(() => {
                 drawerWidth={80}
                 keyboardDismissMode='on-drag'
                 onDrawerClose={() => setDrawerActive(false)}
-                renderNavigationView={()=>(<UserDrawer parameters={[active, setActive, setAppbarTitle, setDrawerActive]}/>)}
-              >
-                <ClientNavigator props={[setAppbarTitle, setActive, activeCategory, setActiveCategory, jobsearch, jobsearchquery]}/>
-              </DrawerLayoutAndroid>
-            </View>
+                renderNavigationView={()=>(
+                  AuthContext.myrole === 'customer' ?
+                  <UserDrawer parameters={[active, setActive, setAppbarTitle, setDrawerActive]}/>
+                  :
+                  <FreelancerDrawer parameters={[active, setActive, setAppbarTitle, setDrawerActive, setjobsearchmenu, setjobsearch]}/>
+                )
+                }>
+                {
+                  AuthContext.myrole === 'customer' ?
+                  <ClientNavigator props={[setAppbarTitle, setActive, activeCategory, setActiveCategory, jobsearch, jobsearchquery, setjobsearchmenu, setjobsearch]}/>
+                  :
+                  <FreelancerNavigator props={[setAppbarTitle, setActive, activeCategory, setActiveCategory, jobsearch, jobsearchquery]}/>
+                }
+                </DrawerLayoutAndroid>
           </View>
-          :
-          <FreelancerNavigator />
+        </View>
         :
-          <CaptureNavigator/> 
+        <CaptureNavigator/> 
       }
       
     </NavigationContainer>

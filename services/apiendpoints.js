@@ -1,7 +1,7 @@
 import axios from 'axios';
 import AuthStore from '../src/models/authentication';
 
-const API_URL='http://192.168.0.57:4002/api/v1';
+const API_URL='http://192.168.187.99:4002/api/v1';
 
 const AxiosConfig = {
     headers: {
@@ -152,5 +152,47 @@ export async function cancelmyRequest(id){
     return cancelresponse.data;
   }catch(error){
     return error.response.data
+  }
+}
+
+// FREELANCER
+export async function registerasfreelancer(props){
+  try{
+    const freelancerresponse = await axios.post(`${API_URL}/freelancers/register`, props, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        'Authorization': `Bearer ${AuthStore._currentValue.token}`
+      },
+    });
+    return freelancerresponse.data;
+  }catch(error){
+    return error.response.data
+  }
+}
+
+export async function freelancerstatus(){
+  try{
+    const freelancerstatusresponse = await axios.post(`${API_URL}/freelancers/me`, AxiosConfig);
+    return freelancerstatusresponse.data;
+  }catch(error){
+    return error.response.data
+  }
+}
+
+export async function updatefreelancer(props){
+  try{
+    const freelancerupdateresponse = await axios.post(`${API_URL}/freelancers/update`, props, AxiosConfig);
+    return freelancerupdateresponse.data;
+  }catch(error){
+    return error.response.data
+  }
+}
+
+export async function getfreelancerjobs(props){
+  try{
+    const freelancerjobsresponse = await axios.post(`${API_URL}/requests/freelancer`, props, AxiosConfig);
+    return freelancerjobsresponse.data;
+  }catch(error){
+    return error.response.data;
   }
 }

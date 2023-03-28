@@ -4,7 +4,7 @@ import React, { useContext, useState } from 'react';
 import { Keyboard, TouchableOpacity } from 'react-native';
 import { Appbar, Avatar, Searchbar, Button, Menu, IconButton, Text } from 'react-native-paper';
 
-import UserStore from '../../models/user';
+import UserStore from '../models/user';
 
 export const CustomAppBar = observer((props) => {
     const navigation = useNavigation();

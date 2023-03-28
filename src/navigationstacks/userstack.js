@@ -22,7 +22,7 @@ export default function ClientNavigator(props) {
         <ClientStack.Screen name="ClientPostaJob" component={ClientJobsRequest} options={{presentation:'transparentModal', contentStyle:{backgroundColor:'transparent'}}}/>
         <ClientStack.Screen name="ClientJobPosting" component={ClientHomePostings}/>
         <ClientStack.Screen name="ClientSingleJobPosts" component={ClientSingleJobPosts}/>
-        <ClientStack.Screen name="ClientFreelancerRegistration" component={ClientFreelancerRegistration}/>
+        <ClientStack.Screen name="ClientFreelancerRegistration" component={ClientFreelancerRegistration} initialParams={props}/>
       </ClientStack.Group>
       
       <ClientStack.Group screenOptions={{

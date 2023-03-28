@@ -72,19 +72,21 @@ const ClientSingleJobPosts = observer(({route}) => {
                     />
                 </Card.Content>
                 <Card.Actions>
-                    <Button 
-                    icon='cancel' 
-                    mode='contained'
-                    buttonColor='salmon'
-                    onPress={()=>Alert.alert('Cancel Post?','Are you sure you want to cancel this posting?',[
                     {
-                        text: 'Cancel',
-                        style: 'cancel',
-                    },
-                    {text: 'OK', onPress: () => cancelhandler()},
-                    ])}>
-                        Cancel Request
-                    </Button>
+                        requestdata?.request_status === 'waiting' && <Button 
+                        icon='cancel' 
+                        mode='contained'
+                        buttonColor='salmon'
+                        onPress={()=>Alert.alert('Cancel Post?','Are you sure you want to cancel this posting?',[
+                        {
+                            text: 'Cancel',
+                            style: 'cancel',
+                        },
+                        {text: 'OK', onPress: () => cancelhandler()},
+                        ])}>
+                            Cancel Request
+                        </Button>
+                    }
                 </Card.Actions>
             </Card>
         </View>

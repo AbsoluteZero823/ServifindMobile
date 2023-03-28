@@ -16,8 +16,6 @@ const ServiForm = observer(() => {
     // Initializing Segmented Value
     const [value, setValue] = useState(['login']);
     const [active, setActive] = useState('login');
-    console.log(value);
-    console.log(active)
     // Segmented Button Setup
     const buttons = [
         {

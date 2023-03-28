@@ -29,6 +29,9 @@ const Auth = types
     },
     setUserType(UserType){
         self.UserType = UserType;
+    },
+    setmyrole(role){
+        self.role = role;
     }
 }))
 .views((self) => ({
