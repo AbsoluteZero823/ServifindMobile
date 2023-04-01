@@ -10,8 +10,10 @@ import { Category } from '../../models/category';
 import { User } from '../../models/user';
 import { Request } from '../../models/request';
 import { format } from 'date-fns';
+import { useNavigation } from '@react-navigation/native';
 
 const FreelancerJobPosts = observer((props) => {
+    const navigation = useNavigation();
     const activecategory = props.params.props[2][0]?.name || '';
     const jobsearchquery = props.params.props[5] || '';
     const jobsearchmenu = props.params.props[4];
@@ -102,6 +104,9 @@ const FreelancerJobPosts = observer((props) => {
                                 mode='outlined'
                                 icon='chat-outline'
                                 textColor='deeppink'
+                                onPress={() => {
+                                    navigation.navigate('FreelancerMessaging', item);
+                                }}
                                 >
                                 Message
                             </Button>

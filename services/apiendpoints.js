@@ -187,11 +187,21 @@ export async function updatefreelancer(props){
     return error.response.data
   }
 }
-
+// FREELANCER JOBS
 export async function getfreelancerjobs(props){
   try{
     const freelancerjobsresponse = await axios.post(`${API_URL}/requests/freelancer`, props, AxiosConfig);
     return freelancerjobsresponse.data;
+  }catch(error){
+    return error.response.data;
+  }
+}
+
+// FREELANCER SERVICES
+export async function getmyServices(){
+  try{
+    const servicesresponse = await axios.post(`${API_URL}/services/freelancer`, AxiosConfig);
+    return servicesresponse.data
   }catch(error){
     return error.response.data;
   }

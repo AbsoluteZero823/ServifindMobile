@@ -5,6 +5,7 @@ import FreelancerHome from '../screens/freelancer/freelancerhome';
 import FreelancerProfile from '../screens/freelancer/freelancerprofile';
 import FreelancerJobPosts from '../screens/freelancer/freelancerjobposts';
 import { JobsHeader } from '../components/user/jobsheader';
+import FreelancerMessaging from '../screens/freelancer/freelancermessaging';
 
 export default function FreelancerNavigator(props) {
   return (
@@ -15,6 +16,7 @@ export default function FreelancerNavigator(props) {
       headerShown: true,
       }}>
         <FreelancerStack.Screen name="FreelancerJobPosts" children={()=><FreelancerJobPosts params={props}/>}/>
+        <FreelancerStack.Screen name="FreelancerMessaging" component={FreelancerMessaging} options={{presentation:'transparentModal', headerShown: false, contentStyle:{backgroundColor:'transparent'}}}/>
     </FreelancerStack.Group>
       
 

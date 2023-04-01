@@ -33,6 +33,6 @@ export const ServiceModel = types
     },
   }));
 
-const ServiceStore = createContext({Services: []});
+const ServiceStore = createContext({services: []});
 
 export default ServiceStore;
