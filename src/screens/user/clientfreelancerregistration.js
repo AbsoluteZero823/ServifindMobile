@@ -6,18 +6,23 @@ import UserStore from '../../models/user';
 import { styles } from '../../components/user/user.css';
 import * as ImagePicker from 'expo-image-picker';
 import * as DocumentPicker from 'expo-document-picker';
-import { freelancerstatus, registerasfreelancer } from '../../../services/apiendpoints';
+import { freelancerstatus, registerasfreelancer, getmyServices } from '../../../services/apiendpoints';
 import AuthStore from '../../models/authentication';
 import Loading from '../../components/loading';
 import { useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
+
+import { User } from '../../models/user';
+import { Category } from '../../models/category';
 import  FreelancerStore, { Freelancer } from '../../models/freelancer';
+import ServiceStore, { ServiceModel } from '../../models/service';
 
 
 const ClientFreelancerRegistration = observer(({route}) => {
     const setjobsearchmenu = route.params.props[6];
     const setjobsearch = route.params.props[7];
     const navigation = useNavigation();
+    const ServicesContext = useContext(ServiceStore);
     const AuthContext = useContext(AuthStore);
     const FreelancerContext = useContext(FreelancerStore);
     const [qrCode, setQrCode] = useState("");
@@ -123,6 +128,7 @@ const ClientFreelancerRegistration = observer(({route}) => {
                 if(response.freelancer[0].approved_date === null){
                     setstatus('Pending')
                 }else{
+                  const servicesresponse = await getmyServices();
                     setjobsearchmenu([
                       {
                         title:'Requests',
@@ -138,6 +144,24 @@ const ClientFreelancerRegistration = observer(({route}) => {
                     response.freelancer[0].approved_date = new Date(response.freelancer[0].approved_date);
                     const freelancerinfo = Freelancer.create(response.freelancer[0]);
                     FreelancerContext.data.push(freelancerinfo);
+                    ServicesContext.data = ([]);
+                    servicesresponse.services.map(service => {
+                        const serviceinfo = ServiceModel.create({
+                          _id: service._id,
+                          title: service.title,
+                          name: service.name,
+                          category: Category.create(service.category),
+                          user: User.create(service.user),
+                          experience: service.experience,
+                          freelancer_id: service.freelancer_id,
+                          status: service.status,
+                          images: { 
+                            public_id: service.images.public_id, 
+                            url: service.images.url, 
+                            }}
+                          )
+                          ServicesContext.services.push(serviceinfo);
+                        });
                     AuthContext.setmyrole('Freelancer');
                     navigation.navigate('FreelancerHome');
                 }

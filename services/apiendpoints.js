@@ -106,6 +106,15 @@ export async function createanInquiry(props){
   }
 }
 
+export async function getClientInquiries(props){
+  try{
+    const getClientInquiriesresponse = await axios.post(`${API_URL}/client-inquiries`, props, AxiosConfig);
+    return getClientInquiriesresponse.data;
+  }catch(error){
+    return error;
+  }
+}
+
 // FETCHING REQUESTS
 export async function getmyRequests(){
   try{
@@ -187,6 +196,7 @@ export async function updatefreelancer(props){
     return error.response.data
   }
 }
+
 // FREELANCER JOBS
 export async function getfreelancerjobs(props){
   try{
@@ -204,5 +214,33 @@ export async function getmyServices(){
     return servicesresponse.data
   }catch(error){
     return error.response.data;
+  }
+}
+
+export async function createmyServices(props){
+  try{
+    const createservicesresponse = await axios.post(`${API_URL}/service/new`, props, AxiosConfig);
+    return createservicesresponse.data;
+  }catch(error){
+    return error.response.data
+  }
+}
+
+// FREELANCER OFFERS
+export async function offerservices(props){
+  try{
+    const offerresponse = await axios.post(`${API_URL}/offer/new`, props, AxiosConfig);
+    return offerresponse.data;
+  }catch(error){
+    return error;
+  }
+}
+
+export async function getoffersRequest(id){
+  try{
+    const offerresponse = await axios.get(`${API_URL}/offers-request/${id}`, AxiosConfig);
+    return offerresponse.data;
+  }catch(error){
+    return error
   }
 }

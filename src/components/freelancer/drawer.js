@@ -4,6 +4,7 @@ import { Drawer, Text} from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import AuthStore from '../../models/authentication';
 import UserStore from '../../models/user';
+import ServiceStore from '../../models/service';
 
 export const FreelancerDrawer = (props) => {
   const setjobsearchmenu = props.parameters[4];
@@ -43,9 +44,9 @@ export const FreelancerDrawer = (props) => {
         label={<Text style={{color:'white', fontWeight:'600', fontSize:14}}>Chat</Text>}
         active={active === 'Chat'}
         onPress={() => {
-          // setAppbarTitle('Chat')
-          // setActive('Chat');
-          // navigation.navigate('ClientChat');
+          setAppbarTitle('Chat')
+          setActive('Chat');
+          navigation.navigate('FreelancerChats');
         }} />
       <View style={{flex:1, justifyContent:'flex-end'}}>
         <Drawer.CollapsedItem 

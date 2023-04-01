@@ -9,7 +9,7 @@ const ClientJobsFreelancer = observer(({route}) => {
     console.log(route.params);
     return (
         <View style={styles.container}>
-
+            <Text>YO!</Text>
         </View>
     )
 })

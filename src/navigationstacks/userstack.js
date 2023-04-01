@@ -30,7 +30,7 @@ export default function ClientNavigator(props) {
         headerShown: true,
         }}>
         <ClientStack.Screen name="ClientJobs" children={() => <ClientJobs params={props} options={{headerShown: false}}/>}/>
-        <ClientStack.Screen name="ClientFreelancer" component={ClientJobsFreelancer}/>
+        <ClientStack.Screen name="ClientFreelancer" component={ClientJobsFreelancer} options={{headerShown: false}}/>
         <ClientStack.Screen name="ClientSingleJob" component={ClientSingleJob} options={{presentation:'transparentModal', headerShown: false, contentStyle:{backgroundColor:'transparent'}}}/>
       </ClientStack.Group>
       <ClientStack.Screen name="ClientChat" children={() => <ClientChat params={props} />}/>

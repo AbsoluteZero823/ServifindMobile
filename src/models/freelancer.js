@@ -2,6 +2,7 @@ import { types } from 'mobx-state-tree';
 import { createContext } from 'react';
 
 export const Freelancer = types.model('Freelancer', {
+  _id: types.string,
   approved_date: types.maybeNull(types.Date),
   isPremium: types.boolean,
   availability: types.boolean,
