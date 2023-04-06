@@ -1,12 +1,12 @@
 import { observer } from 'mobx-react';
-import React, { useContext, useState, useEffect } from 'react';
-import { View, SafeAreaView, Alert, FlatList } from 'react-native';
-import { Button, Card, Text, Avatar, IconButton } from 'react-native-paper';
+import React, { useContext, useState, useEffect, useCallback } from 'react';
+import { View, SafeAreaView, Alert, FlatList, RefreshControl } from 'react-native';
+import { Button, Card, Text, Avatar, IconButton, SegmentedButtons } from 'react-native-paper';
 
 import UserStore from '../../models/user';
 import AuthStore from '../../models/authentication';
 import { styles } from '../../components/user/user.css';
-import { cancelmyRequest, getoffersRequest } from '../../../services/apiendpoints';
+import { cancelmyRequest, getoffersRequest, refuseanOffer, acceptanOffer } from '../../../services/apiendpoints';
 import { useNavigation } from '@react-navigation/native';
 import LoadingScreen from '../../components/loading';
 import RequestStore from '../../models/request';
@@ -45,7 +45,7 @@ const ClientSingleJobPosts = observer(({route}) => {
         try{
             const response = await cancelmyRequest(route.params._id);
             if(response.success){
-                alert('Job Request Cancelled Successfully');
+                alert(response.message);
                 requestdata.setCancel();
                 navigation.goBack();
             }else{
@@ -63,6 +63,51 @@ const ClientSingleJobPosts = observer(({route}) => {
         getoffers();
     },[]);
 
+    async function refusehandler(id){
+        AuthContext.letmeload();
+        try{
+            const response = await refuseanOffer(id);
+            if(response.success){
+                alert(response.message);
+            }else{
+                alert(response);
+            }
+            onRefresh();
+        }catch(error){
+            AuthContext.donewithload();
+            console.log(error);
+        }
+        AuthContext.donewithload();
+    }
+
+    async function accepthandler(id, request_id){
+        AuthContext.letmeload();
+        try{
+            const response = await acceptanOffer({id, request_id});
+            if(response.success){
+                alert(response.message);
+            }else{
+                alert(response);
+            }
+            onRefresh();
+        }catch(error){
+            AuthContext.donewithload();
+            console.log(error);
+        }
+        AuthContext.donewithload();
+    }
+
+    const [refreshing, setRefreshing] = useState(false);
+
+    const onRefresh = useCallback(() => {
+        setRefreshing(true);
+        getSingleRequest();
+        getoffers();
+        setTimeout(() => {
+            setRefreshing(false);
+        }, 2000);
+    }, []);
+
     return (
         <View style={styles.container}>
             <LoadingScreen/>
@@ -77,15 +122,32 @@ const ClientSingleJobPosts = observer(({route}) => {
                 />
                 <Card.Content>
                     <FlatList
-                        data={offersdata}
+                        data={offersdata.sort((a, b) => {
+                            if (a.offer_status === 'granted' && b.offer_status !== 'granted') {
+                              return -1; // a comes first
+                            } else if (a.offer_status !== 'granted' && b.offer_status === 'granted') {
+                              return 1; // b comes first
+                            } else if (a.offer_status === 'waiting' && b.offer_status === 'cancelled') {
+                              return -1; // a comes first
+                            } else if (a.offer_status === 'cancelled' && b.offer_status === 'waiting') {
+                              return 1; // b comes first
+                            } else {
+                              return 0; // no sorting needed
+                            }
+                          })}
+                        style={{ height: '80%' }}
+                        showsVerticalScrollIndicator={false}
                         renderItem={({item})=>
-                            <Card key={item._id} style={{borderColor:'deeppink', borderWidth:1}}>
+                            <Card key={item._id} style={{borderColor:'deeppink', borderWidth:1, marginVertical:5}}>
                                 <Card.Title 
                                     title={item.offered_by.name}
                                     titleStyle={{color:'deeppink'}}
                                     subtitle={item.offered_by.contact}
                                     subtitleStyle={{color:'dimgrey'}}
                                     left={()=><Avatar.Image size={40} source={{uri: item.offered_by.avatar.url }}/>}
+                                    right={()=><IconButton 
+                                        icon={item.offer_status === 'cancelled' ? 'cancel' : item.offer_status === 'granted' ? 'clipboard-check-outline' : 'check'} 
+                                        iconColor={item.offer_status === 'cancelled' ? 'red' : item.offer_status === 'granted' ? 'deeppink' : 'green'}/>}
                                     />
                                 <Card.Content style={{flex:1}}>
                                     <View style={{flexDirection:'row', justifyContent:'space-between', alignItems:'center'}}>
@@ -96,13 +158,58 @@ const ClientSingleJobPosts = observer(({route}) => {
                                         <Text variant='bodyLarge' style={{color:'deeppink'}}>Offer:</Text>
                                         <Text>{item.description}</Text>
                                     </View>
-                                    <View style={{flexDirection:'row', justifyContent:'space-between', alignItems:'center'}}>
-                                        <Text variant='bodyLarge' style={{color:'deeppink'}}>Experience:</Text>
-                                        <Text>{item.service_id.experience}</Text>
-                                    </View>
-                                    
+                                    <Text variant='bodyLarge' style={{color:'deeppink'}}>Experience:</Text>
+                                    <Text>{item.service_id.experience}</Text>
                                 </Card.Content>
+                                <Card.Actions>
+                                    {
+                                        item.offer_status === 'waiting' && 
+                                        <SegmentedButtons
+                                        buttons={[
+                                            {
+                                                label: 'Accept',
+                                                onPress: ()=>{accepthandler(item._id, requestdata._id)}
+                                            },
+                                            {
+                                                label: 'Refuse',
+                                                onPress: ()=>{refusehandler(item._id)}
+                                            }
+                                        ]}
+                                        value={null}
+                                        onValueChange={()=>null}
+                                        />
+                                    }
+                                    {
+                                        item.offer_status === 'granted' &&
+                                        <Button
+                                            mode='contained'
+                                            icon='chat'
+                                            textColor='white'
+                                            buttonColor='blue'
+                                            onPress={()=>{
+                                                
+                                                navigation.navigate('ClientChat')
+                                            }}
+                                            >
+                                            Message
+                                        </Button>
+                                    }
+                                </Card.Actions>
                             </Card>
+                        }
+                        ListFooterComponent={()=>
+                            <SafeAreaView style={{alignItems:'center', alignSelf:'center', justifyContent:'center'}}>
+                                {
+                                (offersdata.length > 0 & requestdata?.request_status === 'waiting' ) ?
+                                <>
+                                <IconButton icon='tag' size={30} iconColor='deeppink'/>
+                                <Text variant='titleMedium'>Not satisfied with the current offers?</Text>
+                                <Text style={{textAlign:'center', color:'dimgrey',marginVertical:6}}>Wait for another freelancer to make an offer</Text>
+                                </>
+                                :
+                                null
+                                } 
+                            </SafeAreaView>
                         }
                         ListEmptyComponent={()=>
                             <SafeAreaView style={{alignItems:'center', alignSelf:'center', justifyContent:'center'}}>
@@ -110,6 +217,9 @@ const ClientSingleJobPosts = observer(({route}) => {
                                 <Text variant='titleMedium'>No Offers as of yet!</Text>
                                 <Text style={{textAlign:'center', color:'dimgrey',marginVertical:6}}>Wait for a freelancer to make an offer</Text>
                             </SafeAreaView> 
+                        }
+                        refreshControl={
+                            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
                         }
                     />
                 </Card.Content>

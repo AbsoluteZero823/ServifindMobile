@@ -8,19 +8,20 @@ export const Freelancer = types.model('Freelancer', {
   availability: types.boolean,
   gcash_name: types.maybeNull(types.string),
   gcash_num: types.maybeNull(types.string),
-  schoolId: types.model({
+  schoolId: types.maybeNull(types.model({
     public_id: types.string,
     url: types.string,
-  }),
-  resume: types.model({
+  })),
+  resume: types.maybeNull(types.model({
     path: types.string,
-  }),
-  qrCode: types.model({
+  })),
+  qrCode: types.maybeNull(types.model({
     public_id: types.string,
     url: types.string,
-  }),
+  })),
   user_id: types.string,
 });
+
 
 const FreelancerStore = createContext({data:[]});
 

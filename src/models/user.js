@@ -20,7 +20,7 @@ export const User = types.model('User', {
   resetPasswordExpire: types.maybeNull(types.Date),
 }).actions((self) => ({
     logout(){
-        self.id = null;
+        self._id = null;
         self.name = null;
         
         self.age = null;

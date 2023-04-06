@@ -37,9 +37,7 @@ const ClientJobsRequest = observer(() => {
             const requestresponse = await createmyRequest({category, description});
             if(requestresponse.success){
                 setmainVisible(false);
-                navigation.navigate('ClientHome');
-                alert('Job Request Uploaded Successfully');
-                const request = requestresponse.addeddata[0];
+                const request = requestresponse.addeddata;
                 RequestContext.requests.push(Request.create({
                     _id: request._id,
                     category: Category.create(request.category),
@@ -48,6 +46,8 @@ const ClientJobsRequest = observer(() => {
                     request_status: request.request_status,
                     requested_by: User.create(request.requested_by),
                 }));
+                navigation.navigate('ClientHome');
+                alert('Job Request Uploaded Successfully');
             }else{
                 alert('Something Went Wrong!');
             }

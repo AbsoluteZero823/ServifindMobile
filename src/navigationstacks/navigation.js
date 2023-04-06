@@ -11,6 +11,7 @@ import { FreelancerDrawer } from '../components/freelancer/drawer';
 import { UserDrawer } from '../components/user/drawer';
 import AuthStore from '../models/authentication';
 import { CustomAppBar } from '../components/appbar';
+import { useEffect } from 'react';
 
 const NavigationStack = observer(() => {
   const AuthContext = useContext(AuthStore);
@@ -21,16 +22,32 @@ const NavigationStack = observer(() => {
   const [jobsearchquery, setjobsearchquery] = useState();
 
   const [jobsearch, setjobsearch] = useState('Services');
-  const [jobsearchmenu, setjobsearchmenu] = useState([
-    {
-      title:'Services',
-      icon:'briefcase-variant-outline'
-    },
-    {
-      title:'Freelancers',
-      icon:'account-group-outline'
-    },
-  ]);
+  const [jobsearchmenu, setjobsearchmenu] = useState([]);
+
+  useEffect(()=>{
+    AuthContext.myrole === 'customer' ? 
+    setjobsearchmenu([
+      {
+        title:'Services',
+        icon:'briefcase-variant-outline'
+      },
+      {
+        title:'Freelancers',
+        icon:'account-group-outline'
+      },
+    ]) 
+    :
+    setjobsearchmenu([
+      {
+        title:'Requests',
+        icon:'briefcase-variant-outline'
+      },
+      {
+        title:'Clients',
+        icon:'account-group-outline'
+      },
+    ])
+  },[AuthContext.myrole])
   const drawer = useRef(null);
   return (
     <NavigationContainer>
@@ -50,14 +67,18 @@ const NavigationStack = observer(() => {
                   AuthContext.myrole === 'customer' ?
                   <UserDrawer parameters={[active, setActive, setAppbarTitle, setDrawerActive]}/>
                   :
-                  <FreelancerDrawer parameters={[active, setActive, setAppbarTitle, setDrawerActive, setjobsearchmenu, setjobsearch]}/>
+                  <FreelancerDrawer parameters={[active, setActive, setAppbarTitle, setDrawerActive, setjobsearch]}/>
                 )
                 }>
                 {
                   AuthContext.myrole === 'customer' ?
-                  <ClientNavigator props={[setAppbarTitle, setActive, activeCategory, setActiveCategory, jobsearch, jobsearchquery, setjobsearchmenu, setjobsearch]}/>
+                  <>
+                  <ClientNavigator props={[setAppbarTitle, setActive, activeCategory, setActiveCategory, jobsearch, jobsearchquery, setjobsearch]}/>
+                  </>
                   :
+                  <>
                   <FreelancerNavigator props={[setAppbarTitle, setActive, activeCategory, setActiveCategory, jobsearch, jobsearchquery]}/>
+                  </>
                 }
                 </DrawerLayoutAndroid>
           </View>

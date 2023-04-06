@@ -163,6 +163,34 @@ export async function cancelmyRequest(id){
     return error.response.data
   }
 }
+// CLIENT OFFER
+export async function refuseanOffer(id){
+  try{
+    const refuseresponse = await axios.post(`${API_URL}/myrequest/offer/refuse`, {_id: id} , AxiosConfig);
+    return refuseresponse.data;
+  }catch(error){
+    return error;
+  }
+}
+
+export async function acceptanOffer(props){
+  try{
+    const acceptresponse = await axios.post(`${API_URL}/myrequest/offer/accept`, props , AxiosConfig);
+    return acceptresponse.data;
+  }catch(error){
+    return error;
+  }
+}
+
+// CLIENT FREELANCER
+export async function getFreelancer(id){
+  try{
+    const freelancerresponse = await axios.get(`${API_URL}/freelancer/${id}`, AxiosConfig);
+    return freelancerresponse.data;
+  }catch(error){
+    return error;
+  }
+}
 
 // FREELANCER
 export async function registerasfreelancer(props){
@@ -227,6 +255,15 @@ export async function createmyServices(props){
 }
 
 // FREELANCER OFFERS
+export async function myOffers(){
+  try{
+    const offersresponse = await axios.get(`${API_URL}/myoffers`, AxiosConfig);
+    return offersresponse.data;
+  }catch(error){
+    return error.response.data
+  }
+}
+
 export async function offerservices(props){
   try{
     const offerresponse = await axios.post(`${API_URL}/offer/new`, props, AxiosConfig);

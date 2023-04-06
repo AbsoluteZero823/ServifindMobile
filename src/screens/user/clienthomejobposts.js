@@ -83,7 +83,7 @@ const ClientHomePostings = observer(() => {
                 }
                 data={
                     RequestCollection.filter(request => {
-                        const hasSearchQuery = request.description.toLowerCase().includes(searchquery.toLowerCase());
+                        const hasSearchQuery = request.description.toLowerCase().includes(searchquery.toLowerCase()) || request.category.name.toLowerCase().includes(searchquery.toLowerCase());
                         const hasMenuActive = request.request_status.toLowerCase().includes(menuactive.toLowerCase());
                         return hasSearchQuery && hasMenuActive;
                       }).sort((a, b) => {

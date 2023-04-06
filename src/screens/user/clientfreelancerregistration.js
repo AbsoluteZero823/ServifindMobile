@@ -19,8 +19,7 @@ import ServiceStore, { ServiceModel } from '../../models/service';
 
 
 const ClientFreelancerRegistration = observer(({route}) => {
-    const setjobsearchmenu = route.params.props[6];
-    const setjobsearch = route.params.props[7];
+    const setjobsearch = route.params.props[6];
     const navigation = useNavigation();
     const ServicesContext = useContext(ServiceStore);
     const AuthContext = useContext(AuthStore);
@@ -129,22 +128,12 @@ const ClientFreelancerRegistration = observer(({route}) => {
                     setstatus('Pending')
                 }else{
                   const servicesresponse = await getmyServices();
-                    setjobsearchmenu([
-                      {
-                        title:'Requests',
-                        icon:'briefcase-variant-outline'
-                      },
-                      {
-                        title:'Clients',
-                        icon:'account-group-outline'
-                      },
-                    ])
                     setjobsearch('Requests');
                     FreelancerContext.data = ([]);
                     response.freelancer[0].approved_date = new Date(response.freelancer[0].approved_date);
                     const freelancerinfo = Freelancer.create(response.freelancer[0]);
                     FreelancerContext.data.push(freelancerinfo);
-                    ServicesContext.data = ([]);
+                    ServicesContext.services = [];
                     servicesresponse.services.map(service => {
                         const serviceinfo = ServiceModel.create({
                           _id: service._id,

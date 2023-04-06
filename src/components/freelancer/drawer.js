@@ -7,8 +7,7 @@ import UserStore from '../../models/user';
 import ServiceStore from '../../models/service';
 
 export const FreelancerDrawer = (props) => {
-  const setjobsearchmenu = props.parameters[4];
-  const setjobsearch = props.parameters[5];
+  const setjobsearch = props.parameters[4];
   const AuthContext = useContext(AuthStore);
   const UserContext = useContext(UserStore);
   const navigation = useNavigation();
@@ -31,7 +30,7 @@ export const FreelancerDrawer = (props) => {
       <Drawer.CollapsedItem 
         focusedIcon="feature-search-outline"
         unfocusedIcon="feature-search"
-        label={<Text style={{color:'white', fontWeight:'600', fontSize:14}}>Services</Text>}
+        label={<Text style={{color:'white', fontWeight:'600', fontSize:14}}>Job Board</Text>}
         active={active === 'Jobs'}
         onPress={() => {
           setAppbarTitle('Jobs');
@@ -71,16 +70,6 @@ export const FreelancerDrawer = (props) => {
               {
                 text: 'Yes', 
                 onPress: () => {
-                    setjobsearchmenu([
-                      {
-                        title:'Services',
-                        icon:'briefcase-variant-outline'
-                      },
-                      {
-                        title:'Freelancers',
-                        icon:'account-group-outline'
-                      },
-                    ])
                     setjobsearch('Services');
                     setAppbarTitle('Browse Talent');
                     setActive('Home');

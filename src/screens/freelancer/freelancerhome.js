@@ -1,14 +1,14 @@
 import { observer } from 'mobx-react';
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState, useEffect, useCallback } from 'react';
 import * as ImagePicker from 'expo-image-picker';
 import Loading from '../../components/loading';
-import { View, FlatList, SafeAreaView} from 'react-native';
-import { Button, Card, Text, IconButton, Portal, Modal, TextInput, List, HelperText} from 'react-native-paper';
+import { View, FlatList, SafeAreaView, RefreshControl } from 'react-native';
+import { Button, Card, Text, IconButton, Portal, Modal, TextInput, List, HelperText, Avatar} from 'react-native-paper';
 
 import FreelancerStore from '../../models/freelancer';
 import CategoryStore from '../../models/category';
 import UserStore from '../../models/user';
-import { getmyServices, createmyServices } from '../../../services/apiendpoints';
+import { getmyServices, createmyServices, myOffers } from '../../../services/apiendpoints';
 import AuthStore from '../../models/authentication';
 import ServiceStore from '../../models/service';
 
@@ -20,8 +20,21 @@ const FreelancerHome = observer(() => {
     const AuthContext = useContext(AuthStore);
     
     const [servicescollection, setServicesCollection] = useState([]);
+    const [offerscollection, setOffersCollection] = useState([]);
+
+    const [refreshing, setRefreshing] = useState(false);
+
+    const onRefresh = useCallback(() => {
+        setRefreshing(true);
+        getMYSERVICES();
+        getmyOffers();
+        setTimeout(() => {
+        setRefreshing(false);
+        }, 2000);
+    }, []);
 
     async function getMYSERVICES(){
+        AuthContext.letmeload();
         try{
             const response = await getmyServices();
             if(response.success){
@@ -30,11 +43,28 @@ const FreelancerHome = observer(() => {
         }catch(error){
             console.log(error);
         }
+        AuthContext.donewithload();
+    }
+
+    async function getmyOffers(){
+        AuthContext.letmeload();
+        try{
+            const response = await myOffers();
+            if(response.success){
+                setOffersCollection(response.myoffers);
+            }
+            console.dir(offerscollection);
+        }catch(error){
+            console.log(error);
+        }
+        AuthContext.donewithload();
     }
 
     useEffect(()=>{
         getMYSERVICES();
+        getmyOffers();
     },[]);
+
     async function pickImage(){
         try{
             let result = await ImagePicker.launchImageLibraryAsync({
@@ -110,7 +140,6 @@ const FreelancerHome = observer(() => {
             if(submitreponse.success){
                 alert("Service Created Successfully");
             }else{
-
                 alert("An Error has Occured");
             }
         }catch(error){
@@ -120,6 +149,7 @@ const FreelancerHome = observer(() => {
     return (
         <>
         <Portal>
+            <Loading/>
             <Modal visible={servicemodalvisibility} onDismiss={()=>setservicemodalvisibility(false)}
                 contentContainerStyle = {{marginHorizontal:20}}
             >
@@ -234,6 +264,7 @@ const FreelancerHome = observer(() => {
                         </Card>
                     }
                     ListFooterComponent={
+                        servicescollection.length > 0 && 
                         <Card style={{borderColor:'dimgrey', borderWidth: 1, borderStyle:'dashed', width:'50%', minWidth:250, minHeight:150, marginRight:5}}>
                             <Card.Title
                                 title="Add more services?"
@@ -251,6 +282,9 @@ const FreelancerHome = observer(() => {
                         <Button mode='contained' buttonColor="salmon" style={{marginVertical:6, width:200}} onPress={()=>(setservicemodalvisibility(true))}>Post a Service</Button>
                         </SafeAreaView>
                     }
+                    refreshControl={
+                        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+                    }
                 />
                 </Card.Content>
             </Card>
@@ -262,17 +296,48 @@ const FreelancerHome = observer(() => {
                 />
                 <Card.Content>
                 <FlatList
-                    data={[]}
-                    renderItem={({item})=>{
-                        
-                    }}
+                    data={offerscollection.sort((a, b) => {
+                        const statusOrder = { granted: 0, waiting: 1, cancelled: 2 };
+                        const aStatus = a.offer_status.toLowerCase();
+                        const bStatus = b.offer_status.toLowerCase();
+                        return statusOrder[aStatus] - statusOrder[bStatus];
+                        })
+                    }
+                    horizontal={true}
+                    showsHorizontalScrollIndicator={false}
+                    renderItem={({item})=>
+                        <Card key={item._id} style={{minWidth:300, marginHorizontal:5, borderColor: item.offer_status === 'waiting' ? 'deeppink' : item.offer_status === 'granted' ? 'green' : 'black', borderWidth: 1}}>
+                            <Card.Title 
+                                title={item.request_id.description} 
+                                subtitle={item.service_id.title}
+                                left={()=><Avatar.Image size={40} source={{uri: item.request_id.requested_by.avatar.url}}/>}
+                                />
+                            <Card.Content>
+                                <View style={{flexDirection:'row', justifyContent:'space-between', marginVertical: 4}}>
+                                    <Text style={{color:'deeppink'}}>Requested By:</Text>
+                                    <Text>{item.request_id.requested_by.name}</Text>
+                                </View>
+                                <View style={{flexDirection:'row', justifyContent:'space-between', marginVertical: 4}}>
+                                    <Text style={{color:'deeppink'}}>Category:</Text>
+                                    <Text>{item.service_id.category.name}</Text>
+                                </View>
+                                <View style={{flexDirection:'row', justifyContent:'space-between', marginVertical: 4}}>
+                                    <Text style={{color:'deeppink'}}>Status:</Text>
+                                    <Text style={{color: item.offer_status === 'waiting' ? 'deeppink' : item.offer_status === 'granted' ? 'green' : 'red'}}>{item.offer_status}</Text>
+                                </View>
+                            </Card.Content>
+                        </Card>
+                    }
                     ListEmptyComponent={
                         <SafeAreaView style={{alignItems:'center', alignSelf:'center', maxWidth: 300, marginBottom:20}}>
-                        <IconButton icon='view-grid-plus' size={30} iconColor='deeppink'/>
-                        <Text variant='titleMedium'>No Projects Yet</Text>
-                        <Text style={{textAlign:'center', color:'dimgrey',marginVertical:6}}>Accept a Job Request on the marketplace and start earning</Text>
-                        <Button mode='contained' buttonColor="salmon" style={{marginVertical:6, width:200}} onPress={()=>(console.log("Redirect Me!"))}>Accept a Request</Button>
+                            <IconButton icon='view-grid-plus' size={30} iconColor='deeppink'/>
+                            <Text variant='titleMedium'>No Projects Yet</Text>
+                            <Text style={{textAlign:'center', color:'dimgrey',marginVertical:6}}>Accept a Job Request on the marketplace and start earning</Text>
+                            <Button mode='contained' buttonColor="salmon" style={{marginVertical:6, width:200}} onPress={()=>(console.log("Redirect Me!"))}>Accept a Request</Button>
                         </SafeAreaView>
+                    }
+                    refreshControl={
+                        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
                     }
                 />
                 </Card.Content>

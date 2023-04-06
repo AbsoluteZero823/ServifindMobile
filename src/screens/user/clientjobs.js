@@ -8,6 +8,7 @@ import ServiceStore, {ServiceModel} from '../../models/service';
 import { Category } from '../../models/category';
 import { User } from '../../models/user';
 import AuthStore from '../../models/authentication';
+import UserStore from '../../models/user';
 
 import { styles } from '../../components/user/user.css';
 import { useEffect } from 'react';
@@ -21,6 +22,7 @@ const ClientJobs = observer((props) => {
     const Filterwith = props.params.props[5];
     const activeCategory = props.params.props[2][0]?.name;
     const ServiceContext = useContext(ServiceStore);
+    const UserContext = useContext(UserStore);
     const AuthContext = useContext(AuthStore);
     const [servicescollection, setservicescollection] = useState();
     const [refreshing, setRefreshing] = useState(false);
@@ -30,26 +32,27 @@ const ClientJobs = observer((props) => {
         try{
             const servicesresponse = await getServices();
             if(servicesresponse.success){
-                ServiceContext.Services = [];
-                servicesresponse.services
-                .map((service) => {
-                    ServiceContext.Services.push(ServiceModel.create({
-                        _id: service._id,
-                        title: service.title,
-                        name: service.name,
-                        category: Category.create(service.category),
-                        user: User.create(service.user),
-                        experience: service.experience,
-                        freelancer_id: service.freelancer_id,
-                        status: service.status,
-                        images: service.images,
-                    }))
+                ServiceContext.services = [];
+                servicesresponse.services.map((service) => {
+                    if (service.user._id !== UserContext.users[0]._id) {
+                        ServiceContext.services.push(ServiceModel.create({
+                            _id: service._id,
+                            title: service.title,
+                            name: service.name,
+                            category: Category.create(service.category),
+                            user: User.create(service.user),
+                            experience: service.experience,
+                            freelancer_id: service.freelancer_id,
+                            status: service.status,
+                            images: service.images,
+                        }))
+                    }
                 })
             }
-            setservicescollection(ServiceContext.Services);
+            setservicescollection(ServiceContext.services);
             setTimeout(() => {
                 AuthContext.donewithload();
-            },500);
+            },200);
         }catch(error){
             console.error(error);
             AuthContext.donewithload();
@@ -68,30 +71,37 @@ const ClientJobs = observer((props) => {
         }, 500);
       }, []);
 
+    useEffect(() => {
+        setservicescollection(ServiceContext.services.filter((service) => {
+        const { title, user } = service;
+        // check if title or user name match the search query
+        if (Filterby === 'Services' && Filterwith) {
+            const titleMatch = title?.toLowerCase().includes(Filterwith.toLowerCase());
+            return titleMatch;
+        } else if (Filterby === 'Freelancers' && Filterwith) {
+            const nameMatch = user?.name?.toLowerCase().includes(Filterwith.toLowerCase());
+            return nameMatch;
+        }else{
+            return true;
+        }
+        }))
+    },[Filterwith, Filterby])
+
     return (
         <>
         <View style={styles.container}>
             <FlatList
                 style={{flex:3, alignSelf:'center'}}
                 data={
-                    servicescollection?.filter((service) => {
+                  servicescollection?.filter((service) => {
                     const { category, title, user } = service;
                     // check if activeCategory is set and filter by it
                     if (activeCategory) {
                         const filterbycategory = category?.name?.toLowerCase().includes(activeCategory.toLowerCase());
                         return filterbycategory;
-                    }
-                    // check if title or user name match the search query
-                    if (Filterby === 'Services' && Filterwith) {
-                      const titleMatch = title?.toLowerCase().includes(Filterwith.toLowerCase());
-                      return titleMatch;
-                    } else if (Filterby === 'Freelancers' && Filterwith) {
-                      const nameMatch = user?.name?.toLowerCase().includes(Filterwith.toLowerCase());
-                      return nameMatch;
-                    } else {
-                      return true;
-                    }
-                  })
+                    }else{
+                        return true;
+                    }})
                 }
                 refreshControl={
                     <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />

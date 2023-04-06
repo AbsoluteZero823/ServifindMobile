@@ -91,11 +91,30 @@ const FreelancerMessaging = observer(({route}) => {
                             />
                             <View style={{backgroundColor:'darksalmon', marginHorizontal:2, borderBottomRightRadius:20, borderBottomLeftRadius:20}}>
                             {
-                               ServicesVisible && ServiceContext.services.filter((service) => service.category._id === item.category._id).map((service) => {
-                                return (
-                                    <List.Item key={service._id} onPress={()=>{setService(service.title),setServiceID(service._id), setServicesVisible(false)}} title={service.title} titleStyle={{color:'white'}}/>
-                                )
-                               })
+                            ServicesVisible &&
+                            (ServiceContext.services.filter((service) => service.category._id === item.category._id).length === 0 ? (
+                                <List.Item
+                                    title='No services available'
+                                    titleStyle={{ color: 'white' }}
+                                />
+                            ) 
+                            :
+                            (
+                                ServiceContext.services
+                                .filter((service) => service.category._id === item.category._id)
+                                .map((service) => (
+                                    <List.Item
+                                    key={service._id}
+                                    onPress={() => {
+                                        setService(service.title);
+                                        setServiceID(service._id);
+                                        setServicesVisible(false);
+                                    }}
+                                    title={service.title}
+                                    titleStyle={{ color: 'white' }}
+                                    />
+                                ))
+                            ))
                             }
                             </View>
                             {

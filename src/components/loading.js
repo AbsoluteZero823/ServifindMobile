@@ -9,11 +9,11 @@ export default LoadingScreen = observer(() => {
     const AuthContext = useContext(AuthStore);
     return (
         <Portal>
-        <Dialog visible={AuthContext.loadingstate}>
-        <Dialog.Content>
-        <ActivityIndicator animating={AuthContext.loadingstate} size={100} color='deeppink' />
-        </Dialog.Content>
-        </Dialog>
+            <Dialog visible={AuthContext.loadingstate} style={{backgroundColor:'transparent', shadowColor:'transparent'}}>
+            <Dialog.Content>
+                <ActivityIndicator animating={AuthContext.loadingstate} size={100} color='deeppink' />
+            </Dialog.Content>
+            </Dialog>
         </Portal>
         )
     })

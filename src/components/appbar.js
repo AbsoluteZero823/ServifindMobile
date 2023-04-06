@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import { observer } from 'mobx-react';
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { Keyboard, TouchableOpacity } from 'react-native';
 import { Appbar, Avatar, Searchbar, Button, Menu, IconButton, Text } from 'react-native-paper';
 
@@ -11,6 +11,13 @@ export const CustomAppBar = observer((props) => {
     const UserContext = useContext(UserStore);
     const [menuvisible, setmenuvisible] = useState(false);
     const [AppbarTitle, setActive, setAppbarTitle, drawer, DrawerActive, setDrawerActive, jobsearchquery, setjobsearchquery, jobsearchmenu, jobsearch, setjobsearch] = props.passed;
+    const [searchisLoading, setjobisLoading] = useState(false);
+    useEffect(()=>{
+        setjobisLoading(true);
+        setTimeout(()=>{
+            setjobisLoading(false);
+        }, 1000)
+    },[jobsearchquery])
     return (
         <Appbar.Header style={{justifyContent:'flex-end', backgroundColor:'transparent'}}>
             {
@@ -18,6 +25,7 @@ export const CustomAppBar = observer((props) => {
                 <Appbar.Content title={
                     <Searchbar 
                         value={jobsearchquery} 
+                        loading={searchisLoading}
                         onChangeText={(text)=>setjobsearchquery(text)} 
                         placeholder='Search...' 
                         icon='magnify' 
@@ -25,6 +33,7 @@ export const CustomAppBar = observer((props) => {
                         onFocus={()=> DrawerActive ? Keyboard.dismiss() : <></> }
                         style={{marginRight:10, borderColor:'dimgrey', borderWidth:2}} 
                         right={()=>
+                            searchisLoading ? null : 
                             <>
                             {
                                 jobsearchquery && <IconButton icon='window-close' size={20} iconColor='deeppink' onPress={()=>setjobsearchquery('')}/>

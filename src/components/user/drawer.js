@@ -3,31 +3,68 @@ import { Alert, View } from 'react-native';
 import { Drawer, Text} from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import AuthStore from '../../models/authentication';
-import UserStore from '../../models/user';
+import UserStore, { User } from '../../models/user';
+import ServiceStore, { ServiceModel } from '../../models/service';
+import { Category } from '../../models/category';
 import FreelancerStore, { Freelancer } from '../../models/freelancer';
-import { freelancerstatus } from '../../../services/apiendpoints';
+import { freelancerstatus, getmyServices } from '../../../services/apiendpoints';
 
 export const UserDrawer = (props) => {
   const FreelancerContext = useContext(FreelancerStore);
   const AuthContext = useContext(AuthStore);
   const UserContext = useContext(UserStore);
+  const ServicesContext = useContext(ServiceStore);
   const navigation = useNavigation();
 
   const [active, setActive, setAppbarTitle, setDrawerActive] = props.parameters;
 
   async function switchover(){
-    if (UserContext.users[0].UserDetails.role === 'freelancer'){
+    AuthContext.letmeload();
+    try {
       const response = await freelancerstatus();
-      FreelancerContext.data = ([]);
-      response.freelancer[0].approved_date = new Date(response.freelancer[0].approved_date);
-      const freelancerinfo = Freelancer.create(response.freelancer[0]);
-      FreelancerContext.data.push(freelancerinfo);
-      AuthContext.setmyrole('Freelancer');
-      navigation.navigate('FreelancerHome');
-    }else if(UserContext.users[0].UserDetails.role === 'customer'){
-      navigation.navigate('ClientFreelancerRegistration');
+      if (response.success === true) {
+        if(response.freelancer.length > 0){
+          if(response.freelancer[0].approved_date === null){
+            setstatus('Pending')
+          }else{
+            const servicesresponse = await getmyServices();
+            FreelancerContext.data = ([]);
+            response.freelancer[0].approved_date = new Date(response.freelancer[0].approved_date);
+            const freelancerinfo = Freelancer.create(response.freelancer[0]);
+            FreelancerContext.data.push(freelancerinfo);
+            ServicesContext.services = [];
+            servicesresponse.services.map(service => {
+            const serviceinfo = ServiceModel.create({
+              _id: service._id,
+              title: service.title,
+              name: service.name,
+              category: Category.create(service.category),
+              user: User.create(service.user),
+              experience: service.experience,
+              freelancer_id: service.freelancer_id,
+              status: service.status,
+              images: { 
+                public_id: service.images.public_id, 
+                url: service.images.url, 
+                }}
+              )
+              ServicesContext.services.push(serviceinfo);
+            });
+            AuthContext.setmyrole('Freelancer');
+            navigation.navigate('FreelancerHome');
+          }
+        }else if(UserContext.users[0].UserDetails.role === 'customer'){
+          navigation.navigate('ClientFreelancerRegistration');
+        }
+      } else {
+        alert(response.errMessage);
+      }
+    } catch (error) {
+      console.log(error);
     }
+    AuthContext.donewithload();
   }
+  
   
   return (
     <Drawer.Section style={{paddingTop:20, marginBottom:20,  marginTop:20, flex:1, backgroundColor:'salmon', borderTopLeftRadius:30, borderBottomLeftRadius:20}} showDivider={false}>

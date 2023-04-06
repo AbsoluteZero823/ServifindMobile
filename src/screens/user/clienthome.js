@@ -25,7 +25,6 @@ const ClientHome = observer((props) => {
     const InquiryContext = useContext(InquiryStore);
     const [InquiryCollection, setInquiryCollection] = useState([]);
     const RequestContext = useContext(RequestStore);
-    const [RequestCollection, setRequestCollection] = useState([]);
 
     const AuthContext = useContext(AuthStore);
 
@@ -73,7 +72,6 @@ const ClientHome = observer((props) => {
           }));
          })
         };
-        setRequestCollection(RequestContext.requests);
         setTimeout(() => {
           AuthContext.donewithload();
         },500);
@@ -114,13 +112,25 @@ const ClientHome = observer((props) => {
               <Card.Title title={<Text variant='headlineSmall'>Your Job Posts</Text>} right={(props) => <Button mode='text' textColor='deeppink' onPress={()=>(setActive('Jobs'), setAppbarTitle('Job Posting'),navigation.navigate('ClientJobPosting'))}>See all postings</Button>}/>
               <Card.Content style={{justifyContent:'center'}}>
               <FlatList
-                data={RequestCollection.filter((request) => request.request_status === 'waiting')}
+                data={
+                  RequestContext.requests
+                  .filter((request) => request.request_status !== 'cancelled')
+                  .sort((a, b) => {
+                      if (a.request_status === 'granted') {
+                          return -1;
+                      } else if (b.request_status === 'granted') {
+                          return 1;
+                      } else {
+                          return 0;
+                      }
+                  })
+                }
                 style={{overflow:'scroll', marginBottom:70}}
                 showsVerticalScrollIndicator={false}
                 keyExtractor={(item) => item._id}
                 renderItem={({item}) => (
                   <TouchableOpacity onPress={()=>navigation.navigate('ClientSingleJobPosts',{_id: item._id})}>
-                    <Card style={{width:'100%', marginBottom:5, borderColor:'deeppink', borderWidth:1}}>
+                    <Card style={{width:'100%', marginBottom:5, borderColor: item.request_status === 'granted' ? 'green' : 'deeppink', borderWidth:1}}>
                       <Card.Title title={item.description} subtitle={<Text style={{color:'grey'}}>{item.category.name}</Text>}
                       right={(props) => <IconButton icon='open-in-new' iconColor='deeppink'/>}/>
                     </Card>

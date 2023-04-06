@@ -19,8 +19,8 @@ export default function CategoryCard(props){
             <Card.Title title={props.category.name} titleStyle={{ color: 'deeppink' }} />
             <Card.Content>
                 <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent:'center' }}>
-                    <Avatar.Icon icon="star-plus" size={24} style={{backgroundColor:'transparent'}} color='deeppink' />
-                    <Text><Text style={styles.highlight}>{props.category.serviceCount} </Text>Services</Text>
+                    <Avatar.Icon icon="face-agent" size={32} style={{backgroundColor:'transparent'}} color='deeppink' />
+                    <Text><Text style={styles.highlight}>{props.category.serviceCount} </Text>Freelancer Services</Text>
                 </View>
             </Card.Content>
         </Card>
