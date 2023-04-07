@@ -1,14 +1,15 @@
 import React, { useContext, useState } from 'react';
 import * as ImagePicker from 'expo-image-picker';
 import { observer } from 'mobx-react';
-import { View, TouchableOpacity, ScrollView} from 'react-native';
+import { View, TouchableOpacity, ScrollView, FlatList, SectionList} from 'react-native';
 import { Button, Card, Text, Avatar, Divider, TextInput, RadioButton, HelperText, IconButton, SegmentedButtons} from 'react-native-paper';
 import { styles  } from '../../components/user/user.css';
 import Loading from '../../components/loading';
 
 import UserStore from '../../models/user';
 import AuthStore from '../../models/authentication';
-import { update, updatePassword, updateProfile } from '../../../services/apiendpoints';
+import { updatePassword, updateProfile, getmyReports, getmyTransactions} from '../../../services/apiendpoints';
+import { useEffect } from 'react';
 
 const ClientProfile = observer((props) => {
     const [isEditing, setisEditing ] = useState(false);
@@ -127,6 +128,49 @@ const ClientProfile = observer((props) => {
         }
         AuthContext.donewithload();
       };
+
+    const [transaction_collection, set_transaction_collection] = useState([]);
+    async function getTransactions(){
+        AuthContext.letmeload();
+        try{
+            const transaction_response = await getmyTransactions();
+            if(transaction_response.success){
+                AuthContext.donewithload();
+                set_transaction_collection(transaction_response.transactions);
+            }else{
+                AuthContext.donewithload();
+                alert(transaction_response.message);
+            }
+        }catch(error){
+            AuthContext.donewithload();
+            console.log(error);
+        }
+        
+    }
+
+    const [reports_collection, set_reports_collection] = useState([]);
+    async function getAllmyReports(){
+        AuthContext.letmeload();
+        try{
+            const report_response = await getmyReports();
+            if(report_response.success){
+                AuthContext.donewithload();
+                set_reports_collection(report_response.reports);
+            }else{
+                AuthContext.donewithload();
+                alert(report_response.message);
+            }
+        }catch(error){
+            AuthContext.donewithload();
+            console.log(error);
+        }
+        
+    }
+
+    useEffect(()=>{
+        getTransactions();
+        getAllmyReports();
+    },[])
 
     return (
         <ScrollView style={styles.container}>
@@ -319,11 +363,50 @@ const ClientProfile = observer((props) => {
                         </View>
                     </Card.Content>
                 </Card>
-                <Card style={{marginVertical:10}}>
-                    <Card.Title title='Payments'/>
+                <Card style={{marginVertical: 6}}>
+                    <Card.Title title='My Transactions'/>
+                    <Card.Content>
+                        <FlatList
+                            data={transaction_collection}
+                            horizontal={transaction_collection.length > 1 ? true : false}
+                            renderItem={({item}) => 
+                                <Card style={{borderWidth:1, borderColor:'green', minWidth: 250}}>
+                                    <Card.Title 
+                                        title={item.offer_id.service_id.title} 
+                                        subtitle={item.isPaid ? "Paid" : "Not Paid"} 
+                                        subtitleStyle={{color:'green'}}
+                                        left={()=><Avatar.Image source={{ uri:item.offer_id.offered_by.avatar.url }} size={50} />}
+                                        />
+                                </Card>
+                            }
+                            ListEmptyComponent={()=>
+                                <View style={{alignItems:'center', alignSelf:'center', maxWidth: 300, marginBottom:20}}>
+                                    <IconButton icon='view-grid-plus' size={30} iconColor='deeppink'/>
+                                    <Text variant='titleMedium'>No Transactions Yet</Text>
+                                </View>
+                            }
+                            />
+                    </Card.Content>
                 </Card>
-                <Card style={{marginVertical:10}}>
-                    <Card.Title title='Reports'/>
+                <Card style={{marginVertical: 6}}>
+                    <Card.Title title='My Reports'/>
+                    <Card.Content>
+                        <FlatList
+                            data={reports_collection}
+                            horizontal={reports_collection.length > 1 ? true : false}
+                            renderItem={({item}) => 
+                                <Card style={{borderWidth:1, borderColor:'green', minWidth: 250}}>
+
+                                </Card>
+                            }
+                            ListEmptyComponent={()=>
+                                <View style={{alignItems:'center', alignSelf:'center', maxWidth: 300, marginBottom:20}}>
+                                    <IconButton icon='view-grid-plus' size={30} iconColor='deeppink'/>
+                                    <Text variant='titleMedium'>No Reports Yet</Text>
+                                </View>
+                            }
+                            />
+                    </Card.Content>
                 </Card>
             </View>
         </ScrollView>

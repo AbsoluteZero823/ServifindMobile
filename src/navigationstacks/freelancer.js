@@ -25,9 +25,9 @@ export default function FreelancerNavigator(props) {
     </FreelancerStack.Group>
       <FreelancerStack.Screen name="FreelancerChats" component={FreelancerChats}/>
       <FreelancerStack.Screen name="FreelancerProjects" component={FreelancerProjects}/>
-      <FreelancerStack.Screen name="FreelancerProject" component={FreelancerProject}/>
+      <FreelancerStack.Screen name="FreelancerProject" component={FreelancerProject} options={{presentation:'transparentModal', contentStyle:{backgroundColor:'transparent'}}}/>
       <FreelancerStack.Screen name="FreelancerServices" component={FreelancerServices}/>
-      <FreelancerStack.Screen name="FreelancerService" component={FreelancerService}/>
+      <FreelancerStack.Screen name="FreelancerService" component={FreelancerService} options={{presentation:'transparentModal', contentStyle:{backgroundColor:'transparent'}}}/>
 
       <FreelancerStack.Screen name="FreelancerProfile" component={FreelancerProfile} />
     </FreelancerStack.Navigator>

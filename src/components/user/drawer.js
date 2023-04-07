@@ -41,7 +41,7 @@ export const UserDrawer = (props) => {
               category: Category.create(service.category),
               user: User.create(service.user),
               experience: service.experience,
-              freelancer_id: service.freelancer_id,
+              freelancer_id: Freelancer.create({...service.freelancer_id, approved_date: new Date(service.freelancer_id.approved_date)}),
               status: service.status,
               images: { 
                 public_id: service.images.public_id, 

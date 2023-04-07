@@ -1,22 +1,179 @@
+import * as ImagePicker from 'expo-image-picker';
 import { observer } from 'mobx-react';
 import React, { useContext, useState } from 'react';
-import { View, StyleSheet, ImageBackground} from 'react-native';
-import { Button, Card, Text, Avatar, Portal, Modal} from 'react-native-paper';
+import { View, StyleSheet, ImageBackground, Image} from 'react-native';
+import { Button, Card, Text, Avatar, Portal, Modal, TextInput, SegmentedButtons, HelperText, IconButton} from 'react-native-paper';
+
+import { completeanOffer, ratefreelancer, reportfreelancer } from '../../../services/apiendpoints';
 
 import AuthStore from '../../models/authentication';
 import UserStore from '../../models/user';
 import Loading from '../../components/loading';
 import { useNavigation } from '@react-navigation/native';
+import { useEffect } from 'react';
 
 const ClientCompleteOffer = observer(({route}) => {
     const AuthContext = useContext(AuthStore);
     const navigation = useNavigation();
-    console.log(route.params);
     const item = route.params;
 
-    const [appstate, setappstate] = useState('Disclaimer');
+    const [segmentedvalue, setsegmentedValue] = useState('cash');
+    const [price, setprice] = useState('');
+    const [gcashreceipt, setgcashreceipt] = useState();
+
+    const [appstate, setappstate] = useState('');
+
+    useEffect(()=>{
+        if (item.transactions[0]?.isPaid) {
+            setappstate('Rate/Report Disclaimer');
+            settransactioninfo(item.transactions[0]);
+        }else if ((item.transactions[0] !== null || item.transactions[0] !== undefined) && item.transactions[0]?.isPaid === false){
+            setprice = item.transactions[0].price;
+            setappstate('Disclaimer');
+        }else{
+            setappstate('Disclaimer');
+        }
+    },[]);
+
     const [mainVisible, setmainVisible] = useState(true);
-    const hideModal = () => {setmainVisible(false), navigation.goBack()};
+    const hideModal = () => {setprice(''), setgcashreceipt(), setmainVisible(false), navigation.goBack()};
+
+    const [validationerrors, setValidationErrors] = useState({});
+    const [transactioninfo, settransactioninfo] = useState();
+
+    async function pickImage(){
+        try{
+            let result = await ImagePicker.launchImageLibraryAsync({
+                mediaTypes: ImagePicker.MediaTypeOptions.Images,
+                base64: true,
+                allowsEditing: true,
+                aspect: [6, 9],
+                quality: 1,
+            });
+            if (!result.canceled) {
+                let typePrefix;
+                if (result.assets[0].type === "image") {
+                    // Autoconverts to jpeg
+                    typePrefix = "data:image/jpeg;base64,";
+                } else {
+                    alert("Unsupported file format. Please select a JPEG or PNG file.");
+                    return;
+                }
+                setgcashreceipt(`${typePrefix}${result.assets[0].base64}`);
+              }
+        }catch(error){
+            console.log(error);
+        }
+      };
+
+    async function submithandler(){
+        const Errors = {};
+        try{
+            if (price === ''){
+                Errors.price = 'Price not set';
+            }
+            if (segmentedvalue === 'gcash'){
+                if (gcashreceipt === undefined){
+                    Errors.gcashreceipt = 'Select a GCash Receipt';
+                }
+            }
+
+            if (Object.keys(Errors).length > 0) {
+                setValidationErrors(Errors);
+                return false;
+            } else {
+                setValidationErrors({});
+                const completeresponse = await completeanOffer({
+                    offer_id: item._id,
+                    price: price,
+                })
+                if (completeresponse.success){
+                    console.log(completeresponse.transaction);
+                    settransactioninfo(completeresponse.transaction);
+                    setappstate("Rate/Report");
+                    alert("Success");
+                }else{
+                    alert("Error");
+                }
+            }
+        }catch(error){
+            console.log(error)
+        }
+    }
+
+    const [starrating, setstarrating] = useState(0);
+    const [freelancerfeedback, setFreelancerFeedback] = useState();
+    async function Feedbackhandler(){
+        AuthContext.letmeload();
+        const Errors = {};
+        try{
+            if (starrating === 0){
+                Errors.starrating = 'Please select a star rating'
+            }
+            if (freelancerfeedback === undefined){
+                Errors.feedback = 'Please fill in the feedback form'
+            }
+            if (Object.keys(Errors).length > 0){
+                setValidationErrors(Errors);
+            }else{
+                const feedbackresponse = await ratefreelancer({
+                    rating: starrating,
+                    comment: freelancerfeedback,
+                    service_id: item.service_id._id,
+                    transaction_id: transactioninfo._id
+                });
+                if (feedbackresponse.success){
+                    AuthContext.donewithload();
+                    alert(feedbackresponse.message);
+                    hideModal;
+                    navigation.goBack();
+                }else{
+                    AuthContext.donewithload();
+                    alert(feedbackresponse.message);
+                }
+            }
+        }catch(error){
+            AuthContext.donewithload();
+            console.log(error);
+        }
+    }
+
+    const [freelancerreason, setFreelancerReason] = useState();
+    const [freelancerreport, setFreelancerReport] = useState();
+    async function Reporthandler(){
+        AuthContext.letmeload();
+        const Errors = {};
+        try{
+            if (freelancerreport === undefined){
+                Errors.report = 'Must have a description';
+            }
+            if (freelancerreason === undefined){
+                Errors.reason = 'Must have a valid reason';
+            }
+            if (Object.keys(Errors).length > 0){
+                setValidationErrors(Errors);
+            }else{
+                const reportresponse = await reportfreelancer({
+                    _id: transactioninfo._id,
+                    reason: freelancerreason,
+                    description: freelancerreport,
+                    user_reported: item.offered_by._id
+                });
+                if(reportresponse.success){
+                    AuthContext.donewithload();
+                    hideModal;
+                    alert(reportresponse.message);
+                }else{
+                    AuthContext.donewithload();
+                    alert(reportresponse.message);
+
+                }
+            }
+        }catch(error){
+            AuthContext.donewithload();
+            console.log(error);
+        }
+    }
 
     return (
         <Portal>
@@ -42,11 +199,203 @@ const ClientCompleteOffer = observer(({route}) => {
                     <Card>
                         <Card.Title title="Freelancer Payment Info" subtitle="Pay your Freelancer" subtitleStyle={{color:'dimgrey'}}/>
                         <Card.Content>
-
+                            <TextInput
+                                label='Price'
+                                mode='outlined'
+                                placeholder='₱0,000.00'
+                                keyboardType='number-pad'
+                                onChangeText={(text) => setprice(text)}
+                                error={validationerrors.price}
+                            />
+                            {
+                                validationerrors.price && 
+                                <HelperText type='error' visible={validationerrors.price}>
+                                    {validationerrors.price}
+                                </HelperText>
+                            }
+                            <View style={{marginVertical:5}}>
+                                <Text>Payment Method:</Text>
+                                <SegmentedButtons
+                                    value={segmentedvalue}
+                                    onValueChange={setsegmentedValue}
+                                    density='high'
+                                    buttons={[
+                                    {
+                                        value: 'gcash',
+                                        label: 'GCash',
+                                    },
+                                    {
+                                        value: 'cash',
+                                        label: 'Cash',
+                                    }
+                                    ]}
+                                />
+                                <View style={{marginVertical:5}}>
+                                {
+                                    segmentedvalue === 'gcash' ? 
+                                    <>
+                                    <Image
+                                        source={{uri: item.service_id.freelancer_id.qrCode.url}}
+                                        style={{height: 300, width: 300, borderRadius: 10, marginVertical: 10}}
+                                        />
+                                    <TextInput
+                                        label='GCash Receipt'
+                                        mode='outlined'
+                                        value={ gcashreceipt ? 'GCash Receipt Selected' : null}
+                                        editable={false}
+                                        placeholder='Upload GCash Receipt'
+                                        right={<TextInput.Icon icon="cloud-upload-outline" iconColor='deeppink' onPress={()=>pickImage()}/>}
+                                        error={validationerrors.gcashreceipt}
+                                        />
+                                    {
+                                        validationerrors.gcashreceipt && 
+                                        <HelperText type='error' visible={validationerrors.gcashreceipt}>
+                                            {validationerrors.gcashreceipt}
+                                        </HelperText>
+                                    }
+                                    </>
+                                    :
+                                    <Text style={{color:'deeppink', textAlign:'center'}}> Cash Transactions are not covered by our application </Text>
+                                }
+                                </View>
+                            </View>
                         </Card.Content>
                         <Card.Actions>
-                            <Button mode='outlined' onPress={()=>console.log("YEY")}>Confirm</Button>
+                            <Button mode='outlined' onPress={()=>submithandler()}>Confirm</Button>
                             <Button mode='outlined' onPress={hideModal}>Cancel</Button>
+                        </Card.Actions>
+                    </Card>
+                }
+                {
+                    appstate === 'Rate/Report Disclaimer' &&
+                    <Card>
+                        <Card.Title title="Disclaimer"/>
+                        <Card.Content>
+                            <Text style={{color:'dimgrey', lineHeight: 24, textAlign:'center',}}>
+                            This is a reminder that you have already paid for the service.
+                            </Text>
+                        </Card.Content>
+                        <Card.Actions>
+                            <Button mode='outlined' onPress={()=>setappstate('Rate/Report')}>Understood</Button>
+                        </Card.Actions>
+                    </Card>
+                }
+                {
+                    appstate === 'Rate/Report' &&
+                    <Card>
+                        <Card.Title title="Freelancer Feedback"/>
+                        <Card.Content>
+                            <View style={{marginVertical: 10}}>
+                            <Text style={{lineHeight: 24, textAlign:'center',}}>
+                            We appreciate your business and would like to know how your experience was working with your freelancer. If you were satisfied with their work, please rate them and let them know they did a good job.
+                            </Text>
+                            <Button mode='outlined' onPress={()=>setappstate('Rate')}>Rate</Button>
+                            </View>
+                            <View style={{marginVertical: 10}}>
+                            <Text style={{lineHeight: 24, textAlign:'center',}}>
+                            On the other hand, if you had a negative experience and found them difficult to work with, please report your experience to us so we can take the necessary steps to address the issue.
+                            </Text>
+                            <Button mode='outlined' onPress={()=>setappstate('Report')}>Report</Button>
+                            </View>
+                        </Card.Content>
+                    </Card>
+                }
+                {
+                    appstate === 'Rate' && 
+                    <Card>
+                        <Card.Title 
+                            title="Freelancer Rating"
+                            right={()=><IconButton icon='chevron-left' iconColor='deeppink' onPress={()=>setappstate("Rate/Report")}/>}
+                            />
+                        <Card.Content>
+                            <Text>Rate:</Text>
+                            <View style={[{flexDirection:'row', justifyContent:'space-around'}, validationerrors.starrating ? {borderWidth: 2, borderColor: 'darkred', borderRadius: 5} : null]}>
+                                <IconButton icon='star' onPress={()=>setstarrating(1)} iconColor={starrating >= 1 ? 'salmon' : 'dimgrey'}/>
+                                <IconButton icon='star' onPress={()=>setstarrating(2)} iconColor={starrating >= 2 ? 'salmon' : 'dimgrey'}/>
+                                <IconButton icon='star' onPress={()=>setstarrating(3)} iconColor={starrating >= 3 ? 'salmon' : 'dimgrey'}/>
+                                <IconButton icon='star' onPress={()=>setstarrating(4)} iconColor={starrating >= 4 ? 'salmon' : 'dimgrey'}/>
+                                <IconButton icon='star' onPress={()=>setstarrating(5)} iconColor={starrating >= 5 ? 'salmon' : 'dimgrey'}/>
+                            </View>
+                            {
+                                validationerrors.starrating && <HelperText type='error' visible={validationerrors.starrating}>{validationerrors.starrating}</HelperText>
+                            }
+                            <TextInput
+                                label='Feedback'
+                                mode='outlined'
+                                placeholder='Freelancer Feedback'
+                                onChangeText={(text)=>setFreelancerFeedback(text)}
+                                multiline={true}
+                                error={validationerrors.feedback}
+                                />
+                                {
+                                    validationerrors.feedback && <HelperText type='error' visible={validationerrors.feedback}>{validationerrors.feedback}</HelperText>
+                                }
+                        </Card.Content>
+                        <Card.Actions>
+                            <Button
+                                textColor='red'
+                                mode='outlined'
+                                onPress={()=>setappstate('Rate/Report')}
+                                >
+                                Back
+                            </Button>
+                            <Button
+                                textColor='deeppink'
+                                mode='outlined'
+                                onPress={()=>Feedbackhandler()}
+                                >
+                                Submit
+                            </Button>
+                        </Card.Actions>
+                    </Card>
+                }
+                {
+                    appstate ==='Report' &&
+                    <Card>
+                        <Card.Title 
+                            title="Report Freelancer"
+                            right={()=><IconButton icon='chevron-left' iconColor='deeppink' onPress={()=>setappstate("Rate/Report")}/>}
+                            />
+                        <Card.Content>
+                            <TextInput
+                                label='Reason'
+                                mode='outlined'
+                                style={{marginVertical:5}}
+                                placeholder='Harassment'
+                                onChangeText={(text)=>setFreelancerReason(text)}
+                                error={validationerrors.reason}
+                            />
+                            {
+                                validationerrors.reason && <HelperText type='error' visible={validationerrors.reason}>{validationerrors.reason}</HelperText>
+                            }
+                            <TextInput
+                                label='Description'
+                                mode='outlined'
+                                style={{marginVertical:5}}
+                                placeholder='Freelancer Deficiencies'
+                                onChangeText={(text)=>setFreelancerReport(text)}
+                                multiline={true}
+                                error={validationerrors.report}
+                                />
+                            {
+                                validationerrors.report && <HelperText type='error' visible={validationerrors.report}>{validationerrors.report}</HelperText>
+                            }
+                        </Card.Content>
+                        <Card.Actions>
+                            <Button
+                                textColor='red'
+                                mode='outlined'
+                                onPress={()=>setappstate('Rate/Report')}
+                                >
+                                Back
+                            </Button>
+                            <Button
+                                textColor='deeppink'
+                                mode='outlined'
+                                onPress={()=>Reporthandler()}
+                                >
+                                Submit
+                            </Button>
                         </Card.Actions>
                     </Card>
                 }

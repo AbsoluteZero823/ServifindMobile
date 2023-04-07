@@ -139,7 +139,7 @@ const ClientSingleJobPosts = observer(({route}) => {
                         style={{ height: '80%' }}
                         showsVerticalScrollIndicator={false}
                         renderItem={({item})=>
-                            <Card key={item._id} style={{borderColor:'deeppink', borderWidth:1, marginVertical:5}}>
+                            <Card key={item._id} style={{borderColor: item.transactions[0]?.paymentSent ? 'green' : 'deeppink', borderWidth:1, marginVertical:5}}>
                                 <Card.Title 
                                     title={item.offered_by.name}
                                     titleStyle={{color:'deeppink'}}
@@ -156,8 +156,22 @@ const ClientSingleJobPosts = observer(({route}) => {
                                         anchorPosition='bottom'
                                         onDismiss={() => setMenuCollection({...menucollection, [item._id]: false})}
                                         >
-                                        <Menu.Item onPress={() => navigation.navigate('ClientCompleteOffer',item)} title="Complete" />
-                                        <Menu.Item onPress={() => {}} title="Cancel" />
+                                        {
+                                            console.log(item.transactions)
+                                        }
+                                        {
+                                            (item.transactions === null || item.transactions === undefined || item.transactions.length === 0) &&
+                                            <Menu.Item onPress={() => navigation.navigate('ClientCompleteOffer',item)} title="Generate Payment"/>
+                                        }
+                                        {
+                                            item.transactions[0]?.isPaid === false &&
+                                            <Menu.Item onPress={() => navigation.navigate('ClientCompleteOffer',item)} title="Complete Payment"/>
+                                        }
+                                        {
+                                            (item.transactions[0]?.isPaid && item.transactions[0]?.isRated === false && item.transactions[0]?.reportedBy.client === false) &&
+                                            <Menu.Item onPress={() => navigation.navigate('ClientCompleteOffer',item)} title="Rate/Report"/>
+                                        }
+                                        <Menu.Item onPress={() => setMenuCollection({...menucollection, [item._id]: !menucollection[item._id]})} title="Cancel" />
                                     </Menu>
                                     :
                                     <IconButton 

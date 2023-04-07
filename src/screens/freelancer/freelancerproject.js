@@ -1,15 +1,20 @@
 import { observer } from 'mobx-react';
-import React, { useContext } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { View, StyleSheet, ImageBackground} from 'react-native';
-import { Button, Card, Text, Avatar} from 'react-native-paper';
-import UserStore from '../../models/user';
-import { styles } from '../../components/user/user.css';
+import { Button, Card, Text, Avatar, Portal, Modal} from 'react-native-paper';
+import AuthStore from '../../models/authentication';
+import Loading from '../../components/loading';
 
 const FreelancerProject = observer(() => {
     return (
-        <View style={styles.container}>
+        <Portal>
+            <Loading/>
+            <Modal>
+                <Card>
 
-        </View>
+                </Card>
+            </Modal>
+        </Portal>
     )
 })
 

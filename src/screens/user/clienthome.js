@@ -52,7 +52,7 @@ const ClientHome = observer((props) => {
               attachments: inquiry.attachments,
               customer: User.create(inquiry.customer),
               freelancer: inquiry.freelancer,
-              service: ServiceModel.create(inquiry.service_id),
+              service: ServiceModel.create({...inquiry.service_id, freelancer_id: {...inquiry.service_id.freelancer_id, approved_date: new Date(inquiry.service_id.freelancer_id.approved_date)}}),
               status: inquiry.status,
             }));
           })

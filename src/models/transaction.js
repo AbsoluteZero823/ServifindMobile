@@ -1,5 +1,6 @@
 import { types } from "mobx-state-tree";
 import Inquiry from "./inquiry";
+import { Offer } from './offer'
 
 const Transaction = types
   .model("Transaction", {
@@ -11,7 +12,8 @@ const Transaction = types
     created_At: types.optional(types.Date, () => new Date()),
     expected_Date: types.maybeNull(types.Date),
     finished_At: types.maybeNull(types.Date),
-    inquiry_id: types.reference(types.late(() => Inquiry)),
+    inquiry_id: Inquiry,
+    offer_id: Offer,
     status: types.optional(types.string, "processing"),
     transaction_done: types.optional(
       types.model({

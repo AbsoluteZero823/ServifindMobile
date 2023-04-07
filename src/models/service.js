@@ -2,7 +2,7 @@ import { types } from 'mobx-state-tree';
 import { createContext } from 'react';
 
 import {Category} from './category';
-import Freelancer from './freelancer';
+import {Freelancer} from './freelancer';
 import {User} from './user';
 
 const ImagesModel = types.model('Images', {
@@ -18,7 +18,7 @@ export const ServiceModel = types
     category: Category,
     user: User,
     experience: types.string,
-    freelancer_id: types.string,
+    freelancer_id: Freelancer,
     status: types.optional(types.string, 'approved'),
     images: types.optional(ImagesModel, { public_id: '', url: '' }),
   })

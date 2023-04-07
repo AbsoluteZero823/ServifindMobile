@@ -15,6 +15,7 @@ import { useEffect } from 'react';
 import { getServices } from '../../../services/apiendpoints';
 import { useNavigation } from '@react-navigation/native';
 import { FAB } from '../../components/user/fab';
+import { Freelancer } from '../../models/freelancer';
 
 const ClientJobs = observer((props) => {
     const navigation = useNavigation();
@@ -35,17 +36,7 @@ const ClientJobs = observer((props) => {
                 ServiceContext.services = [];
                 servicesresponse.services.map((service) => {
                     if (service.user._id !== UserContext.users[0]._id) {
-                        ServiceContext.services.push(ServiceModel.create({
-                            _id: service._id,
-                            title: service.title,
-                            name: service.name,
-                            category: Category.create(service.category),
-                            user: User.create(service.user),
-                            experience: service.experience,
-                            freelancer_id: service.freelancer_id,
-                            status: service.status,
-                            images: service.images,
-                        }))
+                        ServiceContext.services.push(service)
                     }
                 })
             }
@@ -94,7 +85,7 @@ const ClientJobs = observer((props) => {
                 style={{flex:3, alignSelf:'center'}}
                 data={
                   servicescollection?.filter((service) => {
-                    const { category, title, user } = service;
+                    const { category } = service;
                     // check if activeCategory is set and filter by it
                     if (activeCategory) {
                         const filterbycategory = category?.name?.toLowerCase().includes(activeCategory.toLowerCase());
@@ -114,20 +105,22 @@ const ClientJobs = observer((props) => {
                             <Card.Cover source={{ uri: item.images.url }}/>
                             <Card.Title title={item.title}/>
                             <Card.Content>
-                                <View style={{flexDirection:'row', justifyContent:'space-between'}}>
-                                    <View style={{flexDirection:'row'}}>
-                                        <Avatar.Image size={40} source={{ uri: item.user.avatar.url }} style={{alignItems:'center'}}/>
-                                        <View style={{marginHorizontal:5}}>
-                                            <Text>{item.user.name}</Text>
-                                            <Text>Something Else</Text>
-                                        </View>
-                                    </View>
-                                    <View style={{flexDirection:'row', justifyContent:'space-between'}}>
-                                        <Avatar.Icon icon='star' size={20} color='green' style={{backgroundColor:'transparent'}}/>
-                                        <Text> 3.2 </Text>
-                                        <Text style={{color:'dimgrey'}}>(200)</Text>
+                            <View style={{flexDirection:'row', justifyContent:'space-between', marginBottom:10}}>
+                                <View style={{flexDirection:'row'}}>
+                                    <Avatar.Image size={40} source={{ uri: item.user.avatar.url }} style={{alignItems:'center'}}/>
+                                    <View style={{marginHorizontal:5}}>
+                                        <Text>{item.user.name}</Text>
+                                        <Text style={{color:'deeppink'}}>{item.freelancer_id.availability ? 'Available' : 'Not Available'}</Text>
                                     </View>
                                 </View>
+                                <View>
+                                    <View style={{flexDirection:'row', justifyContent:'space-between'}}>
+                                        <Avatar.Icon icon='star' size={20} color='green' style={{backgroundColor:'transparent'}}/>
+                                        <Text>{item.avgRating !== null ? item.avgRating : '0'} / 5</Text>
+                                        <Text style={{color:'dimgrey'}}>({item.ratings !== undefined ? item.ratings.length : '0'})</Text>
+                                    </View>
+                                </View>
+                            </View>
                             </Card.Content>
                         </Card>
                     </TouchableOpacity>

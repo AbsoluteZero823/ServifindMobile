@@ -9,7 +9,8 @@ const AxiosConfig = {
         'Authorization': `Bearer ${AuthStore._currentValue.token}`
     }
 }
-// USER AUTHENTICATION AND MODIFICATION (working)
+
+// USER AUTHENTICATION AND MODIFICATION
 export async function login(email, password) {
   try {
     const response = await axios.post(`${API_URL}/login`, {
@@ -58,7 +59,27 @@ export async function updatePassword(props){
   }
 }
 
-// FETCHING CATEGORIES (Working)
+// FETCH REPORTS
+export async function getmyReports(){
+  try{
+    const reportresponse = await axios.post(`${API_URL}/myreports`, AxiosConfig);
+    return reportresponse.data;
+  }catch(error){
+    return error;
+  }
+}
+
+// FETCHING TRANSACTIONS
+export async function getmyTransactions(){
+  try{
+    const transactionresponse = await axios.post(`${API_URL}/mytransactions`, AxiosConfig);
+    return transactionresponse.data;
+  }catch(error){
+    return error;
+  }
+}
+
+// FETCHING CATEGORIES
 export async function getCategories(){
   try{
     const categoryresponse = await axios.get(`${API_URL}/categories`, AxiosConfig);
@@ -163,6 +184,7 @@ export async function cancelmyRequest(id){
     return error.response.data
   }
 }
+
 // CLIENT OFFER
 export async function refuseanOffer(id){
   try{
@@ -177,6 +199,42 @@ export async function acceptanOffer(props){
   try{
     const acceptresponse = await axios.post(`${API_URL}/myrequest/offer/accept`, props , AxiosConfig);
     return acceptresponse.data;
+  }catch(error){
+    return error;
+  }
+}
+
+export async function checkfortransaction(props){
+  try{
+    const checkresponse = await axios.post(`${API_URL}/transactions/check`, props, AxiosConfig);
+    return checkresponse.data;
+  }catch(error){
+    return error;
+  }
+}
+
+export async function completeanOffer(props){
+  try{
+    const completeresponse = await axios.post(`${API_URL}/transactions/complete`, props, AxiosConfig);
+    return completeresponse.data;
+  }catch(error){
+    return error;
+  }
+}
+
+export async function ratefreelancer(props){
+  try{
+    const rateresponse = await axios.post(`${API_URL}/transactions/client/rate`, props, AxiosConfig);
+    return rateresponse.data;
+  }catch(error){
+    return error;
+  }
+}
+
+export async function reportfreelancer(props){
+  try{
+    const reportresponse = await axios.post(`${API_URL}/transactions/client/report`, props, AxiosConfig);
+    return reportresponse.data
   }catch(error){
     return error;
   }
@@ -279,5 +337,15 @@ export async function getoffersRequest(id){
     return offerresponse.data;
   }catch(error){
     return error
+  }
+}
+
+// FREELANCER RATINGS
+export async function getmyServiceRatings(service_id){
+  try{
+    const ratingsresponse = await axios.post(`${API_URL}/myratings`, {service_id}, AxiosConfig);
+    return ratingsresponse.data;
+  }catch(error){
+    return error.response.data
   }
 }

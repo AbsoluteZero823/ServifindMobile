@@ -1,18 +1,20 @@
 import { observer } from 'mobx-react';
 import React, { useContext, useState } from 'react';
-import { View, StyleSheet, ImageBackground, TouchableOpacity} from 'react-native';
+import { View, StyleSheet, ImageBackground, TouchableOpacity, FlatList} from 'react-native';
 import { Button, Card, Text, Avatar, Divider, IconButton, Portal, Modal, TextInput} from 'react-native-paper';
 import UserStore from '../../models/user';
 import { styles } from '../../components/user/user.css';
 import { useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { createanInquiry } from '../../../services/apiendpoints';
+import { format } from 'date-fns';
 import AuthStore from '../../models/authentication';
 import LoadingScreen from '../../components/loading';
 
 const ClientSingleJob = observer(({route}) => {
     const AuthContext = useContext(AuthStore);
     const data = route.params.item;
+    console.log(data);
     const navigation = useNavigation();
     const [mainvisible, setmainVisible] = useState(true);
     const [Inquirevalue, setInquirevalue] = useState('');
@@ -51,34 +53,63 @@ const ClientSingleJob = observer(({route}) => {
         <Portal>
             <LoadingScreen/>
             <Modal visible={mainvisible} onDismiss={hideModal} contentContainerStyle={{marginHorizontal:10}}>
-            <Card style={{marginTop:50}}>
+            <Card style={{marginTop:50, borderWidth: 1, borderColor:'deeppink'}}>
                 <Card.Cover source={{uri: data.images.url}}/>
-                <Card.Title title={data.title}/>
+                <Card.Title title={data.title} titleStyle={{color:'deeppink'}} />
                 <Card.Content>
                     <View style={{flexDirection:'row', justifyContent:'space-between', marginBottom:10}}>
                         <View style={{flexDirection:'row'}}>
                             <Avatar.Image size={40} source={{ uri: data.user.avatar.url }} style={{alignItems:'center'}}/>
                             <View style={{marginHorizontal:5}}>
                                 <Text>{data.user.name}</Text>
-                                <Text>Something Else</Text>
+                                <Text style={{color:'deeppink'}}>{data.freelancer_id.availability ? 'Available' : 'Not Available'}</Text>
                             </View>
                         </View>
                         <View>
                             <View style={{flexDirection:'row', justifyContent:'space-between'}}>
                                 <Avatar.Icon icon='star' size={20} color='green' style={{backgroundColor:'transparent'}}/>
-                                <Text> 3.2 </Text>
-                                <Text style={{color:'dimgrey'}}>(200)</Text>
+                                <Text>{data.avgRating !== null ? data.avgRating : '0'} / 5</Text>
+                                <Text style={{color:'dimgrey'}}>({data.ratings !== undefined ? data.ratings.length : '0'})</Text>
                             </View>
-                            <TouchableOpacity style={{flexDirection:'row', justifyContent:'space-between'}} onPress={()=>{setmainVisible(false),navigation.navigate('ClientFreelancer',{freelancer_id: data.freelancer_id})}}>
+                            <TouchableOpacity style={{flexDirection:'row', justifyContent:'space-between'}} onPress={()=>{setmainVisible(false),navigation.navigate('ClientFreelancer',{freelancer_id: data.freelancer_id._id})}}>
                                 <Avatar.Icon icon='eye' size={20} color='green' style={{backgroundColor:'transparent'}}/>
-                                <Text style={{color:'green'}}>View Profile</Text>
+                                <Text style={{color:'green'}}>See Profile</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
                     <Divider/>
                     <View style={{marginVertical:10}}>
+                        <Text style={{color:'green', marginBottom: 4}}>Experience:</Text>
                         <Text>{data.experience}</Text>
                     </View>
+                    <Text style={{color:'green', marginVertical: 2}}>Reviews:</Text>
+                    <FlatList
+                        data={data.ratings}
+                        horizontal={data.ratings.length > 1 ? true : false}
+                        showsHorizontalScrollIndicator={false}
+                        renderItem={({item}) => (
+                            <Card style={{marginVertical:4, borderWidth:1, borderColor:'green'}}>
+                                <Card.Title 
+                                    title={item.user.name} 
+                                    subtitle={format(new Date(item.created_At),"MMM. dd (EEEE), yyyy")}
+                                    subtitleStyle={{fontSize:12, color:'dimgrey'}}
+                                    left={()=><Avatar.Image size={40} source={{ uri: item.user.avatar.url }} style={{alignItems:'center'}}/>}
+                                    />
+                                <Card.Content>
+                                    <View style={{flexDirection:'row', justifyContent:'space-between'}}>
+                                        <Text style={{color:'deeppink'}}>Rating:</Text>
+                                        <Text>{item.rating}</Text>
+                                    </View>
+                                    <Text style={{color:'deeppink'}}>Comment:</Text>
+                                    <Text style={{textAlign:'right'}}>{item.comment}</Text>
+                                </Card.Content>
+                            </Card>
+                        )}
+                        ListEmptyComponent={() => (
+                            <Text style={{textAlign:'center', fontWeight:'bold', color: 'deeppink'}}>No Reviews Available</Text>
+                        )} 
+                    />
+                    
                 </Card.Content>
                 <Card.Actions>
                     <Button icon="chat" mode="contained" buttonColor="green" onPress={() => {setInquirevisible(true)}}>

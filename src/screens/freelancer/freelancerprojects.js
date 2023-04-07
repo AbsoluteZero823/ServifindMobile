@@ -1,9 +1,10 @@
 import { observer } from 'mobx-react';
 import React, { useContext, useEffect, useState, useCallback } from 'react';
-import { View, StyleSheet, ImageBackground, FlatList, RefreshControl, SafeAreaView } from 'react-native';
+import { View, StyleSheet, ImageBackground, FlatList, RefreshControl, SafeAreaView, TouchableOpacity } from 'react-native';
 import { Button, Card, Text, Avatar, Searchbar, Menu, IconButton} from 'react-native-paper';
 import UserStore from '../../models/user';
 import { styles } from '../../components/user/user.css';
+import { useNavigation } from '@react-navigation/native';
 
 
 import { myOffers } from '../../../services/apiendpoints';
@@ -12,6 +13,7 @@ import OfferStore from '../../models/offer';
 import Loading from '../../components/loading';
 
 const FreelancerProjects = observer(() => {
+    const navigation = useNavigation();
     const OfferContext = useContext(OfferStore);
     const AuthContext = useContext(AuthStore);
 
@@ -20,7 +22,7 @@ const FreelancerProjects = observer(() => {
     const closeMenu = () => setVisible(false);
 
     const [searchquery, setsearchquery] = useState();
-    const [statusquery, setstatusquery] = useState();
+    const [statusquery, setstatusquery] = useState(null);
 
     const [refreshing, setRefreshing] = useState(false);
 
@@ -72,7 +74,8 @@ const FreelancerProjects = observer(() => {
                 }
                 />
             <FlatList
-                data={OfferContext.offers.filter((offer) => {
+                data={
+                OfferContext.offers.filter((offer) => {
                     if (statusquery && offer.offer_status.toLowerCase() !== statusquery.toLowerCase()) {
                         // if statusquery is not empty and offer.offer_status does not match, return false
                         return false;
@@ -88,26 +91,50 @@ const FreelancerProjects = observer(() => {
                     } else {
                         return true;
                     }
-                })}
+                })
+                .sort((a, b) => {
+                    const order = {
+                      granted: 0,
+                      waiting: 1,
+                      cancelled: 2
+                    };
+                    const statusA = a.offer_status.toLowerCase();
+                    const statusB = b.offer_status.toLowerCase();
+                
+                    if (statusA === statusB) {
+                      return 0;
+                    } else if (order[statusA] < order[statusB]) {
+                      return -1;
+                    } else {
+                      return 1;
+                    }
+                  })
+                }
                 showsVerticalScrollIndicator={false}
                 renderItem={({item}) => 
-                    <Card key={item._id} style={{marginVertical: 10, marginHorizontal: 5, minWidth:300, marginHorizontal:5, borderColor: item.offer_status === 'waiting' ? 'deeppink' : item.offer_status === 'granted' ? 'green' : 'black', borderWidth: 1}}>
-                        <Card.Title 
-                            title={item.request_id.requested_by.name} 
-                            subtitle={<Text style={{color: item.offer_status === 'waiting' ? 'deeppink' : item.offer_status === 'granted' ? 'green' : 'red'}}>{item.offer_status}</Text>}
-                            left={()=><Avatar.Image size={40} source={{uri: item.request_id.requested_by.avatar.url}}/>}
-                            />
-                        <Card.Content>
-                            <Text style={{color:'deeppink'}}>Requested:</Text>
-                            <Text style={{alignSelf:'flex-end'}}>{item.request_id.description}</Text>
-                            <Text style={{color:'deeppink'}}>Category:</Text>
-                            <Text style={{alignSelf:'flex-end'}}>{item.service_id.category.name}</Text>
-                            <Text style={{color:'deeppink'}}>Service:</Text>
-                            <Text style={{alignSelf:'flex-end'}}>{item.service_id.title}</Text>
-                            <Text style={{color:'deeppink'}}>Offer:</Text>
-                            <Text style={{alignSelf:'flex-end'}}>{item.description}</Text>
-                        </Card.Content>
-                    </Card>
+                    
+                    <TouchableOpacity onPress={()=>{
+                        // navigation.navigate('FreelancerProject', item.service_id._id);
+                    }}>
+                        <Card key={item._id} style={{marginVertical: 10, marginHorizontal: 5, minWidth:300, marginHorizontal:5, borderColor: item.offer_status === 'waiting' ? 'deeppink' : item.offer_status === 'granted' ? 'green' : 'black', borderWidth: 1}}>
+                            <Card.Title 
+                                title={item.request_id.requested_by.name} 
+                                subtitle={<Text style={{color: item.offer_status === 'waiting' ? 'deeppink' : item.offer_status === 'granted' ? 'green' : 'red'}}>{item.offer_status}</Text>}
+                                left={()=><Avatar.Image size={40} source={{uri: item.request_id.requested_by.avatar.url}}/>}
+                                />
+                            <Card.Content>
+                                <Text style={{color:'deeppink'}}>Requested:</Text>
+                                <Text style={{alignSelf:'flex-end'}}>{item.request_id.description}</Text>
+                                <Text style={{color:'deeppink'}}>Category:</Text>
+                                <Text style={{alignSelf:'flex-end'}}>{item.service_id.category.name}</Text>
+                                <Text style={{color:'deeppink'}}>Service:</Text>
+                                <Text style={{alignSelf:'flex-end'}}>{item.service_id.title}</Text>
+                                <Text style={{color:'deeppink'}}>Offer:</Text>
+                                <Text style={{alignSelf:'flex-end'}}>{item.description}</Text>
+                            </Card.Content>
+                        </Card>
+                    </TouchableOpacity>
+
                 }
                 ListEmptyComponent={
                     <SafeAreaView style={{alignItems:'center', alignSelf:'center', maxWidth: 300, marginBottom:20}}>

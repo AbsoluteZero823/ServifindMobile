@@ -52,9 +52,6 @@ const FreelancerProfile = observer((props) => {
                 <Card style={{marginVertical:10}}>
                     <Card.Title title='Payments'/>
                 </Card>
-                <Card style={{marginVertical:10}}>
-                    <Card.Title title='Reports'/>
-                </Card>
             </View>
         </ScrollView>
     )

@@ -2,7 +2,7 @@ import { observer } from 'mobx-react';
 import React, { useContext, useState, useEffect, useCallback } from 'react';
 import * as ImagePicker from 'expo-image-picker';
 import Loading from '../../components/loading';
-import { View, FlatList, SafeAreaView, RefreshControl } from 'react-native';
+import { View, FlatList, SafeAreaView, RefreshControl, TouchableOpacity } from 'react-native';
 import { Button, Card, Text, IconButton, Portal, Modal, TextInput, List, HelperText, Avatar} from 'react-native-paper';
 
 import { getmyServices, createmyServices, myOffers } from '../../../services/apiendpoints';
@@ -257,22 +257,24 @@ const FreelancerHome = observer(() => {
                     horizontal={true}
                     showsHorizontalScrollIndicator={false}
                     renderItem={({item})=>
-                        <Card key={item._id} style={{borderColor:'deeppink', borderWidth:1, minWidth:300, maxWidth: 300, minHeight:150, marginHorizontal: 5}}>
-                            <Card.Title 
-                                title={item.title} 
-                                titleStyle={{color:'deeppink'}} 
-                                subtitle={item.name} 
-                                subtitleStyle={{color:'dimgrey'}}
-                                right={()=><IconButton icon='pencil' iconColor='deeppink' size={20} style={{marginRight:20}}/>}
-                                />
-                            <Card.Content>
-                                <Text style={{color:'deeppink'}}>Experience:</Text>
-                                <Text>{item.experience}</Text>
-                            </Card.Content>
-                            <Card.Actions>
-                                <Text style={{color:'dimgrey'}}>Category: {item.category.name}</Text>
-                            </Card.Actions>
-                        </Card>
+                        <TouchableOpacity onPress={()=>navigation.navigate('FreelancerService',item._id)}>
+                            <Card key={item._id} style={{borderColor:'deeppink', borderWidth:1, minWidth:300, maxWidth: 300, minHeight:150, marginHorizontal: 5}}>
+                                <Card.Title 
+                                    title={item.title} 
+                                    titleStyle={{color:'deeppink'}} 
+                                    subtitle={item.name} 
+                                    subtitleStyle={{color:'dimgrey'}}
+                                    right={()=><IconButton icon='pencil' iconColor='deeppink' size={20} style={{marginRight:20}}/>}
+                                    />
+                                <Card.Content>
+                                    <Text style={{color:'deeppink'}}>Experience:</Text>
+                                    <Text>{item.experience}</Text>
+                                </Card.Content>
+                                <Card.Actions>
+                                    <Text style={{color:'dimgrey'}}>Category: {item.category.name}</Text>
+                                </Card.Actions>
+                            </Card>
+                        </TouchableOpacity>
                     }
                     ListFooterComponent={
                         servicescollection.length > 0 && 
