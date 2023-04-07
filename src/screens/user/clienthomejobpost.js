@@ -1,7 +1,7 @@
 import { observer } from 'mobx-react';
 import React, { useContext, useState, useEffect, useCallback } from 'react';
 import { View, SafeAreaView, Alert, FlatList, RefreshControl } from 'react-native';
-import { Button, Card, Text, Avatar, IconButton, SegmentedButtons } from 'react-native-paper';
+import { Button, Card, Text, Avatar, IconButton, SegmentedButtons, Menu } from 'react-native-paper';
 
 import UserStore from '../../models/user';
 import AuthStore from '../../models/authentication';
@@ -18,6 +18,7 @@ const ClientSingleJobPosts = observer(({route}) => {
     const navigation = useNavigation();
     const [requestdata, setrequestdata] = useState();
     const [offersdata, setoffersdata] = useState([]);
+    const [menucollection, setMenuCollection] = useState({});
 
     function getSingleRequest(){
         const singledata = RequestContext.requests.find((request) => request._id === route.params._id);
@@ -83,7 +84,7 @@ const ClientSingleJobPosts = observer(({route}) => {
     async function accepthandler(id, request_id){
         AuthContext.letmeload();
         try{
-            const response = await acceptanOffer({id, request_id});
+            const response = await acceptanOffer({id});
             if(response.success){
                 alert(response.message);
             }else{
@@ -145,9 +146,24 @@ const ClientSingleJobPosts = observer(({route}) => {
                                     subtitle={item.offered_by.contact}
                                     subtitleStyle={{color:'dimgrey'}}
                                     left={()=><Avatar.Image size={40} source={{uri: item.offered_by.avatar.url }}/>}
-                                    right={()=><IconButton 
-                                        icon={item.offer_status === 'cancelled' ? 'cancel' : item.offer_status === 'granted' ? 'clipboard-check-outline' : 'check'} 
-                                        iconColor={item.offer_status === 'cancelled' ? 'red' : item.offer_status === 'granted' ? 'deeppink' : 'green'}/>}
+                                    right={()=>
+                                    item.offer_status === 'granted' ?
+                                    <Menu
+                                        visible={menucollection[item._id]}
+                                        anchor={
+                                            <IconButton icon='dots-vertical' iconColor='deeppink' onPress={() => setMenuCollection({...menucollection, [item._id]: !menucollection[item._id]})}/>
+                                        }
+                                        anchorPosition='bottom'
+                                        onDismiss={() => setMenuCollection({...menucollection, [item._id]: false})}
+                                        >
+                                        <Menu.Item onPress={() => navigation.navigate('ClientCompleteOffer',item)} title="Complete" />
+                                        <Menu.Item onPress={() => {}} title="Cancel" />
+                                    </Menu>
+                                    :
+                                    <IconButton 
+                                        icon={item.offer_status === 'cancelled' ? 'cancel' : 'check'} 
+                                        iconColor={item.offer_status === 'cancelled' ? 'red' : item.offer_status === 'granted' ? 'deeppink' : 'green'}/>
+                                    }
                                     />
                                 <Card.Content style={{flex:1}}>
                                     <View style={{flexDirection:'row', justifyContent:'space-between', alignItems:'center'}}>
@@ -181,18 +197,19 @@ const ClientSingleJobPosts = observer(({route}) => {
                                     }
                                     {
                                         item.offer_status === 'granted' &&
+                                        <>
                                         <Button
                                             mode='contained'
                                             icon='chat'
                                             textColor='white'
                                             buttonColor='blue'
                                             onPress={()=>{
-                                                
                                                 navigation.navigate('ClientChat')
                                             }}
                                             >
                                             Message
                                         </Button>
+                                        </>
                                     }
                                 </Card.Actions>
                             </Card>

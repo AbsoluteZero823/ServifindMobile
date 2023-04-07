@@ -69,7 +69,6 @@ const ClientJobsRequest = observer(() => {
     }
 
     return (
-
         <Portal>
             <Loading/>
             <Modal visible={mainVisible} onDismiss={hideModal} contentContainerStyle={{marginHorizontal:10}}>

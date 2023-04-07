@@ -5,19 +5,23 @@ import Loading from '../../components/loading';
 import { View, FlatList, SafeAreaView, RefreshControl } from 'react-native';
 import { Button, Card, Text, IconButton, Portal, Modal, TextInput, List, HelperText, Avatar} from 'react-native-paper';
 
+import { getmyServices, createmyServices, myOffers } from '../../../services/apiendpoints';
 import FreelancerStore from '../../models/freelancer';
 import CategoryStore from '../../models/category';
 import UserStore from '../../models/user';
-import { getmyServices, createmyServices, myOffers } from '../../../services/apiendpoints';
 import AuthStore from '../../models/authentication';
-import ServiceStore from '../../models/service';
+import ServiceStore, { ServiceModel } from '../../models/service';
+import OfferStore, { Offer } from '../../models/offer';
+import { useNavigation } from '@react-navigation/native';
 
 
 const FreelancerHome = observer(() => {
-
+    const navigation = useNavigation();
     const FreelancerContext = useContext(FreelancerStore);
     const UserContext = useContext(UserStore);
     const AuthContext = useContext(AuthStore);
+    const ServiceContext = useContext(ServiceStore);
+    const OfferContext = useContext(OfferStore);
     
     const [servicescollection, setServicesCollection] = useState([]);
     const [offerscollection, setOffersCollection] = useState([]);
@@ -39,6 +43,10 @@ const FreelancerHome = observer(() => {
             const response = await getmyServices();
             if(response.success){
                 setServicesCollection(response.services);
+                ServiceContext.services = [];
+                response.services.map((service)=>{
+                    ServiceContext.services.push(service);
+                })
             }
         }catch(error){
             console.log(error);
@@ -52,8 +60,11 @@ const FreelancerHome = observer(() => {
             const response = await myOffers();
             if(response.success){
                 setOffersCollection(response.myoffers);
+                OfferContext.offers = [];
+                response.myoffers.map((offer)=>{
+                    OfferContext.offers.push(offer);
+                })
             }
-            console.dir(offerscollection);
         }catch(error){
             console.log(error);
         }
@@ -238,7 +249,7 @@ const FreelancerHome = observer(() => {
                 <Card.Title 
                     title='My Services'
                     titleStyle={{color:'deeppink', fontSize:24}}
-                    right={()=><Button icon='eye' textColor='deeppink' style={{marginHorizontal:20}}>See All</Button>}
+                    right={()=><Button icon='eye' textColor='deeppink' style={{marginHorizontal:20}} onPress={()=>navigation.navigate('FreelancerServices')}>See All</Button>}
                     />
                 <Card.Content>
                 <FlatList
@@ -292,7 +303,7 @@ const FreelancerHome = observer(() => {
                 <Card.Title 
                     title='My Projects'
                     titleStyle={{color:'deeppink', fontSize:24}}
-                    right={()=><Button icon='eye' textColor='deeppink' style={{marginHorizontal:20}}>See All</Button>}
+                    right={()=><Button icon='eye' textColor='deeppink' style={{marginHorizontal:20}} onPress={()=>navigation.navigate('FreelancerProjects')}>See All</Button>}
                 />
                 <Card.Content>
                 <FlatList
@@ -308,23 +319,19 @@ const FreelancerHome = observer(() => {
                     renderItem={({item})=>
                         <Card key={item._id} style={{minWidth:300, marginHorizontal:5, borderColor: item.offer_status === 'waiting' ? 'deeppink' : item.offer_status === 'granted' ? 'green' : 'black', borderWidth: 1}}>
                             <Card.Title 
-                                title={item.request_id.description} 
-                                subtitle={item.service_id.title}
+                                title={item.request_id.requested_by.name} 
+                                subtitle={<Text style={{color: item.offer_status === 'waiting' ? 'deeppink' : item.offer_status === 'granted' ? 'green' : 'red'}}>{item.offer_status}</Text>}
                                 left={()=><Avatar.Image size={40} source={{uri: item.request_id.requested_by.avatar.url}}/>}
                                 />
                             <Card.Content>
-                                <View style={{flexDirection:'row', justifyContent:'space-between', marginVertical: 4}}>
-                                    <Text style={{color:'deeppink'}}>Requested By:</Text>
-                                    <Text>{item.request_id.requested_by.name}</Text>
-                                </View>
-                                <View style={{flexDirection:'row', justifyContent:'space-between', marginVertical: 4}}>
-                                    <Text style={{color:'deeppink'}}>Category:</Text>
-                                    <Text>{item.service_id.category.name}</Text>
-                                </View>
-                                <View style={{flexDirection:'row', justifyContent:'space-between', marginVertical: 4}}>
-                                    <Text style={{color:'deeppink'}}>Status:</Text>
-                                    <Text style={{color: item.offer_status === 'waiting' ? 'deeppink' : item.offer_status === 'granted' ? 'green' : 'red'}}>{item.offer_status}</Text>
-                                </View>
+                                <Text style={{color:'deeppink'}}>Requested:</Text>
+                                <Text style={{alignSelf:'flex-end'}}>{item.request_id.description}</Text>
+                                <Text style={{color:'deeppink'}}>Category:</Text>
+                                <Text style={{alignSelf:'flex-end'}}>{item.service_id.category.name}</Text>
+                                <Text style={{color:'deeppink'}}>Service:</Text>
+                                <Text style={{alignSelf:'flex-end'}}>{item.service_id.title}</Text>
+                                <Text style={{color:'deeppink'}}>Offer:</Text>
+                                <Text style={{alignSelf:'flex-end'}}>{item.description}</Text>
                             </Card.Content>
                         </Card>
                     }

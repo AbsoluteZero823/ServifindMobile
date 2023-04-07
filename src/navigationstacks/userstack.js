@@ -12,6 +12,7 @@ import ClientJobsRequest from '../screens/user/clientjobspost';
 import ClientHomePostings from '../screens/user/clienthomejobposts';
 import ClientSingleJobPosts from '../screens/user/clienthomejobpost';
 import ClientFreelancerRegistration from '../screens/user/clientfreelancerregistration';
+import ClientCompleteOffer from '../screens/user/clientcompleteoffer';
 
 const ClientStack = createNativeStackNavigator();
 export default function ClientNavigator(props) {
@@ -33,6 +34,7 @@ export default function ClientNavigator(props) {
         <ClientStack.Screen name="ClientFreelancer" component={ClientJobsFreelancer} options={{headerShown: false}}/>
         <ClientStack.Screen name="ClientSingleJob" component={ClientSingleJob} options={{presentation:'transparentModal', headerShown: false, contentStyle:{backgroundColor:'transparent'}}}/>
       </ClientStack.Group>
+      <ClientStack.Screen name="ClientCompleteOffer" component={ClientCompleteOffer} options={{presentation:'transparentModal', contentStyle:{backgroundColor:'transparent'}}}/>
       <ClientStack.Screen name="ClientChat" children={() => <ClientChat params={props} />}/>
       <ClientStack.Screen name="ClientReports" children={() => <ClientReports params={props} />}/>
       <ClientStack.Screen name="ClientProfile" children={() => <ClientProfile params={props} />}/>
