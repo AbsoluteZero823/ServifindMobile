@@ -325,7 +325,7 @@ export async function refuseanOffer(id){
 * 
 * @param props - A hash of properties to be used in the request
 * 
-* @return { Promise } Resolves with the response from Airbrake or an error if something goes wrong
+* @return { Promise } Resolves with the response from Server or an error if something goes wrong
 */
 export async function acceptanOffer(props){
   try{
@@ -581,5 +581,33 @@ export async function getmyServiceRatings(service_id){
     return ratingsresponse.data;
   }catch(error){
     return error.response.data
+  }
+}
+
+// FREELANCER TRANSACTIONS
+export async function generateTransaction(props){
+  try{
+    const transactionresponse = await axios.post(`${API_URL}/myfreelancertransactions/generatetransaction`, props, AxiosConfig);
+    return transactionresponse.data;
+  }catch(error){
+    return error;
+  }
+}
+
+export async function completeTransaction(props){
+  try{
+    const transactionresponse = await axios.post(`${API_URL}/myfreelancertransactions/completetransaction`, props, AxiosConfig);
+    return transactionresponse.data;
+  }catch(error){
+    return error;
+  }
+}
+
+export async function reportTransaction(props){
+  try{
+    const transactionresponse = await axios.post(`${API_URL}/myfreelancertransactions/reporttransaction`, props, AxiosConfig);
+    return transactionresponse.data;
+  }catch(error){
+    return error;
   }
 }

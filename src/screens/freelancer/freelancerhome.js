@@ -343,7 +343,7 @@ const FreelancerHome = observer(() => {
                                     <Text style={{color:'deeppink'}}>Paid:</Text>
                                     {
                                         item.transactions.length > 0 ? 
-                                        <Text>{(item.transactions[0].isPaid && item.transactions[0].paymentSent) ? 'Yes' : 'Not Yet'}</Text>
+                                        <Text>{(item.transactions[0].isPaid === 'true' && item.transactions[0].paymentSent === 'true') ? 'Yes' : 'Not Yet'}</Text>
                                         :
                                         <Text>No Payment Generated</Text>    
                                     }
