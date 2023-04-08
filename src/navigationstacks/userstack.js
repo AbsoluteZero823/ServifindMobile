@@ -15,6 +15,11 @@ import ClientFreelancerRegistration from '../screens/user/clientfreelancerregist
 import ClientCompleteOffer from '../screens/user/clientcompleteoffer';
 
 const ClientStack = createNativeStackNavigator();
+/**
+* Client navigation component for the client. This component is used to display the top - level page of the client's app.
+* 
+* @param props - props to pass to the component. This is an object with the following properties : screenOptions : { Object } a component's options. initialParams
+*/
 export default function ClientNavigator(props) {
   return (
     <ClientStack.Navigator initialRouteName='ClientHome' screenOptions={{headerShown: false, animation:'slide_from_right', navigationBarHidden:true, statusBarTranslucent:true, statusBarStyle:'dark', contentStyle:{backgroundColor:'mistyrose'}}}>

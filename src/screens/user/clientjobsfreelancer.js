@@ -13,10 +13,14 @@ const ClientJobsFreelancer = observer(({route}) => {
     const [servicescollection, setservicescollection] = useState([]);
     const [freelancerinfo, setfreelancerinfo] = useState({});
 
+    /**
+    * function to get freelancer info and service list from Freelancer
+    */
     async function getfreelancer(){
         AuthContext.letmeload();
         try{
             const freelancerresponse = await getFreelancer(route.params.freelancer_id);
+            // This method is called when the server is successful.
             if (freelancerresponse.success) {
                 setfreelancerinfo(freelancerresponse.freelancer);
                 setservicescollection(freelancerresponse.services);

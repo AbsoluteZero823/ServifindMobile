@@ -12,6 +12,13 @@ import FreelancerProject from '../screens/freelancer/freelancerproject';
 import FreelancerServices from '../screens/freelancer/freelancerservices';
 import FreelancerService from '../screens/freelancer/freelancerservice';
 
+/**
+* This component is used to render Freelancer navigation. It is responsible for rendering the home page and job posts
+* 
+* @param props - Properties to pass to the screenOptions
+* 
+* @return { ReactElement } The
+*/
 export default function FreelancerNavigator(props) {
   return (
     <FreelancerStack.Navigator initialRouteName='FreelancerHome' screenOptions={{headerShown: false, animation:'slide_from_right', navigationBarHidden:true, statusBarTranslucent:true, statusBarStyle:'dark', contentStyle:{backgroundColor:'mistyrose'}}}>

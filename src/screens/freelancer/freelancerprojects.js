@@ -75,7 +75,7 @@ const FreelancerProjects = observer(() => {
                 />
             <FlatList
                 data={
-                OfferContext.offers.filter((offer) => {
+                    OfferContext.offers?.filter((offer) => {
                     if (statusquery && offer.offer_status.toLowerCase() !== statusquery.toLowerCase()) {
                         // if statusquery is not empty and offer.offer_status does not match, return false
                         return false;
@@ -112,9 +112,8 @@ const FreelancerProjects = observer(() => {
                 }
                 showsVerticalScrollIndicator={false}
                 renderItem={({item}) => 
-                    
                     <TouchableOpacity onPress={()=>{
-                        // navigation.navigate('FreelancerProject', item.service_id._id);
+                        navigation.navigate('FreelancerProject', item);
                     }}>
                         <Card key={item._id} style={{marginVertical: 10, marginHorizontal: 5, minWidth:300, marginHorizontal:5, borderColor: item.offer_status === 'waiting' ? 'deeppink' : item.offer_status === 'granted' ? 'green' : 'black', borderWidth: 1}}>
                             <Card.Title 
@@ -131,6 +130,15 @@ const FreelancerProjects = observer(() => {
                                 <Text style={{alignSelf:'flex-end'}}>{item.service_id.title}</Text>
                                 <Text style={{color:'deeppink'}}>Offer:</Text>
                                 <Text style={{alignSelf:'flex-end'}}>{item.description}</Text>
+                                <View style={{flexDirection:'row', justifyContent:'space-between'}}>
+                                    <Text style={{color:'deeppink'}}>Paid:</Text>
+                                    {
+                                        item.transactions.length > 0 ? 
+                                        <Text>{(item.transactions[0].isPaid && item.transactions[0].paymentSent) ? 'Yes' : 'Not Yet'}</Text>
+                                        :
+                                        <Text>No Payment Generated</Text>    
+                                    }
+                                </View>
                             </Card.Content>
                         </Card>
                     </TouchableOpacity>

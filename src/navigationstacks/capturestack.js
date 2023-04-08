@@ -6,6 +6,12 @@ import ServiForm from '../screens/auth/serviform';
 
 const CaptureStack = createNativeStackNavigator();
 
+/**
+* Captures the Navigator component. This component is used to navigate through the stack to the landingpage and register pages.
+* 
+* 
+* @return { ReactElement } The Navigator component wrapped in a capture stack component with a navigation option to allow the user to navigate
+*/
 export default function CaptureNavigator() {
   return (
     <CaptureStack.Navigator 

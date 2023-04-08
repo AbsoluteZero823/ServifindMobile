@@ -143,7 +143,7 @@ const FreelancerHome = observer(() => {
                 category: category,
                 user: UserContext.users[0]._id,
                 experience: experience,
-                freelancer_id: FreelancerContext.data[0]._id,
+                freelancer_id: FreelancerContext.data[0]?._id,
                 image: image
             });
             AuthContext.donewithload();
@@ -264,7 +264,6 @@ const FreelancerHome = observer(() => {
                                     titleStyle={{color:'deeppink'}} 
                                     subtitle={item.name} 
                                     subtitleStyle={{color:'dimgrey'}}
-                                    right={()=><IconButton icon='pencil' iconColor='deeppink' size={20} style={{marginRight:20}}/>}
                                     />
                                 <Card.Content>
                                     <Text style={{color:'deeppink'}}>Experience:</Text>
@@ -309,8 +308,14 @@ const FreelancerHome = observer(() => {
                 />
                 <Card.Content>
                 <FlatList
-                    data={offerscollection.sort((a, b) => {
-                        const statusOrder = { granted: 0, waiting: 1, cancelled: 2 };
+                    data={offerscollection.filter((offer)=>{
+                            if (offer.offer_status === 'cancelled'){
+                                return;
+                            }else{
+                                return true;
+                            }
+                        }).sort((a, b) => {
+                        const statusOrder = { granted: 0, waiting: 1};
                         const aStatus = a.offer_status.toLowerCase();
                         const bStatus = b.offer_status.toLowerCase();
                         return statusOrder[aStatus] - statusOrder[bStatus];
@@ -334,6 +339,15 @@ const FreelancerHome = observer(() => {
                                 <Text style={{alignSelf:'flex-end'}}>{item.service_id.title}</Text>
                                 <Text style={{color:'deeppink'}}>Offer:</Text>
                                 <Text style={{alignSelf:'flex-end'}}>{item.description}</Text>
+                                <View style={{flexDirection:'row', justifyContent:'space-between'}}>
+                                    <Text style={{color:'deeppink'}}>Paid:</Text>
+                                    {
+                                        item.transactions.length > 0 ? 
+                                        <Text>{(item.transactions[0].isPaid && item.transactions[0].paymentSent) ? 'Yes' : 'Not Yet'}</Text>
+                                        :
+                                        <Text>No Payment Generated</Text>    
+                                    }
+                                </View>
                             </Card.Content>
                         </Card>
                     }

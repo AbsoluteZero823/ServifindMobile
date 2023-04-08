@@ -20,6 +20,9 @@ const ClientSingleJobPosts = observer(({route}) => {
     const [offersdata, setoffersdata] = useState([]);
     const [menucollection, setMenuCollection] = useState({});
 
+    /**
+    * get single request from request data and set it to RequestContext. requests if it
+    */
     function getSingleRequest(){
         const singledata = RequestContext.requests.find((request) => request._id === route.params._id);
         setrequestdata(singledata);

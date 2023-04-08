@@ -28,13 +28,18 @@ const ClientJobs = observer((props) => {
     const [servicescollection, setservicescollection] = useState();
     const [refreshing, setRefreshing] = useState(false);
 
+    /**
+    * get all services and store in ServiceContext. services for use in next page
+    */
     async function getAllServices() {
         AuthContext.letmeload();
         try{
             const servicesresponse = await getServices();
+            // This method is called when the services response is successful.
             if(servicesresponse.success){
                 ServiceContext.services = [];
                 servicesresponse.services.map((service) => {
+                    // Add a service to the services list
                     if (service.user._id !== UserContext.users[0]._id) {
                         ServiceContext.services.push(service)
                     }
@@ -66,9 +71,11 @@ const ClientJobs = observer((props) => {
         setservicescollection(ServiceContext.services.filter((service) => {
         const { title, user } = service;
         // check if title or user name match the search query
+        // Returns true if the filterby is services or Freelancers
         if (Filterby === 'Services' && Filterwith) {
             const titleMatch = title?.toLowerCase().includes(Filterwith.toLowerCase());
             return titleMatch;
+        // Returns true if the user is a user name or user name
         } else if (Filterby === 'Freelancers' && Filterwith) {
             const nameMatch = user?.name?.toLowerCase().includes(Filterwith.toLowerCase());
             return nameMatch;

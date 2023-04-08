@@ -13,7 +13,6 @@ import Loading from '../../components/loading';
 
 
 const ClientJobsRequest = observer(() => {
-    const UserContext = useContext(UserStore);
     const RequestContext = useContext(RequestStore);
     const CategoryContext = useContext(CategoryStore);
     const AuthContext = useContext(AuthStore);
@@ -30,11 +29,16 @@ const ClientJobsRequest = observer(() => {
 
     const hideModal = () => {setmainVisible(false), navigation.goBack()};
 
+    /**
+    * This function handles the job request creation and updates the RequestContext with the request data
+    */
     async function requesthandler(){
+        // Creates a new request and adds it to the request list
         if (category && description) {
             AuthContext.letmeload();
         try{
             const requestresponse = await createmyRequest({category, description});
+            // This function is called when the request is successful.
             if(requestresponse.success){
                 setmainVisible(false);
                 const request = requestresponse.addeddata;
@@ -57,9 +61,11 @@ const ClientJobsRequest = observer(() => {
         AuthContext.donewithload();
         }else{
             const errors = {};
+            // Check if category is required.
             if (!category) {
                 errors.category = 'Category is required';
             }
+            // if description is set to true the description is required
             if (!description) {
                 errors.description = 'Description is required';
             }

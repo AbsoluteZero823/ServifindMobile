@@ -1,10 +1,7 @@
 import { observer } from 'mobx-react';
 import React, { useContext, useState } from 'react';
-import { View, StyleSheet, ImageBackground, TouchableOpacity, FlatList} from 'react-native';
+import { View, TouchableOpacity, FlatList} from 'react-native';
 import { Button, Card, Text, Avatar, Divider, IconButton, Portal, Modal, TextInput} from 'react-native-paper';
-import UserStore from '../../models/user';
-import { styles } from '../../components/user/user.css';
-import { useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { createanInquiry } from '../../../services/apiendpoints';
 import { format } from 'date-fns';
@@ -21,6 +18,9 @@ const ClientSingleJob = observer(({route}) => {
     const [Inquirevisible, setInquirevisible] = useState(false);
     const hideModal = () => {setmainVisible(false), navigation.goBack()};
 
+    /**
+    * Send an Inquiry to Freelancer and set visibility to
+    */
     async function sendInquiry() {
         AuthContext.letmeload();
         let body = {};
@@ -30,6 +30,7 @@ const ClientSingleJob = observer(({route}) => {
         body.service_id = data._id;
         try{
             const sendresponse = await createanInquiry(body);
+            // This method is called when the server sends a response to the Freelancer.
             if(sendresponse.success){
                 setInquirevisible(false);
                 setmainVisible(false);

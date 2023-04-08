@@ -12,9 +12,13 @@ export default Jobpostcard = (passeddata) => {
     const [isEditing, setisEditing] = useState(false);  
     const [newdescription, setnewdescription] = useState(item.description);
     const [newstatus, setnewstatus] = useState(item.request_status);
+    /**
+    * Updates the description of a job request and shows a success / failure message to the user if the job request was
+    */
     async function updatehandler(){
         try{
             const response = await editmyRequest({_id: item._id, description: newdescription});
+            // if the job was successfully updated
             if(response.success){
                 setisEditing(false);
                 alert('Job Request Updated Successfully');
@@ -26,9 +30,13 @@ export default Jobpostcard = (passeddata) => {
             console.log(error);
         }
     }
+    /**
+    * Function to handle cancelmyRequest ( item ) This function is called when user clicks on Cancel button in
+    */
     async function cancelhandler(){
         try{
             const response = await cancelmyRequest(item._id);
+            // if the request was successful
             if(response.success){
                 setisEditing(false);
                 alert('Job Request Cancelled Successfully');

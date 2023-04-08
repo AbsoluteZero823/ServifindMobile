@@ -1,3 +1,4 @@
+// This is a copy of react - media - graph. js which has been moved to another module. We're going to need to move this in a more elegant way
 import React, { useContext } from 'react';
 import { Alert, View } from 'react-native';
 import { Drawer, Text} from 'react-native-paper';
@@ -6,7 +7,9 @@ import AuthStore from '../../models/authentication';
 import UserStore from '../../models/user';
 import ServiceStore from '../../models/service';
 
+// Exports Freelancer's view drawer. It is used to build the view
 export const FreelancerDrawer = (props) => {
+  // Adds setjobsearch and / or auth context to the appbar. This is called from a constructor
   const setjobsearch = props.parameters[4];
   const AuthContext = useContext(AuthStore);
   const UserContext = useContext(UserStore);
@@ -15,6 +18,7 @@ export const FreelancerDrawer = (props) => {
   const [active, setActive, setAppbarTitle, setDrawerActive] = props.parameters;
   
   return (
+    // Adds the home and Board icons to the appbar. This is a bit hacky but I don't know how to make it
     <Drawer.Section style={{paddingTop:20, marginBottom:20,  marginTop:20, flex:1, backgroundColor:'salmon', borderTopLeftRadius:30, borderBottomLeftRadius:20}} showDivider={false}>
       <Drawer.CollapsedItem 
         focusedIcon="home-outline"

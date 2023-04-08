@@ -1,3 +1,4 @@
+// This is called by React to ensure that we don't accidentally get a reference to the AnimatedFAB
 import React from 'react';
 import { AnimatedFAB } from "react-native-paper"
 import { useNavigation } from '@react-navigation/native';

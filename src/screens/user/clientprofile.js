@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import * as ImagePicker from 'expo-image-picker';
 import { observer } from 'mobx-react';
-import { View, TouchableOpacity, ScrollView, FlatList, SectionList} from 'react-native';
+import { View, TouchableOpacity, ScrollView, FlatList } from 'react-native';
 import { Button, Card, Text, Avatar, Divider, TextInput, RadioButton, HelperText, IconButton, SegmentedButtons} from 'react-native-paper';
 import { styles  } from '../../components/user/user.css';
 import Loading from '../../components/loading';
@@ -18,20 +18,27 @@ const ClientProfile = observer((props) => {
     const AuthContext = useContext(AuthStore);
     const [validationErrors, setvalidationErrors] = useState({});
     
+    /**
+    * Handles the request to update a user's profile. This is called when the user clicks the update
+    */
     function updatehandler(){
         AuthContext.letmeload();
         const errors = {};
+        // Check if age is between 18 and 100
         if(UserContext.users[0].UserDetails.age < 18 || UserContext.users[0].UserDetails.age > 100){
             errors.age = 'Valid Age is between 18-100';
         }
+        // Check if contact is required
         if (!UserContext.users[0].UserDetails.contact || UserContext.users[0].UserDetails.contact.length < 11) {
             errors.contact = 'Contact is required';
         }
         setTimeout(async () => {
+            // updateProfile UserContext. users 0. ProfileDetails. ProfileDetails. ProfileDetails. success true
             if (Object.keys(errors).length > 0) {
                 setvalidationErrors(errors);
             } else {
             const response = await updateProfile(UserContext.users[0].ProfileDetails);
+            // if profile was successfully updated
             if (response.success) {
                 setisEditing(false);
                 alert("Profile Updated Successfully");
@@ -54,31 +61,41 @@ const ClientProfile = observer((props) => {
     const [ newconfirmPasswordVisibility, setnewconfirmPasswordVisibility ] = useState(false);
 
     
+    /**
+    * passwordhandler is used to change password. It checks if old and new passwords are valid
+    */
     function passwordhandler(){
         AuthContext.letmeload();
         const errors = {};
+        // This is required if the old confirm password is less than 6 characters
         if(oldconfirmPassword.length < 6 ){
             errors.oldconfirmPassword = 'This is required!';
         }
+        // check that newPassword is at least 6 characters
         if(newPassword.length < 6){
             errors.newPassword = 'Password must be atleast 6 characters';
         }
+        // Check if the old password and new password are the same as the old one.
         if(newPassword === oldconfirmPassword){
             errors.oldconfirmPassword = "Old Password can't be the same as the new one.";
             errors.newPassword = "New Password can't be the same as the old one.";
         }
+        // if newconfirmPassword is less than 6 characters
         if(newconfirmPassword < 6){
             errors.newconfirmPassword = 'Password must be atleast 6 characters';
         }
+        // check if the new password is correct
         if(newconfirmPassword !== newPassword && (newconfirmPassword.length !== newPassword.length || newconfirmPassword.length === newPassword.length) ){
             errors.newPassword='Password Mismatch!';
             errors.newconfirmPassword = 'Password Mismatch!';
         }
         setTimeout(async () => {
+            // updatePassword function to update the password.
             if (Object.keys(errors).length > 0) {
                 setvalidationErrors(errors);
             } else {
                 const response = await updatePassword({oldPassword: oldconfirmPassword, password: newPassword});
+                // if the password is successful
                 if (response.success) {
                     setisPassword(false);
                     setoldconfirmPassword('');
@@ -95,6 +112,12 @@ const ClientProfile = observer((props) => {
         }, 2000);
     }
 
+    /**
+    * Launch image picker and upload an image to the user's profile. This is a blocking call
+    * 
+    * 
+    * @return Promise resolved when image is
+    */
     async function pickImage(){
         AuthContext.letmeload();
         try{
@@ -105,8 +128,10 @@ const ClientProfile = observer((props) => {
                 aspect: [4, 3],
                 quality: 1,
             });
+            // Upload a picture to the users profile.
             if (!result.canceled) {
                 let typePrefix;
+                // Returns true if the result is an image or PNG file.
                 if (result.assets[0].type === "image") {
                     // Autoconverts to jpeg
                     typePrefix = "data:image/jpeg;base64,";
@@ -115,6 +140,7 @@ const ClientProfile = observer((props) => {
                     return;
                 }
                 const uploadresponse = await updateProfile({avatar: typePrefix + result.assets[0].base64});
+                // if the user is successful display the profile picture
                 if (uploadresponse.success) {
                     UserContext.users[0].setAvatar(uploadresponse.user.avatar);
                     alert("Profile Picture Successfully");
@@ -130,10 +156,14 @@ const ClientProfile = observer((props) => {
       };
 
     const [transaction_collection, set_transaction_collection] = useState([]);
+    /**
+    * Gets transactions from MyStudio and stores them in the database. This is a wrapper around getmyTransactions
+    */
     async function getTransactions(){
         AuthContext.letmeload();
         try{
             const transaction_response = await getmyTransactions();
+            // if transaction_response. success then alert the user if the transaction is successful
             if(transaction_response.success){
                 AuthContext.donewithload();
                 set_transaction_collection(transaction_response.transactions);
@@ -149,10 +179,14 @@ const ClientProfile = observer((props) => {
     }
 
     const [reports_collection, set_reports_collection] = useState([]);
+    /**
+    * Gets all reports from My Mentat and stores them in Reports collection
+    */
     async function getAllmyReports(){
         AuthContext.letmeload();
         try{
             const report_response = await getmyReports();
+            // if report_response. success true set the report collection to the report collection
             if(report_response.success){
                 AuthContext.donewithload();
                 set_reports_collection(report_response.reports);
