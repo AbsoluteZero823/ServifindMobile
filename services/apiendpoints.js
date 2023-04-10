@@ -585,6 +585,15 @@ export async function getmyServiceRatings(service_id){
 }
 
 // FREELANCER TRANSACTIONS
+export async function FreelancerFetchTransaction(){
+  try{
+    const transactionresponse = await axios.post(`${API_URL}/myfreelancertransactions`, AxiosConfig);
+    return transactionresponse.data;
+  }catch(error){
+    return error;
+  }
+}
+
 export async function generateTransaction(props){
   try{
     const transactionresponse = await axios.post(`${API_URL}/myfreelancertransactions/generatetransaction`, props, AxiosConfig);
