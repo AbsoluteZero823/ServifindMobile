@@ -124,7 +124,7 @@ const ClientFreelancerRegistration = observer(({route}) => {
         const response = await freelancerstatus();
         if (response.success === true) {
             if(response.freelancer.length > 0){
-                if(response.freelancer[0].approved_date === null){
+                if(response.freelancer[0].approved_date === null || response.freelancer[0].approved_date === undefined){
                     setstatus('Pending')
                 }else{
                   const servicesresponse = await getmyServices();

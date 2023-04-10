@@ -5,10 +5,12 @@ import { Keyboard, TouchableOpacity } from 'react-native';
 import { Appbar, Avatar, Searchbar, Button, Menu, IconButton, Text } from 'react-native-paper';
 
 import UserStore from '../models/user';
+import AuthStore from '../models/authentication';
 
 export const CustomAppBar = observer((props) => {
     const navigation = useNavigation();
     const UserContext = useContext(UserStore);
+    const AuthContext = useContext(AuthStore);
     const [menuvisible, setmenuvisible] = useState(false);
     const [AppbarTitle, setActive, setAppbarTitle, drawer, DrawerActive, setDrawerActive, jobsearchquery, setjobsearchquery, jobsearchmenu, jobsearch, setjobsearch] = props.passed;
     const [searchisLoading, setjobisLoading] = useState(false);
@@ -67,7 +69,7 @@ export const CustomAppBar = observer((props) => {
                 :  
                 <>
                 <Appbar.Content title={AppbarTitle} titleStyle={{color:'deeppink', fontWeight:'bold',fontSize:28, marginLeft:10}}/>
-                <TouchableOpacity onPress={()=>{setActive('Jobs'), setAppbarTitle('Jobs'),navigation.navigate('ClientJobs')}}>
+                <TouchableOpacity onPress={()=>{setActive('Jobs'), setAppbarTitle('Jobs'),navigation.navigate(AuthContext.myrole === 'customer' ? 'ClientJobs' : 'FreelancerJobPosts')}}>
                     <Appbar.Action icon='magnify' color='deeppink' size={26}/>
                 </TouchableOpacity>
                 </>

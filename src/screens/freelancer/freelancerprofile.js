@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react';
 import * as ImagePicker from 'expo-image-picker';
 import { observer } from 'mobx-react';
-import { View, TouchableOpacity, ScrollView, FlatList} from 'react-native';
+import { View, TouchableOpacity, ScrollView, SafeAreaView} from 'react-native';
 import { Button, Card, Text, Avatar, Divider, TextInput, RadioButton, HelperText, Switch, SegmentedButtons, IconButton} from 'react-native-paper';
 import { styles  } from '../../components/user/user.css';
 import Loading from '../../components/loading';
@@ -77,11 +77,11 @@ const FreelancerProfile = observer((props) => {
                     <Card.Title 
                         title='My Transactions'
                         titleStyle={{color:'deeppink', fontWeight:'bold', fontSize:20}}
-                        right={()=><IconButton icon={visibletransaction ? 'chevron-up' : 'chevron-down'} iconColor='deeppink' onPress={()=>setvisibletransaction(!visibletransaction)} style={{marginRight: 8 }}/>}
+                        right={()=>transactionlist.length > 0 && <IconButton icon={visibletransaction ? 'chevron-up' : 'chevron-down'} iconColor='deeppink' onPress={()=>setvisibletransaction(!visibletransaction)} style={{marginRight: 8 }}/>}
                         />
                     <Card.Content>
                         {   
-                            visibletransaction &&
+                            (visibletransaction && transactionlist.length > 0) ?
                             transactionlist.map((item, index)=>{
                                 return (
                                     <Card key={index} style={{marginVertical:4, borderColor:'deeppink', borderWidth: 1}}>
@@ -123,6 +123,12 @@ const FreelancerProfile = observer((props) => {
                                     </Card>
                                 )
                             })
+                            :
+                            <SafeAreaView style={{alignItems:'center', alignSelf:'center', maxWidth: '100%', marginBottom:20}}>
+                                <IconButton icon='view-grid-plus' size={30} iconColor='deeppink'/>
+                                <Text variant='titleMedium'>No Transactions Yet</Text>
+                                <Text style={{textAlign:'center', color:'dimgrey',marginVertical:6}}>Post a Service on the marketplace and let a client come to you</Text>
+                            </SafeAreaView>
                         }
                     </Card.Content>
                 </Card>

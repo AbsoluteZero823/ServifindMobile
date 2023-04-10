@@ -24,8 +24,8 @@ export const UserDrawer = (props) => {
       const response = await freelancerstatus();
       if (response.success === true) {
         if(response.freelancer.length > 0){
-          if(response.freelancer[0].approved_date === null){
-            setstatus('Pending')
+          if(response.freelancer[0].approved_date === null || response.freelancer[0].approved_date === undefined){
+            alert("Your Application is still being processed, If you haven't verified your application please do so.")
           }else{
             const servicesresponse = await getmyServices();
             FreelancerContext.data = ([]);

@@ -137,7 +137,7 @@ const FreelancerHome = observer(() => {
         }
         try{
             AuthContext.letmeload()
-            const submitreponse = await createmyServices({
+            const submitresponse = await createmyServices({
                 title: title,
                 name: shortname,
                 category: category,
@@ -148,10 +148,10 @@ const FreelancerHome = observer(() => {
             });
             AuthContext.donewithload();
             setservicemodalvisibility(false);
-            if(submitreponse.success){
+            if(submitresponse.success){
                 alert("Service Created Successfully");
             }else{
-                alert("An Error has Occured");
+                alert(submitresponse.message);
             }
         }catch(error){
             console.log(error);
@@ -287,11 +287,11 @@ const FreelancerHome = observer(() => {
                         </Card>
                     }
                     ListEmptyComponent={
-                        <SafeAreaView style={{alignItems:'center', alignSelf:'center', maxWidth: 300, marginBottom:20}}>
-                        <IconButton icon='view-grid-plus' size={30} iconColor='deeppink'/>
-                        <Text variant='titleMedium'>No Services Yet</Text>
-                        <Text style={{textAlign:'center', color:'dimgrey',marginVertical:6}}>Post a Service on the marketplace and let a client come to you</Text>
-                        <Button mode='contained' buttonColor="salmon" style={{marginVertical:6, width:200}} onPress={()=>(setservicemodalvisibility(true))}>Post a Service</Button>
+                        <SafeAreaView style={{alignItems:'center', alignSelf:'center', maxWidth: '100%', marginBottom:20}}>
+                            <IconButton icon='view-grid-plus' size={30} iconColor='deeppink'/>
+                            <Text variant='titleMedium'>No Services Yet</Text>
+                            <Text style={{textAlign:'center', color:'dimgrey',marginVertical:6}}>Post a Service on the marketplace and let a client come to you</Text>
+                            <Button mode='contained' buttonColor="salmon" style={{marginVertical:6, width:200}} onPress={()=>(setservicemodalvisibility(true))}>Post a Service</Button>
                         </SafeAreaView>
                     }
                     refreshControl={
@@ -352,7 +352,7 @@ const FreelancerHome = observer(() => {
                         </Card>
                     }
                     ListEmptyComponent={
-                        <SafeAreaView style={{alignItems:'center', alignSelf:'center', maxWidth: 300, marginBottom:20}}>
+                        <SafeAreaView style={{alignItems:'center', alignSelf:'center', maxWidth: '100%', marginBottom:20}}>
                             <IconButton icon='view-grid-plus' size={30} iconColor='deeppink'/>
                             <Text variant='titleMedium'>No Projects Yet</Text>
                             <Text style={{textAlign:'center', color:'dimgrey',marginVertical:6}}>Accept a Job Request on the marketplace and start earning</Text>

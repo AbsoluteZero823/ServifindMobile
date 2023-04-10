@@ -58,7 +58,7 @@ export const FreelancerDrawer = (props) => {
           label={<Text style={{color:'white', fontWeight:'600', fontSize:14}}>Profile</Text>}
           active={active === 'Profile'}
           onPress={() => {
-            setAppbarTitle('Freelance Profile');
+            setAppbarTitle('My Profile');
             setActive('Profile');
             navigation.navigate('FreelancerProfile');
           }} />
