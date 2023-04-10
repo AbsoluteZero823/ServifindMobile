@@ -60,6 +60,9 @@ const LoginPage = observer(() => {
                     alert('An Error has occured!');
                 }
                 AuthContext.donewithload();
+            }else{
+                AuthContext.donewithload();
+                alert('An Error has occured!');
             }
         }
     }
