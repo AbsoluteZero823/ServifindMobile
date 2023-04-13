@@ -18,47 +18,37 @@ export const UserDrawer = (props) => {
 
   const [active, setActive, setAppbarTitle, setDrawerActive] = props.parameters;
 
-  async function switchover(){
+  async function switchover() {
     AuthContext.letmeload();
     try {
       const response = await freelancerstatus();
-      if (response.success === true) {
-        if(response.freelancer.length > 0){
-          if(response.freelancer[0].approved_date === null || response.freelancer[0].approved_date === undefined){
-            alert("Your Application is still being processed, Please wait for a while.");
-          }else{
-            const servicesresponse = await getmyServices();
-            FreelancerContext.data = ([]);
-            response.freelancer[0].approved_date = new Date(response.freelancer[0].approved_date);
-            const freelancerinfo = Freelancer.create(response.freelancer[0]);
-            FreelancerContext.data.push(freelancerinfo);
-            ServicesContext.services = [];
-            servicesresponse.services.map(service => {
-            const serviceinfo = ServiceModel.create({
-              _id: service._id,
-              title: service.title,
-              name: service.name,
-              category: Category.create(service.category),
-              user: User.create(service.user),
-              experience: service.experience,
-              freelancer_id: Freelancer.create({...service.freelancer_id, approved_date: new Date(service.freelancer_id.approved_date)}),
-              status: service.status,
-              images: { 
-                public_id: service.images.public_id, 
-                url: service.images.url, 
-                }}
-              )
-              ServicesContext.services.push(serviceinfo);
-            });
-            AuthContext.setmyrole('Freelancer');
-            navigation.navigate('FreelancerHome');
-          }
-        }else if(UserContext.users[0].UserDetails.role === 'customer'){
-          navigation.navigate('ClientFreelancerRegistration');
-        }
-      } else {
+      if (!response.success) {
         alert(response.errMessage);
+        return;
       }
+      const freelancer = response.freelancer[0];
+      if (!freelancer || !freelancer.approved_date) {
+        alert("Your Application is still being processed, Please wait for a while.");
+        return;
+      }
+      const servicesresponse = await getmyServices();
+      FreelancerContext.data = [Freelancer.create(freelancer)];
+      ServicesContext.services = servicesresponse.services.map(service => ({
+        _id: service._id,
+        title: service.title,
+        name: service.name,
+        category: Category.create(service.category),
+        user: User.create(service.user),
+        experience: service.experience,
+        freelancer_id: Freelancer.create({...service.freelancer_id, approved_date: new Date(service.freelancer_id.approved_date)}),
+        status: service.status,
+        images: { 
+          public_id: service.images.public_id, 
+          url: service.images.url, 
+        }
+      }));
+      AuthContext.setmyrole('Freelancer');
+      navigation.navigate('FreelancerHome');
     } catch (error) {
       console.log(error);
     }

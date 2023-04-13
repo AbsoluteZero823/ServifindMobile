@@ -1,7 +1,7 @@
 import axios from 'axios';
 import AuthStore from '../src/models/authentication';
 
-const API_URL='http://192.168.0.57:4002/api/v1';
+const API_URL='http://192.168.187.99:4002/api/v1';
 
 const AxiosConfig = {
     headers: {
