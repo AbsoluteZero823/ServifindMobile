@@ -1,7 +1,6 @@
 import { types } from 'mobx-state-tree';
 import { createContext } from 'react';
 import { User } from './user';
-import Freelancer from './freelancer';
 import { ServiceModel } from './service';
 
 export const Inquiry = types.model('Inquiry', {

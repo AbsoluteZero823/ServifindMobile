@@ -45,6 +45,7 @@ const ClientHome = observer((props) => {
         const inquiriesCollection = await getmyInquiries();
         InquiryContext.inquiries = [];
         if(inquiriesCollection.success){
+          console.log(inquiriesCollection.inquiries);
           inquiriesCollection.inquiries?.map((inquiry) => {
             InquiryContext.inquiries.push(Inquiry.create({
               _id: inquiry._id,
@@ -52,7 +53,7 @@ const ClientHome = observer((props) => {
               attachments: inquiry.attachments,
               customer: User.create(inquiry.customer),
               freelancer: inquiry.freelancer,
-              service: ServiceModel.create({...inquiry.service_id, freelancer_id: {...inquiry.service_id.freelancer_id, approved_date: new Date(inquiry.service_id.freelancer_id.approved_date)}}),
+              service: ServiceModel.create({...inquiry.service_id, freelancer_id: { ...inquiry.service_id.freelancer_id }}),
               status: inquiry.status,
             }));
           })

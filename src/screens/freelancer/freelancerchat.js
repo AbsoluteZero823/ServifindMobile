@@ -1,149 +1,109 @@
 import { observer } from 'mobx-react';
-import React, { useContext, useEffect, useState } from 'react';
-import { View, SectionList, FlatList} from 'react-native';
-import { Button, Card, Text, Avatar, IconButton, Searchbar, Menu} from 'react-native-paper';
-import Loading from '../../components/loading';
-import { getClientInquiries } from '../../../services/apiendpoints';
-
+import React, { useContext, useEffect, useState, useCallback } from 'react';
+import { View, FlatList, TouchableOpacity, RefreshControl } from 'react-native';
+import { Text, Avatar, Searchbar, IconButton } from 'react-native-paper';
 import AuthStore from '../../models/authentication';
-import FreelancerStore from '../../models/freelancer';
+import { useNavigation } from '@react-navigation/native';
+import { fetchChats } from '../../../services/apiendpoints';
 import UserStore from '../../models/user';
 
-const FreelancerChats = observer(() => {
+const FreelancerChat = observer(() => {
+    const UserContext = useContext(UserStore);
     const AuthContext = useContext(AuthStore);
-    const FreelancerContext = useContext(FreelancerStore)
-    const [query, setQuery] = useState('');
-    const [visible, setVisible] = useState(false);
-    const [selectedOption, setSelectedOption] = useState('All');
-    const handleQueryChange = query => setQuery(query);
-    const openMenu = () => setVisible(true);
-    const closeMenu = () => setVisible(false);
+    const navigation = useNavigation();
+    const [ChatsCollection, setChatsCollection] = useState([]);
+    const [search, setSearch] = useState('');
 
-    const handleOptionSelect = option => {
-        setSelectedOption(option);
-        closeMenu();
-    };
+    const [refreshing, setRefreshing] = useState(false);
 
-    const [pendinginquirycollection, setpendinginquirycollection] = useState([]);
+    const onRefresh = useCallback(() => {
+        setRefreshing(true);
+        setTimeout(() => {
+        setRefreshing(false);
+        }, 2000);
+    }, []);
 
-    async function fetchpendinginquiry(){
+    async function fetchmyChats(){
         AuthContext.letmeload();
         try{
-            setpendinginquirycollection([]);
-            const fetchpendinginquiry = await getClientInquiries({
-                freelancer: FreelancerContext.data[0]._id
-            })
-            if(fetchpendinginquiry.success){
-                let collection = []
-                fetchpendinginquiry.inquiries.map((inquiry)=>{
-                    console.log(inquiry);
-                    collection.push(inquiry)
-                })
-                setpendinginquirycollection(collection);
+            const fetchmychatsresponse = await fetchChats();
+            if(fetchmychatsresponse.success){
+                setChatsCollection(fetchmychatsresponse.chats);
+            }else{
+                alert("An Error has Occured");
             }
             AuthContext.donewithload();
         }catch(error){
+            AuthContext.donewithload();
             console.log(error)
         }
     }
-
+    
     useEffect(()=>{
-        fetchpendinginquiry();
-    },[])
-
-    const DATACOLLECTION = [
-        {
-            title: 'Inquiries',
-            data: pendinginquirycollection
-        },
-        {
-            title: 'Messages',
-            data: []
-        },
-        {
-            title: 'Projects',
-            data: []
-        }
-    ]
+        fetchmyChats();
+    },[]);
 
     return (
-        <View style={{marginHorizontal:10}}>
-            <Loading/>
+        <View style={{marginHorizontal: 4}}>
             <Searchbar
+                value={search}
+                onChangeText={(text) => setSearch(text)}
                 mode='bar'
+                placeholder='Search...'
                 iconColor='deeppink'
-                placeholder="Search"
-                onChangeText={handleQueryChange}
-                style={{borderColor:'deepink', borderWidth:1}}
-                right={()=>
-                    <Menu
-                    visible={visible}
-                    onDismiss={closeMenu}
-                    anchor={
-                        <IconButton icon="menu" iconColor='deeppink' onPress={openMenu}/>
-                    }
-                    anchorPosition="bottom"
-                    >
-                    <Menu.Item
-                    onPress={() => handleOptionSelect('All')}
-                    title="All"
-                    titleStyle={{color: selectedOption === 'All' ? 'deeppink' : 'black' }}
-                    />
-                    <Menu.Item
-                    onPress={() => handleOptionSelect('Projects')}
-                    title="Projects"
-                    titleStyle={{color: selectedOption === 'Projects' ? 'deeppink' : 'black' }}
-                    />
-                    <Menu.Item
-                    onPress={() => handleOptionSelect('Inquiries')}
-                    title="Inquiries"
-                    titleStyle={{color: selectedOption === 'Inquiries' ? 'deeppink' : 'black' }}
-                    />
-                </Menu>
-                }
+                traileringIconColor='deeppink'
+                style={{borderWidth:2, borderColor:'dimgrey'}}
             />
             <FlatList
-                data={ selectedOption === 'All' ? [] : selectedOption === 'Projects' ? [] : selectedOption === 'Inquiries' ? pendinginquirycollection : null}
-                style={{ marginVertical: 8 }}
-                renderItem={({item}) => 
-                    <Card style={{backgroundColor:'transparent', shadowColor: 'transparent', borderWidth: 1}}>
-                        <Card.Title 
-                            title={item.customer.name+"  -  "+item.service_id.title}
-                            titleStyle={{fontWeight: 'bold', color:'deeppink', marginLeft: 4 }}
-                            subtitle={item.service_id.category.name}
-                            subtitleStyle={{color:'dimgrey'}}
-                            left={()=><Avatar.Image size={50} source={{uri: item.customer.avatar.url}}/>}
-                            />
-                    </Card>
+            data={
+            ChatsCollection.filter((chat)=>{
+                if (chat.chatName.toLowerCase().includes(search.toLowerCase())){
+                    if (!chat.offer_id && !chat.inquiry_id) {
+                        return false;
+                    }
+                    if (chat.inquiry_id && chat.users[1]._id === UserContext.users[0]._id) {
+                        return true;
+                    }
+                    if (chat.offer_id && chat.users[1]._id === UserContext.users[0]._id) {
+                        return true;
+                    }
                 }
+            })}
+            keyExtractor={(item) => item._id}
+            refreshControl={
+                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
+            renderItem={({item}) => (
+                <TouchableOpacity onPress={()=>navigation.navigate('FreelancerMessage',{
+                    offer_id: item.offer_id,
+                    receiver: item.users[1]._id,
+                    inquiry_id: item.inquiry_id
+                    })}>
+                    <View style={{flexDirection:'row', marginHorizontal: 4, marginVertical: 8}}>
+                        <Avatar.Image source={{uri:  item.latestMessage.sender.avatar.url}} size={60}/>
+                        <View style={{marginHorizontal: 4, alignSelf: 'center'}}>
+                            <Text variant='titleMedium' style={{color:'deeppink'}}>{item.chatName}</Text>
+                            {
+                                item.latestMessage.sender._id === item.users[1]._id &&
+                                <Text style={{color:'dimgrey'}}>You: {item.latestMessage.content}</Text>
+                            }
+                            {
+                                item.latestMessage.sender._id === item.users[0]._id &&
+                                <Text style={{color:'dimgrey'}}>{item.latestMessage.sender.name}: {item.latestMessage.content}</Text>
+                            }
+                        </View>
+                    </View>
+                </TouchableOpacity>
+            )}
+            ListEmptyComponent={() => (
+                <View style={{alignSelf:'center', backgroundColor:'white', padding:20, marginVertical:20, borderRadius:20}}>
+                    <IconButton icon='chat-processing-outline' iconColor='deeppink' size={60} style={{alignSelf:'center'}}/>
+                    <Text style={{textAlign:'center', color:'black', fontWeight:'bold'}}>Once you connect with a freelancer{`\n`}your messages will appear here{`\n\n`}To get started{`\n`}<Text style={{color:'deeppink'}}>Search for Freelancers</Text>{`\n`}or{`\n`}<Text style={{color:'deeppink'}}>Post a Job</Text></Text>
+                </View>
+            )}
             />
-            {/* {
-                pendinginquirycollection &&
-                <SectionList
-                sections={DATACOLLECTION}
-                keyExtractor={(item, index) => item + index}
-                renderItem={({item}) => 
-                    <Card key={item._id}>
-                        <Card.Title
-                            title={item.customer.name+"    "+item.service_id.title}
-                            titleStyle={{fontWeight: 'bold', color:'deeppink'}}
-                            subtitle={item.service_id.category.name}
-                            subtitleStyle={{color:'dimgrey'}}
-                            left={()=><Avatar.Image size={50} source={{uri: item.customer.avatar.url}}/>}
-                            right={()=><IconButton icon='chat-outline' iconColor='deeppink' onPress={()=>console.log('Yes Sir!')}/>}
-                            />
-                        <Card.Content>
-                            <Text>{item.instruction}</Text>
-                        </Card.Content>
-                    </Card>
-                }
-                renderSectionHeader={({section: {title}}) => (
-                    <Text variant='titleLarge' style={{color:'deeppink', marginVertical:5}}>{title}</Text>
-                )}
-                />
-            } */}
         </View>
     )
 })
 
-export default FreelancerChats;
+export default FreelancerChat;

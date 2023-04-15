@@ -81,7 +81,8 @@ const FreelancerProfile = observer((props) => {
                         />
                     <Card.Content>
                         {   
-                            (visibletransaction && transactionlist.length > 0) ?
+                            transactionlist.length > 0 ?
+                            (visibletransaction &&
                             transactionlist.map((item, index)=>{
                                 return (
                                     <Card key={index} style={{marginVertical:4, borderColor:'deeppink', borderWidth: 1}}>
@@ -122,11 +123,11 @@ const FreelancerProfile = observer((props) => {
                                         </Card.Content>
                                     </Card>
                                 )
-                            })
+                            }))
                             :
                             <SafeAreaView style={{alignItems:'center', alignSelf:'center', maxWidth: '100%', marginBottom:20}}>
                                 <IconButton icon='view-grid-plus' size={30} iconColor='deeppink'/>
-                                <Text variant='titleMedium'>No Transactions Yet</Text>
+                                <Text variant='titleMedium'>No Transactions Yet or Hidden</Text>
                                 <Text style={{textAlign:'center', color:'dimgrey',marginVertical:6}}>Post a Service on the marketplace and let a client come to you</Text>
                             </SafeAreaView>
                         }

@@ -3,7 +3,7 @@ import React, { useContext, useState } from 'react';
 import { View, TouchableOpacity, FlatList} from 'react-native';
 import { Button, Card, Text, Avatar, Divider, IconButton, Portal, Modal, TextInput} from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
-import { createanInquiry } from '../../../services/apiendpoints';
+import { createanInquiry, getChat, sendMessage } from '../../../services/apiendpoints';
 import { format } from 'date-fns';
 import AuthStore from '../../models/authentication';
 import LoadingScreen from '../../components/loading';
@@ -11,7 +11,6 @@ import LoadingScreen from '../../components/loading';
 const ClientSingleJob = observer(({route}) => {
     const AuthContext = useContext(AuthStore);
     const data = route.params.item;
-    console.log(data);
     const navigation = useNavigation();
     const [mainvisible, setmainVisible] = useState(true);
     const [Inquirevalue, setInquirevalue] = useState('');
@@ -32,11 +31,15 @@ const ClientSingleJob = observer(({route}) => {
             const sendresponse = await createanInquiry(body);
             // This method is called when the server sends a response to the Freelancer.
             if(sendresponse.success){
+                const fetchchatresponse = await getChat({userId: data.user._id, inquiryId: sendresponse.inquiry._id});
+                if (fetchchatresponse.success) {
+                    sendMessage({content: Inquirevalue, chatId: fetchchatresponse.FullChat._id});
+                }
                 setInquirevisible(false);
                 setmainVisible(false);
                 setInquirevalue('');
                 navigation.goBack();
-                alert("Inquiry sent successfully!");
+                alert("Inquiry sent successfully! Check your Chats for Updates");
             }else{
                 setInquirevisible(false);
                 setmainVisible(false);

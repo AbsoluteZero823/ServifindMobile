@@ -4,6 +4,7 @@ import { View, StyleSheet, ImageBackground, Alert, ToastAndroid} from 'react-nat
 import { Button, Card, Text, Avatar, Portal, Modal, Divider, IconButton, TextInput} from 'react-native-paper';
 import AuthStore from '../../models/authentication';
 import Loading from '../../components/loading';
+import Infoline from '../../components/infoline';
 import { useNavigation } from '@react-navigation/native';
 import { format } from 'date-fns';
 import { generateTransaction, completeTransaction, reportTransaction } from '../../../services/apiendpoints';
@@ -68,7 +69,7 @@ const FreelancerProject = observer(({route}) => {
                 reason: reportreason, 
                 description: reportdescription, 
                 _id: item.transactions[0]?._id, 
-                user_reported: item.request_id.requested_by._id
+                user_reported: item.request_id?.requested_by._id || item.inquiry_id.customer._id
             })
             if (reportResponse.success){
                 AuthContext.donewithload();
@@ -92,12 +93,12 @@ const FreelancerProject = observer(({route}) => {
                     modalstate === 'default' &&
                     <Card>
                         <Card.Title
-                            title={item.request_id.requested_by.name}
-                            subtitle={item.request_id.requested_by.contact}
+                            title={item.request_id?.requested_by.name || item.inquiry_id.customer.name}
+                            subtitle={item.request_id?.requested_by.contact || item.inquiry_id.customer.contact}
                             subtitleStyle={{color:'dimgrey'}}
-                            left={()=><Avatar.Image source={{uri: item.request_id.requested_by.avatar.url}} size={50}/>}
+                            left={()=><Avatar.Image source={{uri: (item.request_id?.requested_by.avatar.url || item.inquiry_id.customer.avatar.url)}} size={50}/>}
                             right={()=> 
-                                item.request_id.request_status === 'granted' && item.transactions[0]?.reportedBy.freelancer === "false" &&
+                                (item.request_id?.request_status === 'granted' || item.inquiry_id?.status === 'granted') && item.transactions[0]?.reportedBy.freelancer === "false" &&
                                 <IconButton 
                                     icon='alert-circle-outline' 
                                     iconColor='deeppink' 
@@ -124,66 +125,51 @@ const FreelancerProject = observer(({route}) => {
                             />
                         <Card.Content>
                             <View>
-                                <Text>REQUEST DETAILS:</Text>
-                                <View style={{flexDirection:'row', justifyContent:'space-between'}}>
-                                    <Text style={{color: 'deeppink'}}>Status: </Text>
-                                    {
-                                        item.transactions?.length > 0 ? 
-                                        <Text>{(item.transactions[0].isPaid && item.transactions[0].paymentSent) ? 'Payment Sent' : 'Payment Not Sent'}</Text>
-                                        :
-                                        <Text>{item.request_id.request_status}</Text>
-                                    }
-                                </View>
-                                <View style={{flexDirection:'row', justifyContent:'space-between'}}>
-                                    <Text style={{color: 'deeppink'}}>Created At: </Text>
-                                    <Text>{format(new Date(item.request_id.created_At), 'MMM dd, yyyy')}</Text>
-                                </View>
-                                <View>
-                                    <Text style={{color: 'deeppink'}}>Description: </Text>
-                                    <Text style={{textAlign: 'right'}}>{item.request_id.description}</Text>
-                                </View>
+                                <Text style={{color: 'deeppink'}}>REQUEST DETAILS:</Text>
+                                {
+                                    item.request_id ?
+                                    <>
+                                    <Infoline label="Type:" value='Request' />
+                                    <Infoline label="Created At:" value={format(new Date(item.request_id.created_At), 'MMM dd, yyyy')} />
+                                    <Infoline label="Description: " value={item.request_id.description} />
+                                    </>
+                                    :
+                                    <>
+                                    <Infoline label="Type:" value='Inquiry' />
+                                    <Infoline label="Created At:" value={format(new Date(item.created_At), 'MMM dd, yyyy')} />
+                                    <Infoline label="Description: " value={item.description} />
+                                    </>
+                                }
                             </View>
-                            <Divider style={{marginVertical:8}}/>
+                            <Divider style={{marginVertical: 8}} />
                             <View>
-                                <Text>SERVICE OFFERRED:</Text>
-                                <View style={{flexDirection:'row', justifyContent:'space-between'}}>
-                                    <Text style={{color: 'deeppink'}}>Name: </Text>
-                                    <Text>{item.service_id.title}</Text>
-                                </View>
-                                <View style={{flexDirection:'row', justifyContent:'space-between'}}>
-                                    <Text style={{color: 'deeppink'}}>Category: </Text>
-                                    <Text>{item.service_id.category.name}</Text>
-                                </View>
+                                <Text style={{color: 'deeppink'}}>SERVICE OFFERED:</Text>
+                                <Infoline label="Name:" value={item.service_id.title} />
+                                <Infoline label="Category:" value={item.service_id.category.name} />
                                 <View>
-                                    <Text style={{color: 'deeppink'}}>Experience: </Text>
-                                    <Text style={{textAlign: 'right'}}>{item.service_id.experience}</Text>
+                                <Text style={{color: 'deeppink'}}>Experience:</Text>
+                                <Text style={{textAlign: 'right'}}>{item.service_id.experience}</Text>
                                 </View>
                             </View>
                             {
                                 item.transactions?.length > 0 &&
                                 <>
-                                <Divider style={{marginVertical:8}}/>
+                                <Divider style={{marginVertical: 8}} />
                                 <View>
-                                    <Text>PAYMENT DETAILS:</Text>
-                                    <View style={{flexDirection:'row', justifyContent:'space-between'}}>
-                                        <Text style={{color: 'deeppink'}}>Payment Sent: </Text>
-                                        <Text>{item.transactions[0].paymentSent === 'true' ? 'Yes' : 'No'}</Text>
-                                    </View>
-                                    <View style={{flexDirection:'row', justifyContent:'space-between'}}>
-                                        <Text style={{color: 'deeppink'}}>Amount: </Text>
-                                        <Text>{item.transactions[0].price}</Text>
-                                    </View>
-                                    <View style={{flexDirection:'row', justifyContent:'space-between'}}>
-                                        <Text style={{color: 'deeppink'}}>Status: </Text>
-                                        <Text>
-                                            {
-                                                (item.transactions[0]?.transaction_done?.client === 'true' && item.transactions[0]?.transaction_done?.freelancer === 'false') ? 
-                                                'Waiting Your Confirmation' 
-                                                :
-                                                'Completed'
-                                            }
-                                        </Text>
-                                    </View>
+                                <Text style={{color: 'deeppink'}}>PAYMENT DETAILS:</Text>
+                                <Infoline label="Payment Sent:" value={item.transactions[0].paymentSent === 'true' ? 'Yes' : 'No'} />
+                                <Infoline label="Amount:" value={`₱ ${item.transactions[0].price}`} />
+                                <Infoline label="Status:" value={
+                                    item.transactions[0].status === 'processing' && item.transactions[0].transaction_done.client === 'false' && item.transactions[0].transaction_done.freelancer === 'false'
+                                    ?
+                                    'Processing / On-Going'
+                                    :
+                                    item.transactions[0].status === 'processing' && item.transactions[0].transaction_done.client === 'true' && item.transactions[0].transaction_done.freelancer === 'false'
+                                    ?
+                                    'Waiting for your confirmation'
+                                    :
+                                    item.transactions[0].status === 'completed' && 'Completed'
+                                    } />
                                 </View>
                                 </>
                             }

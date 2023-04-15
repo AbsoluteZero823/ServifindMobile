@@ -1,7 +1,7 @@
 import axios from 'axios';
 import AuthStore from '../src/models/authentication';
 
-const API_URL='http://192.168.187.99:4002/api/v1';
+const API_URL='http://192.168.45.99:4002/api/v1';
 
 const AxiosConfig = {
     headers: {
@@ -22,11 +22,14 @@ const AxiosConfig = {
 export async function login(email, password) {
   try {
     const response = await axios.post(`${API_URL}/login`, {
-      email: email,
-      password: password
+      email,
+      password
     }, AxiosConfig);
-    console.log(response.data)
-    return response.data;
+    if(response.data){
+      return response.data;
+    }else{
+      return {success: false, message: 'Login failed. Please try again.'};
+    } 
   } catch (error) {
     return error.response.data;
   }
@@ -220,6 +223,15 @@ export async function getClientInquiries(props){
   }
 }
 
+export async function getSingleInquiry(id){
+  try{
+    const inquiryresponse = await axios.get(`${API_URL}/inquiry/${id}`, AxiosConfig);
+    return inquiryresponse.data;
+  }catch(error){
+    return error;
+  }
+}
+
 // FETCHING REQUESTS
 /**
 * Get a list of requests made to the API. You can use this to check if you have a user or an API that is running in the context of a web app.
@@ -311,9 +323,9 @@ export async function cancelmyRequest(id){
 * 
 * @return { Promise } Resolves with the refuse data or error message on failure. Note that you must use this method in conjuction with awaitOffer
 */
-export async function refuseanOffer(id){
+export async function refuseanOffer(props){
   try{
-    const refuseresponse = await axios.post(`${API_URL}/myrequest/offer/refuse`, {_id: id} , AxiosConfig);
+    const refuseresponse = await axios.post(`${API_URL}/myrequest/offer/refuse`, props , AxiosConfig);
     return refuseresponse.data;
   }catch(error){
     return error;
@@ -585,6 +597,12 @@ export async function getmyServiceRatings(service_id){
 }
 
 // FREELANCER TRANSACTIONS
+/**
+* Fetches transaction from Freelancer's API and returns it.
+* 
+* 
+* @return { Promise } Resolves with transaction data or error
+*/
 export async function FreelancerFetchTransaction(){
   try{
     const transactionresponse = await axios.post(`${API_URL}/myfreelancertransactions`, AxiosConfig);
@@ -594,6 +612,13 @@ export async function FreelancerFetchTransaction(){
   }
 }
 
+/**
+* Generates a transaction based on the properties passed to it. This is useful for generating transactions that are part of a transaction - chain
+* 
+* @param props - The properties to use for the transaction
+* 
+* @return { Promise } The transaction or error from the axios
+*/
 export async function generateTransaction(props){
   try{
     const transactionresponse = await axios.post(`${API_URL}/myfreelancertransactions/generatetransaction`, props, AxiosConfig);
@@ -603,6 +628,13 @@ export async function generateTransaction(props){
   }
 }
 
+/**
+* Completes a transaction by submitting a request to Freelancer
+* 
+* @param props - transaction properties to be submitted
+* 
+* @return { Promise } Promise of the transaction data or error
+*/
 export async function completeTransaction(props){
   try{
     const transactionresponse = await axios.post(`${API_URL}/myfreelancertransactions/completetransaction`, props, AxiosConfig);
@@ -612,10 +644,100 @@ export async function completeTransaction(props){
   }
 }
 
+/**
+* Reports a transaction to Freelancer. This is a POST request to the API
+* 
+* @param props - Object with transaction properties. See reportTransaction for details
+* 
+* @return { Promise } Promise with
+*/
 export async function reportTransaction(props){
   try{
     const transactionresponse = await axios.post(`${API_URL}/myfreelancertransactions/reporttransaction`, props, AxiosConfig);
     return transactionresponse.data;
+  }catch(error){
+    return error;
+  }
+}
+
+// CHATS
+/**
+* Fetches chats from Axios. com and returns them as an array of Chat objects
+* 
+* 
+* @return { Promise } Array of Chat
+*/
+export async function fetchChats(){
+  try{
+    const chatsresponse = await axios.get(`${API_URL}/chat`, AxiosConfig);
+    return chatsresponse.data;
+  }catch(error){
+    return error;
+  }
+}
+
+/**
+* Get chat information from Axios. com. This is used to send messages to a user or to chat a user.
+* 
+* 
+* @return { Promise } Object containing the chat information or error
+*/
+export async function getChat(props){
+  try{
+    const chatresponse = await axios.post(`${API_URL}/chat`, props, AxiosConfig);
+    return chatresponse.data;
+  }catch(error){
+    return error;
+  }
+}
+
+// MESSAGES
+/**
+* Use this method to get messages from a chat. Requires Authentication : True for the user to be an administrator and must have the appropiate rights
+* 
+* @param chatId - Unique identifier for the target chat or username of the target channel ( in the format @channelusername )
+* 
+* @return { Promise } An object containing the messages on success
+*/
+export async function fetchMessages(chatId){
+  try{
+    const messagesresponse = await axios.get(`${API_URL}/messages/${chatId}`, AxiosConfig);
+    return messagesresponse.data;
+  }catch(error){
+    return error;
+  }
+}
+
+/**
+* Sends a message to Axios. This is a wrapper around the Post API for sending messages
+* 
+* @param props - The properties to send to Axios
+* 
+* @return { Promise } The response from the API or error
+*/
+export async function sendMessage(props){
+  // content, chatId
+  try{
+    const messagesresponse = await axios.post(`${API_URL}/message/new`, props, AxiosConfig);
+    return messagesresponse.data;
+  }catch(error){
+    return error;
+  }
+}
+
+export async function FetchTransactionbyOfferorInquiry(props){
+  try{
+    const messagesresponse = await axios.post(`${API_URL}/messages/transaction/offerorinquiry`, props, AxiosConfig);
+    return messagesresponse.data;
+  }catch(error){
+    return error;
+  }
+}
+
+export async function AddOfferandTransactionbyInquiry(props){
+  try{
+    const messagesresponse = await axios.post(`${API_URL}/messages/transaction/offerorinquiry/new`, props, AxiosConfig);
+    return messagesresponse.data;
   }catch(error){
     return error;
   }

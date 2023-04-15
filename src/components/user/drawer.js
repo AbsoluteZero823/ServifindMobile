@@ -8,6 +8,7 @@ import ServiceStore, { ServiceModel } from '../../models/service';
 import { Category } from '../../models/category';
 import FreelancerStore, { Freelancer } from '../../models/freelancer';
 import { freelancerstatus, getmyServices } from '../../../services/apiendpoints';
+import { isValid } from 'date-fns';
 
 export const UserDrawer = (props) => {
   const FreelancerContext = useContext(FreelancerStore);
@@ -40,7 +41,9 @@ export const UserDrawer = (props) => {
         category: Category.create(service.category),
         user: User.create(service.user),
         experience: service.experience,
-        freelancer_id: Freelancer.create({...service.freelancer_id, approved_date: new Date(service.freelancer_id.approved_date)}),
+        freelancer_id: Freelancer.create({
+          ...service.freelancer_id, 
+        }),
         status: service.status,
         images: { 
           public_id: service.images.public_id, 

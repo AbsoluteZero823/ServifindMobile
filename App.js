@@ -10,7 +10,7 @@ export default function App() {
   const scheme = useColorScheme();
   // Incorporating Themes into the App
   return (
-      <Provider>
+      <Provider theme='light'>
         <StatusBar style='dark'/>
         <NavigationStack/>
       </Provider>

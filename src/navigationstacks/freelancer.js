@@ -11,6 +11,8 @@ import FreelancerProjects from '../screens/freelancer/freelancerprojects';
 import FreelancerProject from '../screens/freelancer/freelancerproject';
 import FreelancerServices from '../screens/freelancer/freelancerservices';
 import FreelancerService from '../screens/freelancer/freelancerservice';
+import FreelancerMessage from '../screens/freelancer/freelancermessage';
+import FreelancerMessageTransactionOfferModal from '../screens/freelancer/freelancermessagemodal';
 
 /**
 * This component is used to render Freelancer navigation. It is responsible for rendering the home page and job posts
@@ -31,6 +33,8 @@ export default function FreelancerNavigator(props) {
         <FreelancerStack.Screen name="FreelancerMessaging" component={FreelancerMessaging} options={{presentation:'transparentModal', headerShown: false, contentStyle:{backgroundColor:'transparent'}}}/>      
     </FreelancerStack.Group>
       <FreelancerStack.Screen name="FreelancerChats" component={FreelancerChats}/>
+      <FreelancerStack.Screen name="FreelancerMessage" component={FreelancerMessage}/>
+      <FreelancerStack.Screen name="FreelancerMessageTransactionOffer" component={FreelancerMessageTransactionOfferModal} options={{presentation:'transparentModal', contentStyle:{backgroundColor:'transparent'}}}/>
       <FreelancerStack.Screen name="FreelancerProjects" component={FreelancerProjects}/>
       <FreelancerStack.Screen name="FreelancerProject" component={FreelancerProject} options={{presentation:'transparentModal', contentStyle:{backgroundColor:'transparent'}}}/>
       <FreelancerStack.Screen name="FreelancerServices" component={FreelancerServices}/>

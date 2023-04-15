@@ -1,8 +1,7 @@
 import { observer } from 'mobx-react';
-import React, { useContext, useEffect, useState, useCallback } from 'react';
-import { View, StyleSheet, ImageBackground, FlatList, RefreshControl, SafeAreaView, TouchableOpacity } from 'react-native';
+import React, { useContext, useState, useCallback } from 'react';
+import { View, FlatList, RefreshControl, SafeAreaView, TouchableOpacity } from 'react-native';
 import { Button, Card, Text, Avatar, Searchbar, Menu, IconButton} from 'react-native-paper';
-import UserStore from '../../models/user';
 import { styles } from '../../components/user/user.css';
 import { useNavigation } from '@react-navigation/native';
 

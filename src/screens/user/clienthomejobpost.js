@@ -70,7 +70,7 @@ const ClientSingleJobPosts = observer(({route}) => {
     async function refusehandler(id){
         AuthContext.letmeload();
         try{
-            const response = await refuseanOffer(id);
+            const response = await refuseanOffer({offer_id: id});
             if(response.success){
                 alert(response.message);
             }else{
@@ -84,10 +84,10 @@ const ClientSingleJobPosts = observer(({route}) => {
         AuthContext.donewithload();
     }
 
-    async function accepthandler(id, request_id){
+    async function accepthandler(id){
         AuthContext.letmeload();
         try{
-            const response = await acceptanOffer({id});
+            const response = await acceptanOffer({offer_id: id});
             if(response.success){
                 alert(response.message);
             }else{
@@ -150,37 +150,36 @@ const ClientSingleJobPosts = observer(({route}) => {
                                     subtitleStyle={{color:'dimgrey'}}
                                     left={()=><Avatar.Image size={40} source={{uri: item.offered_by.avatar.url }}/>}
                                     right={()=>
-                                    item.offer_status === 'granted' ?
-                                    <Menu
-                                        visible={menucollection[item._id]}
-                                        anchor={
-                                            <IconButton icon='dots-vertical' iconColor='deeppink' onPress={() => setMenuCollection({...menucollection, [item._id]: !menucollection[item._id]})}/>
+                                        (item.transactions[0]?.transaction_done.workCompleted === null || item.transactions[0]?.transaction_done.workCompleted === undefined) &&
+                                            (item.offer_status === 'granted' ?
+                                            <Menu
+                                                visible={menucollection[item._id]}
+                                                anchor={
+                                                    <IconButton icon='dots-vertical' iconColor='deeppink' onPress={() => setMenuCollection({...menucollection, [item._id]: !menucollection[item._id]})}/>
+                                                }
+                                                anchorPosition='bottom'
+                                                onDismiss={() => setMenuCollection({...menucollection, [item._id]: false})}
+                                                >
+                                                {
+                                                    (item.transactions === null || item.transactions === undefined || item.transactions.length === 0) &&
+                                                    <Menu.Item onPress={() => navigation.navigate('ClientCompleteOffer',item)} title="Generate Payment"/>
+                                                }
+                                                {
+                                                    item.transactions[0]?.isPaid === false &&
+                                                    <Menu.Item onPress={() => navigation.navigate('ClientCompleteOffer',item)} title="Complete Payment"/>
+                                                }
+                                                {
+                                                    (item.transactions[0]?.isPaid && item.transactions[0]?.isRated === false && item.transactions[0]?.reportedBy.client === false) &&
+                                                    <Menu.Item onPress={() => navigation.navigate('ClientCompleteOffer',item)} title="Rate/Report"/>
+                                                }
+                                                <Menu.Item onPress={() => setMenuCollection({...menucollection, [item._id]: !menucollection[item._id]})} title="Cancel" />
+                                            </Menu>
+                                            :
+                                            <IconButton 
+                                                icon={item.offer_status === 'cancelled' ? 'cancel' : 'check'} 
+                                                iconColor={item.offer_status === 'cancelled' ? 'red' : item.offer_status === 'granted' ? 'deeppink' : 'green'}/>
+                                            )
                                         }
-                                        anchorPosition='bottom'
-                                        onDismiss={() => setMenuCollection({...menucollection, [item._id]: false})}
-                                        >
-                                        {
-                                            console.log(item.transactions)
-                                        }
-                                        {
-                                            (item.transactions === null || item.transactions === undefined || item.transactions.length === 0) &&
-                                            <Menu.Item onPress={() => navigation.navigate('ClientCompleteOffer',item)} title="Generate Payment"/>
-                                        }
-                                        {
-                                            item.transactions[0]?.isPaid === false &&
-                                            <Menu.Item onPress={() => navigation.navigate('ClientCompleteOffer',item)} title="Complete Payment"/>
-                                        }
-                                        {
-                                            (item.transactions[0]?.isPaid && item.transactions[0]?.isRated === false && item.transactions[0]?.reportedBy.client === false) &&
-                                            <Menu.Item onPress={() => navigation.navigate('ClientCompleteOffer',item)} title="Rate/Report"/>
-                                        }
-                                        <Menu.Item onPress={() => setMenuCollection({...menucollection, [item._id]: !menucollection[item._id]})} title="Cancel" />
-                                    </Menu>
-                                    :
-                                    <IconButton 
-                                        icon={item.offer_status === 'cancelled' ? 'cancel' : 'check'} 
-                                        iconColor={item.offer_status === 'cancelled' ? 'red' : item.offer_status === 'granted' ? 'deeppink' : 'green'}/>
-                                    }
                                     />
                                 <Card.Content style={{flex:1}}>
                                     <View style={{flexDirection:'row', justifyContent:'space-between', alignItems:'center'}}>
@@ -213,20 +212,23 @@ const ClientSingleJobPosts = observer(({route}) => {
                                         />
                                     }
                                     {
-                                        item.offer_status === 'granted' &&
-                                        <>
+                                        (item.transactions[0]?.transaction_done.workCompleted === null || item.transactions[0]?.transaction_done.workCompleted === undefined) &&
+                                        (item.offer_status === 'granted' &&
                                         <Button
                                             mode='contained'
                                             icon='chat'
                                             textColor='white'
                                             buttonColor='blue'
                                             onPress={()=>{
-                                                navigation.navigate('ClientChat')
+                                                navigation.navigate('ClientMessage',{
+                                                    offer_id: item._id,
+                                                    receiver: item.offered_by._id
+                                                })
                                             }}
                                             >
                                             Message
                                         </Button>
-                                        </>
+                                        )
                                     }
                                 </Card.Actions>
                             </Card>

@@ -133,7 +133,6 @@ const FreelancerMessaging = observer(({route}) => {
                             {
                                 validationerrors.message && <HelperText type='error'>{validationerrors.message}</HelperText>
                             }
-                        
                     </Card.Content>
                     <Card.Actions>
                         <Button

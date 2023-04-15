@@ -127,32 +127,22 @@ const ClientFreelancerRegistration = observer(({route}) => {
                 if(response.freelancer[0].approved_date === null || response.freelancer[0].approved_date === undefined){
                     setstatus('Pending')
                 }else{
-                  const servicesresponse = await getmyServices();
-                    setjobsearch('Requests');
-                    FreelancerContext.data = ([]);
-                    response.freelancer[0].approved_date = new Date(response.freelancer[0].approved_date);
-                    const freelancerinfo = Freelancer.create(response.freelancer[0]);
-                    FreelancerContext.data.push(freelancerinfo);
-                    ServicesContext.services = [];
-                    servicesresponse.services.map(service => {
-                        const serviceinfo = ServiceModel.create({
-                          _id: service._id,
-                          title: service.title,
-                          name: service.name,
-                          category: Category.create(service.category),
-                          user: User.create(service.user),
-                          experience: service.experience,
-                          freelancer_id: service.freelancer_id,
-                          status: service.status,
-                          images: { 
-                            public_id: service.images.public_id, 
-                            url: service.images.url, 
-                            }}
-                          )
-                          ServicesContext.services.push(serviceinfo);
-                        });
-                    AuthContext.setmyrole('Freelancer');
-                    navigation.navigate('FreelancerHome');
+                    const servicesresponse = await getmyServices();
+                    FreelancerContext.data = [Freelancer.create(freelancer)];
+                    ServicesContext.services = servicesresponse.services.map(service => ({
+                      _id: service._id,
+                      title: service.title,
+                      name: service.name,
+                      category: Category.create(service.category),
+                      user: User.create(service.user),
+                      experience: service.experience,
+                      freelancer_id: Freelancer.create({...service.freelancer_id, approved_date: new Date(service.freelancer_id.approved_date)}),
+                      status: service.status,
+                      images: { 
+                        public_id: service.images.public_id, 
+                        url: service.images.url, 
+                      }
+                    }));
                 }
             }else{
                 alert("We need you to register first as a Freelancer");

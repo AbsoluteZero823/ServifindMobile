@@ -2,6 +2,7 @@ import { observer } from 'mobx-react';
 import React, { useContext, useState, useEffect, useCallback } from 'react';
 import * as ImagePicker from 'expo-image-picker';
 import Loading from '../../components/loading';
+import Infoline from '../../components/infoline';
 import { View, FlatList, SafeAreaView, RefreshControl, TouchableOpacity } from 'react-native';
 import { Button, Card, Text, IconButton, Portal, Modal, TextInput, List, HelperText, Avatar} from 'react-native-paper';
 
@@ -10,8 +11,8 @@ import FreelancerStore from '../../models/freelancer';
 import CategoryStore from '../../models/category';
 import UserStore from '../../models/user';
 import AuthStore from '../../models/authentication';
-import ServiceStore, { ServiceModel } from '../../models/service';
-import OfferStore, { Offer } from '../../models/offer';
+import ServiceStore from '../../models/service';
+import OfferStore from '../../models/offer';
 import { useNavigation } from '@react-navigation/native';
 
 
@@ -249,7 +250,16 @@ const FreelancerHome = observer(() => {
                 <Card.Title 
                     title='My Services'
                     titleStyle={{color:'deeppink', fontSize:24}}
-                    right={()=><Button icon='eye' textColor='deeppink' style={{marginHorizontal:20}} onPress={()=>navigation.navigate('FreelancerServices')}>See All</Button>}
+                    right={()=>
+                        <Button 
+                            icon='eye' 
+                            textColor='deeppink' 
+                            style={{marginHorizontal:20}}
+                            onPress={()=>
+                                // navigation.navigate('FreelancerServices')
+                                alert("In Development!")
+                            }
+                            >See All</Button>}
                     />
                 <Card.Content>
                 <FlatList
@@ -324,32 +334,58 @@ const FreelancerHome = observer(() => {
                     horizontal={true}
                     showsHorizontalScrollIndicator={false}
                     renderItem={({item})=>
-                        <Card key={item._id} style={{minWidth:300, marginHorizontal:5, borderColor: item.offer_status === 'waiting' ? 'deeppink' : item.offer_status === 'granted' ? 'green' : 'black', borderWidth: 1}}>
-                            <Card.Title 
-                                title={item.request_id.requested_by.name} 
-                                subtitle={<Text style={{color: item.offer_status === 'waiting' ? 'deeppink' : item.offer_status === 'granted' ? 'green' : 'red'}}>{item.offer_status}</Text>}
-                                left={()=><Avatar.Image size={40} source={{uri: item.request_id.requested_by.avatar.url}}/>}
-                                />
-                            <Card.Content>
-                                <Text style={{color:'deeppink'}}>Requested:</Text>
-                                <Text style={{alignSelf:'flex-end'}}>{item.request_id.description}</Text>
-                                <Text style={{color:'deeppink'}}>Category:</Text>
-                                <Text style={{alignSelf:'flex-end'}}>{item.service_id.category.name}</Text>
-                                <Text style={{color:'deeppink'}}>Service:</Text>
-                                <Text style={{alignSelf:'flex-end'}}>{item.service_id.title}</Text>
-                                <Text style={{color:'deeppink'}}>Offer:</Text>
-                                <Text style={{alignSelf:'flex-end'}}>{item.description}</Text>
-                                <View style={{flexDirection:'row', justifyContent:'space-between'}}>
-                                    <Text style={{color:'deeppink'}}>Paid:</Text>
-                                    {
-                                        item.transactions.length > 0 ? 
-                                        <Text>{(item.transactions[0].isPaid === 'true' && item.transactions[0].paymentSent === 'true') ? 'Yes' : 'Not Yet'}</Text>
-                                        :
-                                        <Text>No Payment Generated</Text>    
-                                    }
-                                </View>
-                            </Card.Content>
-                        </Card>
+                        <TouchableOpacity onPress={()=>{
+                            navigation.navigate('FreelancerProject', item);
+                        }}>
+                        {
+                            item.request_id ? 
+                            <Card key={item._id} style={{minWidth:300, maxWidth:350, marginHorizontal:2, borderColor: item.offer_status === 'waiting' ? 'deeppink' : item.offer_status === 'granted' ? 'green' : 'black', borderWidth: 1}}>
+                                <Card.Title 
+                                    title={item.request_id.requested_by.name} 
+                                    subtitle={<Text style={{color: item.offer_status === 'waiting' ? 'deeppink' : item.offer_status === 'granted' ? 'green' : 'red'}}>{item.offer_status}</Text>}
+                                    left={()=><Avatar.Image size={40} source={{uri: item.request_id.requested_by.avatar.url}}/>}
+                                    />
+                                <Card.Content>
+                                    <Infoline label="Requested:" value={item.request_id.description} />
+                                    <Infoline label="Category:" value={item.service_id.category.name} />
+                                    <Infoline label="Service:" value={item.service_id.title} />
+                                    <Infoline label="Price:" value={`₱ ${item.transactions[0]?.price || 'Not Set'}`} />
+                                    <Infoline label="Paid:" value={item.transactions.length > 0 ? (
+                                            item.transactions[0].isPaid === 'true' && item.transactions[0].paymentSent === 'true' ? (
+                                            'Yes'
+                                            ) : (
+                                            'Not Yet'
+                                            )
+                                        ) : (
+                                            'No Payment Generated'
+                                        )} />
+                                </Card.Content>
+                            </Card>
+                            :
+                            <Card key={item._id} style={{minWidth:300, maxWidth:350, marginHorizontal:5, borderColor: item.offer_status === 'waiting' ? 'deeppink' : item.offer_status === 'granted' ? 'green' : 'black', borderWidth: 1}}>
+                                <Card.Title 
+                                    title={item.inquiry_id.customer.name} 
+                                    subtitle={<Text style={{color: item.offer_status === 'waiting' ? 'deeppink' : item.offer_status === 'granted' ? 'green' : 'red'}}>{item.offer_status}</Text>}
+                                    left={()=><Avatar.Image size={40} source={{uri: item.inquiry_id.customer.avatar.url}}/>}
+                                    />
+                                <Card.Content>
+                                    <Infoline label="Inquiry:" value={item.inquiry_id.instruction} />
+                                    <Infoline label="Category:" value={item.service_id.category.name} />
+                                    <Infoline label="Service:" value={item.service_id.title} />
+                                    <Infoline label="Price:" value={`₱ ${item.transactions[0]?.price || 'Not Set'}`} />
+                                    <Infoline label="Paid:" value={item.transactions.length > 0 ? (
+                                    item.transactions[0].isPaid === 'true' && item.transactions[0].paymentSent === 'true' ? (
+                                    'Yes'
+                                    ) : (
+                                    'Not Yet'
+                                    )
+                                    ) : (
+                                    'No Payment Generated'
+                                    )} />
+                                </Card.Content>
+                            </Card>
+                        }
+                        </TouchableOpacity>
                     }
                     ListEmptyComponent={
                         <SafeAreaView style={{alignItems:'center', alignSelf:'center', maxWidth: '100%', marginBottom:20}}>
