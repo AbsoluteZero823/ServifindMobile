@@ -28,7 +28,6 @@ const ClientFreelancerRegistration = observer(({route}) => {
     const [gcash_name, setGcashName] = useState("");
     const [gcash_number, setGcashNumber] = useState("");
     const [schoolId, setSchoolId] = useState("");
-    const [resumeName, setresumeName] = useState("");
     const [resumeFile, setresumeFile] = useState(null);
     const [validationErrors, setValidationErrors] = useState({});
   
@@ -38,7 +37,6 @@ const ClientFreelancerRegistration = observer(({route}) => {
           mediaTypes: ImagePicker.MediaTypeOptions.Images,
           base64: true,
           allowsEditing: true,
-          aspect: [4, 4],
           quality: 1,
         });
         if (!result.canceled) {
@@ -51,21 +49,6 @@ const ClientFreelancerRegistration = observer(({route}) => {
         }
       } catch (error) {
         console.log(error);
-      }
-    }
-  
-    async function pickDocument() {
-      try {
-        const result = await DocumentPicker.getDocumentAsync({
-          type: "application/pdf",
-        });
-        if (result.type === "success") {
-            setValidationErrors({});
-            setresumeName(result.name);
-            setresumeFile(result);
-        }
-      } catch (err) {
-        console.log("Error picking document:", err);
       }
     }
   
@@ -227,10 +210,10 @@ const ClientFreelancerRegistration = observer(({route}) => {
                     dense={true}
                     label='Resume'
                     placeholder='Resume...'
-                    value={resumeName ? resumeName : 'No Resume Selected'}
+                    value={resumeFile ? 'Resume Selected' : 'No Resume Selected'}
                     mode='outlined'
                     editable={false}
-                    right={<TextInput.Icon icon="file-document-outline" onPress={() => pickDocument()} />}
+                    right={<TextInput.Icon icon="file-document-outline" onPress={() => pickImage(setresumeFile)} />}
                     error={validationErrors?.resumeFile}
                 />
                 {

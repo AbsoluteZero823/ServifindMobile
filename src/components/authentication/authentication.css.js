@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
         marginVertical:0,
     },
     inputbutton:{
-        marginTop:10
+        marginTop:10,
     },  
     logo: {
       width: 100,
@@ -36,6 +36,7 @@ const styles = StyleSheet.create({
       fontSize: 24,
       fontWeight: '400',
       marginBottom: 20,
+      textAlign:'center'
     },
     highlight:{
         color: 'deeppink',
@@ -61,7 +62,8 @@ const styles = StyleSheet.create({
     },
     button: {
         margin:10,
-        maxWidth: 200,
+        minWidth: 120,
+        maxWidth: 220,
     }
 });
 

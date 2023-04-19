@@ -1,7 +1,9 @@
 import axios from 'axios';
 import AuthStore from '../src/models/authentication';
 
-const API_URL='http://192.168.45.99:4002/api/v1';
+export const URL = 'http://192.168.45.99:4002';
+
+const API_URL=`${URL}/api/v1`;
 
 const AxiosConfig = {
     headers: {
@@ -477,6 +479,16 @@ export async function updatefreelancer(props){
   try{
     const freelancerupdateresponse = await axios.post(`${API_URL}/freelancers/update`, props, AxiosConfig);
     return freelancerupdateresponse.data;
+  }catch(error){
+    return error.response.data
+  }
+}
+
+
+export async function upgradefreelancer(props){
+  try{
+    const freelancerupgraderesponse = await axios.post(`${API_URL}/freelancers/upgrade`, props, AxiosConfig);
+    return freelancerupgraderesponse.data;
   }catch(error){
     return error.response.data
   }

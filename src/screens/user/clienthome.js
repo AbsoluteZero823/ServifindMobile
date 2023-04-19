@@ -45,7 +45,6 @@ const ClientHome = observer((props) => {
         const inquiriesCollection = await getmyInquiries();
         InquiryContext.inquiries = [];
         if(inquiriesCollection.success){
-          console.log(inquiriesCollection.inquiries);
           inquiriesCollection.inquiries?.map((inquiry) => {
             InquiryContext.inquiries.push(Inquiry.create({
               _id: inquiry._id,
@@ -154,7 +153,7 @@ const ClientHome = observer((props) => {
           </View>
           <View style={{flex:4, padding:5}}>
             <Card style={[styles.cardStyle]}>
-              <Card.Title title={<Text variant='headlineSmall'>Your Inquiries</Text>} right={(props) => <Button mode='text' textColor='deeppink' onPress={()=>(console.log("Empty"))}>See all inquiries</Button>}/>
+              <Card.Title title={<Text variant='headlineSmall'>Your Inquiries</Text>} right={(props) => <Button mode='text' textColor='deeppink' onPress={()=>(alert("Coming Soon"))}>See all inquiries</Button>}/>
               <Card.Content>
                 <SafeAreaView>
                   <FlatList

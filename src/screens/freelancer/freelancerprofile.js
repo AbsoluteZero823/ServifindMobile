@@ -10,12 +10,15 @@ import { format } from 'date-fns';
 import UserStore from '../../models/user';
 import AuthStore from '../../models/authentication';
 import FreelancerContext from '../../models/freelancer';
-import { updatefreelancer, FreelancerFetchTransaction } from '../../../services/apiendpoints';
+import { updatefreelancer, FreelancerFetchTransaction, freelancerstatus } from '../../../services/apiendpoints';
+import Infoline from '../../components/infoline';
+import { useNavigation } from '@react-navigation/native';
 
 const FreelancerProfile = observer((props) => {
     const FreelancerStore = useContext(FreelancerContext);
     const UserContext = useContext(UserStore);
     const AuthContext = useContext(AuthStore);
+    const navigation = useNavigation();
 
     const [Availability, setAvailability] = useState(FreelancerStore.data[0].availability);
 
@@ -41,9 +44,8 @@ const FreelancerProfile = observer((props) => {
             const fetchresponse = await FreelancerFetchTransaction();
             if(fetchresponse.success){
                 settransactionlist(fetchresponse.transactions);
-                console.log(transactionlist);
             }else{
-                alert(fetchresponse.message)
+                alert(fetchresponse.message);
             }
             AuthContext.donewithload();
         }catch(error){
@@ -70,6 +72,12 @@ const FreelancerProfile = observer((props) => {
                     <Text variant="titleMedium" style={{alignSelf:'center'}}>Available?</Text>
                     <Switch color='deeppink' value={Availability} onValueChange={()=>{toggleavailability()}}/>
                 </View>
+                {
+                    !FreelancerStore.data[0].isPremium && FreelancerStore.data[0].premiumReceipt === undefined &&
+                    <Button mode='text' textColor='dimgrey' onPress={()=>{FreelancerStore.data.premiumReceipt === undefined ? navigation.navigate('FreelancerPremium') : alert("You may have a pending premium application. Wait for further updates")}}>
+                        Go Premium
+                    </Button>
+                }
                 
             </View>
             <View style={{flex:3, margin:10, justifyContent: 'flex-start'}}>
@@ -87,39 +95,32 @@ const FreelancerProfile = observer((props) => {
                                 return (
                                     <Card key={index} style={{marginVertical:4, borderColor:'deeppink', borderWidth: 1}}>
                                         <Card.Title 
-                                            title={item.offer_id.request_id.requested_by.name} 
-                                            subtitle={<Text>{ item.isPaid === 'true' ? 'Paid' : 'Not Yet Paid' }</Text>}
-                                            titleStyle={{ color:'deeppink' }}
-                                            subtitleStyle={{ color:'dimgrey' }}
-                                            left={()=><Avatar.Image size={50} source={{ uri: item.offer_id.request_id.requested_by.avatar.url }}/>}
-                                            
+                                        title={(item.offer_id.request_id?.requested_by?.name || item.offer_id.inquiry_id?.customer?.name)} 
+                                        subtitle={<Text>{ item.isPaid === 'true' ? 'Paid' : 'Not Yet Paid' }</Text>}
+                                        titleStyle={{ color:'deeppink' }}
+                                        subtitleStyle={{ color:'dimgrey' }}
+                                        left={()=><Avatar.Image size={50} source={{ uri: (item.offer_id.request_id?.requested_by?.avatar.url || item.offer_id.inquiry_id?.customer?.avatar.url)}}/>}
                                         />
+                                        
                                         <Card.Content>
-                                            <Text style={{color:'deeppink', fontWeight:'bold'}}>Payment Details:</Text>
-                                            <View style={{flexDirection:'row', justifyContent:'space-between'}}>
-                                                <Text>Price:</Text>
-                                                <Text>{item.price}</Text>
-                                            </View>
-                                            <View style={{flexDirection:'row', justifyContent:'space-between'}}>
-                                                <Text>Sent:</Text>
-                                                <Text>{item.paymentSent === 'true' ? 'Sent' : 'No' }</Text>
-                                            </View>
-                                            <View style={{flexDirection:'row', justifyContent:'space-between'}}>
-                                                <Text>Received:</Text>
-                                                <Text>{item.paymentReceived === 'true' ? 'Sent' : 'No' }</Text>
-                                            </View>
-                                            <View style={{flexDirection:'row', justifyContent:'space-between'}}>
-                                                <Text>Client Rated:</Text>
-                                                <Text>{item.isRated === 'true' ? 'Sent' : 'No' }</Text>
-                                            </View>
-                                            <View style={{flexDirection:'row', justifyContent:'space-between'}}>
-                                                <Text>Status:</Text>
-                                                <Text>{item.status}</Text>
-                                            </View>
-                                            <View style={{flexDirection:'row', justifyContent:'space-between'}}>
-                                                <Text>Date Generated:</Text>
-                                                <Text>{format(new Date(item.created_At), 'MMM dd, yyyy')}</Text>
-                                            </View>
+                                            <Text style={{color: 'deeppink', fontWeight:'bold'}}>PAYMENT DETAILS:</Text>
+                                            <Infoline label="Paid:" value={item.paymentSent === 'true' ? 'Yes' : 'No'} />
+                                            <Infoline label="Amount:" value={`₱ ${item.price}`} />
+                                            <Infoline label="Sent: " value={item.paymentSent === 'true' ? 'Yes' : 'No' }/>
+                                            <Infoline label="Received:" value={item.paymentReceived === 'true' ? 'Yes' : 'No' } />
+                                            <Infoline label="Client Rated:" value={item.isRated === 'true' ? 'Yes' : 'No' } />
+                                            <Infoline label="Status:" value={
+                                                item.status === 'processing' && item.transaction_done?.client === 'false' && item.transaction_done?.freelancer === 'false'
+                                                ?
+                                                'Processing / On-Going'
+                                                :
+                                                item.status === 'processing' && item.transaction_done?.client === 'true' && item.transaction_done?.freelancer === 'false'
+                                                ?
+                                                'Waiting for your confirmation'
+                                                :
+                                                item.status === 'completed' && 'Completed'
+                                                } />
+                                            <Infoline label="Date Generated:" value={format(new Date(item.created_At), 'MMM dd, yyyy')} />
                                         </Card.Content>
                                     </Card>
                                 )

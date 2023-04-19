@@ -1,15 +1,17 @@
 import { observer } from 'mobx-react';
-import React, { useContext, useEffect, useState, useCallback } from 'react';
+import React, { useContext, useEffect, useState, useCallback, useRef } from 'react';
 import { View, FlatList, ToastAndroid, Keyboard, RefreshControl } from 'react-native';
 import { Button, Text, Avatar, TextInput, Banner } from 'react-native-paper';
 import UserStore from '../../models/user';
 import AuthStore from '../../models/authentication';
-import { getChat, fetchMessages, sendMessage, FetchTransactionbyOfferorInquiry } from '../../../services/apiendpoints';
+import { getChat, fetchMessages, sendMessage, FetchTransactionbyOfferorInquiry, URL } from '../../../services/apiendpoints';
 import { format } from 'date-fns';
 import Loading from '../../components/loading';
 import { useNavigation } from '@react-navigation/native';
+import io from 'socket.io-client';
 
 const FreelancerMessage = observer(({route}) => {
+
     const UserContext = useContext(UserStore);
     const AuthContext = useContext(AuthStore);
     const navigation = useNavigation();
@@ -19,6 +21,30 @@ const FreelancerMessage = observer(({route}) => {
     const [MessagesCollection, setMessagesCollection] = useState([]);
     const [chatId, setChatId] = useState('');
     const [content, setContent] = useState('');
+
+    const socket = io(URL);
+    
+    useEffect(()=>{
+        if(chatId){
+            socket.emit('setup', UserContext.users[0]);
+            socket.on('connected', async() => {
+                console.log('Connected to server:', socket.connected);
+                socket.emit('join chat', chatId);
+                ToastAndroid.show('Connected', ToastAndroid.SHORT);
+            });
+        }
+    }, [chatId]);
+
+    useEffect(()=>{
+        socket.on('message received', () => {
+            FetchorCreateChat();
+        });
+        return () => {
+            socket.disconnect();
+        };
+    },[])
+
+    
 
     const { offer_id, receiver, inquiry_id } = route.params;
 
@@ -30,7 +56,7 @@ const FreelancerMessage = observer(({route}) => {
         FetchOfferAndTransaction();
         setTimeout(() => {
             setRefreshing(false);
-        }, 2000);
+        }, 1000);
     }, []);
     
     useEffect(() => {
@@ -48,8 +74,8 @@ const FreelancerMessage = observer(({route}) => {
                     setChatInfo(chatresponse.isChat);
                     setChatId(chatresponse.isChat._id);
                     const messageresponse = await fetchMessages(chatresponse.isChat._id);
-                    if(messageresponse.success){
-                        setMessagesCollection(messageresponse.messages);
+                    if(messageresponse.length > 0){
+                        setMessagesCollection(messageresponse);
                     }else{
                         alert("An Error has Occured");
                     }
@@ -73,6 +99,7 @@ const FreelancerMessage = observer(({route}) => {
             const sendmessageresponse = await sendMessage({content: content, chatId: chatId});
             if(sendmessageresponse.success){
                 setContent('');
+                socket.emit('new message',sendmessageresponse.message);
                 MessagesCollection.push(sendmessageresponse.message);
                 ToastAndroid.show('Message Sent', ToastAndroid.SHORT);
             }else{
@@ -93,7 +120,6 @@ const FreelancerMessage = observer(({route}) => {
         try{
             AuthContext.letmeload();
             const transactionresponse = await FetchTransactionbyOfferorInquiry({offer_id, inquiry_id});
-            console.log(transactionresponse);
             if(transactionresponse.success){
                 if(transactionresponse.transaction.status === 'completed'){
                     setbannervisibility(true);
@@ -107,6 +133,8 @@ const FreelancerMessage = observer(({route}) => {
             console.log(error);
         }
     }
+
+    const flatListRef = useRef(null);
 
     return (
         <>
@@ -129,6 +157,7 @@ const FreelancerMessage = observer(({route}) => {
             This Transaction is already completed. Archive?
         </Banner>
         <FlatList
+            ref={flatListRef}
             style={{ marginHorizontal: 8 }}
             data={MessagesCollection}
             showsVerticalScrollIndicator={false}
@@ -136,8 +165,11 @@ const FreelancerMessage = observer(({route}) => {
             refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
             getItemLayout={(data, index) => (
                 {length: MessagesCollection.length, offset: MessagesCollection.length * index, index}
-              )}
+            )}
             initialScrollIndex={MessagesCollection.length - 1}
+            onContentSizeChange={() => {
+                MessagesCollection.length > 0 && flatListRef.current.scrollToIndex({index: MessagesCollection.length - 1 ,animated: true});
+            }}
             renderItem={({item, index}) => {
                 const loggedInUser = UserContext.users[0];
                 const isLastMessage = index === MessagesCollection.length - 1;

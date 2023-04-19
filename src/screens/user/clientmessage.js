@@ -1,14 +1,16 @@
 import { observer } from 'mobx-react';
-import React, { useContext, useEffect, useState, useCallback } from 'react';
+import React, { useContext, useEffect, useState, useCallback, useRef } from 'react';
 import { View, FlatList, ToastAndroid, Keyboard, RefreshControl } from 'react-native';
 import { Button, Text, Avatar, TextInput, Banner } from 'react-native-paper';
 import AuthStore from '../../models/authentication';
-import { getChat, fetchMessages, sendMessage, FetchTransactionbyOfferorInquiry, acceptanOffer, refuseanOffer } from '../../../services/apiendpoints';
+import { getChat, fetchMessages, sendMessage, FetchTransactionbyOfferorInquiry, acceptanOffer, refuseanOffer, URL } from '../../../services/apiendpoints';
 import { format } from 'date-fns';
 import Loading from '../../components/loading';
 import UserStore from '../../models/user';
+import io from 'socket.io-client';
 
 const ClientMessage = observer(({route}) => {
+    const { offer_id, receiver, inquiry_id } = route.params;
     const UserContext = useContext(UserStore);
     const AuthContext = useContext(AuthStore);
 
@@ -18,16 +20,37 @@ const ClientMessage = observer(({route}) => {
     const [chatId, setChatId] = useState('');
     const [content, setContent] = useState('');
 
-    const { offer_id, receiver, inquiry_id } = route.params;
-
     const [refreshing, setRefreshing] = useState(false);
 
+    const socket = io(URL);
+    
+    useEffect(()=>{
+        if(chatId){
+            socket.emit('setup', UserContext.users[0]);
+            socket.on('connected', () => {
+                socket.emit('join chat', chatId);
+                ToastAndroid.show('Connected', ToastAndroid.SHORT);
+            });
+        }
+    }, [chatId]);
+
+    useEffect(()=>{
+        socket.on('message received', () => {
+            onRefresh();
+        });
+        return () => {
+            socket.disconnect();
+        }
+    },[]);
+
+    
+
     const onRefresh = useCallback(() => {
-    setRefreshing(true);
-    FetchorCreateChat();
-    setTimeout(() => {
-        setRefreshing(false);
-    }, 2000);
+        setRefreshing(true);
+        FetchorCreateChat();
+        setTimeout(() => {
+            setRefreshing(false);
+        }, 1000);
     }, []);
     
     useEffect(() => {
@@ -45,8 +68,9 @@ const ClientMessage = observer(({route}) => {
                     setChatInfo(chatresponse.isChat);
                     setChatId(chatresponse.isChat._id);
                     const messageresponse = await fetchMessages(chatresponse.isChat._id);
-                    if(messageresponse.success){
-                        setMessagesCollection(messageresponse.messages);
+                    if(messageresponse.length > 0){
+                        setMessagesCollection(messageresponse);
+                        console.log(MessagesCollection[0]);
                     }else{
                         alert("An Error has Occured");
                     }
@@ -69,6 +93,7 @@ const ClientMessage = observer(({route}) => {
             AuthContext.letmeload();
             const sendmessageresponse = await sendMessage({content: content, chatId: chatId});
             if(sendmessageresponse.success){
+                socket.emit('new message',sendmessageresponse.message);
                 setContent('');
                 MessagesCollection.push(sendmessageresponse.message);
                 ToastAndroid.show('Message Sent', ToastAndroid.SHORT);
@@ -133,6 +158,8 @@ const ClientMessage = observer(({route}) => {
         AuthContext.donewithload();
     }
 
+    const flatListRef = useRef();
+
     return (
         <>
         <Loading/>
@@ -158,6 +185,7 @@ const ClientMessage = observer(({route}) => {
         </Banner>
         <View style={{flex: 1}}>
             <FlatList
+                ref={flatListRef}
                 style={{ marginHorizontal: 10 }}
                 data={MessagesCollection}
                 showsVerticalScrollIndicator={false}
@@ -165,8 +193,11 @@ const ClientMessage = observer(({route}) => {
                 refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
                 getItemLayout={(data, index) => (
                     {length: MessagesCollection.length, offset: MessagesCollection.length * index, index}
-                  )}
+                )}
                 initialScrollIndex={MessagesCollection.length - 1}
+                onContentSizeChange={() => {
+                    MessagesCollection.length > 0 && flatListRef.current.scrollToIndex({index: MessagesCollection.length - 1 ,animated: true});
+                }}
                 renderItem={({ item, index }) => {
                     const loggedInUser = UserContext.users[0];
                     const isLastMessage = index === MessagesCollection.length - 1;

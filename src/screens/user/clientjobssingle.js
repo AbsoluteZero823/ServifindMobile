@@ -116,9 +116,12 @@ const ClientSingleJob = observer(({route}) => {
                     
                 </Card.Content>
                 <Card.Actions>
-                    <Button icon="chat" mode="contained" buttonColor="green" onPress={() => {setInquirevisible(true)}}>
-                        Inquire
-                    </Button>
+                    {
+                        data.freelancer_id.availability &&
+                        <Button icon="chat" mode="contained" buttonColor="green" onPress={() => {setInquirevisible(true)}}>
+                            Inquire
+                        </Button>
+                    }
                 </Card.Actions>
             </Card>
         </Modal>

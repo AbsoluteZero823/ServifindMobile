@@ -422,26 +422,6 @@ const ClientProfile = observer((props) => {
                             />
                     </Card.Content>
                 </Card>
-                <Card style={{marginVertical: 6}}>
-                    <Card.Title title='My Reports'/>
-                    <Card.Content>
-                        <FlatList
-                            data={reports_collection}
-                            horizontal={reports_collection.length > 1 ? true : false}
-                            renderItem={({item}) => 
-                                <Card style={{borderWidth:1, borderColor:'green', minWidth: 250}}>
-
-                                </Card>
-                            }
-                            ListEmptyComponent={()=>
-                                <View style={{alignItems:'center', alignSelf:'center', maxWidth: 300, marginBottom:20}}>
-                                    <IconButton icon='view-grid-plus' size={30} iconColor='deeppink'/>
-                                    <Text variant='titleMedium'>No Reports Yet</Text>
-                                </View>
-                            }
-                            />
-                    </Card.Content>
-                </Card>
             </View>
         </ScrollView>
     )

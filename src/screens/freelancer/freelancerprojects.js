@@ -9,6 +9,7 @@ import { useNavigation } from '@react-navigation/native';
 import { myOffers } from '../../../services/apiendpoints';
 import AuthStore from '../../models/authentication';
 import OfferStore from '../../models/offer';
+import Infoline from '../../components/infoline';
 import Loading from '../../components/loading';
 
 const FreelancerProjects = observer(() => {
@@ -39,6 +40,7 @@ const FreelancerProjects = observer(() => {
             const response = await myOffers();
             if(response.success){
                 OfferContext.offers = [];
+                console.log(response.myoffers);
                 response.myoffers.map((offer)=>{
                     OfferContext.offers.push(offer);
                 })
@@ -114,32 +116,67 @@ const FreelancerProjects = observer(() => {
                     <TouchableOpacity onPress={()=>{
                         navigation.navigate('FreelancerProject', item);
                     }}>
-                        <Card key={item._id} style={{marginVertical: 10, marginHorizontal: 5, minWidth:300, marginHorizontal:5, borderColor: item.offer_status === 'waiting' ? 'deeppink' : item.offer_status === 'granted' ? 'green' : 'black', borderWidth: 1}}>
+                    {
+                        item.request_id ? 
+                        <Card key={item._id} style={{minWidth:300, maxWidth:350, marginVertical:2, borderColor: item.offer_status === 'waiting' ? 'deeppink' : item.offer_status === 'granted' ? 'green' : 'black', borderWidth: 1}}>
                             <Card.Title 
                                 title={item.request_id.requested_by.name} 
-                                subtitle={<Text style={{color: item.offer_status === 'waiting' ? 'deeppink' : item.offer_status === 'granted' ? 'green' : 'red'}}>{item.offer_status}</Text>}
+                                subtitle={
+                                    <Text style={{
+                                        color: item.offer_status === 'waiting' ? 'deeppink' : item.offer_status === 'granted' ? 'green' : 'red'
+                                    }}>
+                                        {
+                                        item.offer_status === 'granted' && item.transactions[0]?.status !== 'completed' ? 
+                                        item.offer_status
+                                        :
+                                        item.transactions[0]?.status === 'completed' ? 
+                                        'Completed'
+                                        :
+                                        item.offer_status
+                                        }
+                                    </Text>}
                                 left={()=><Avatar.Image size={40} source={{uri: item.request_id.requested_by.avatar.url}}/>}
                                 />
                             <Card.Content>
-                                <Text style={{color:'deeppink'}}>Requested:</Text>
-                                <Text style={{alignSelf:'flex-end'}}>{item.request_id.description}</Text>
-                                <Text style={{color:'deeppink'}}>Category:</Text>
-                                <Text style={{alignSelf:'flex-end'}}>{item.service_id.category.name}</Text>
-                                <Text style={{color:'deeppink'}}>Service:</Text>
-                                <Text style={{alignSelf:'flex-end'}}>{item.service_id.title}</Text>
-                                <Text style={{color:'deeppink'}}>Offer:</Text>
-                                <Text style={{alignSelf:'flex-end'}}>{item.description}</Text>
-                                <View style={{flexDirection:'row', justifyContent:'space-between'}}>
-                                    <Text style={{color:'deeppink'}}>Paid:</Text>
-                                    {
-                                        item.transactions.length > 0 ? 
-                                        <Text>{(item.transactions[0].isPaid === 'true' && item.transactions[0].paymentSent === 'true') ? 'Yes' : 'Not Yet'}</Text>
-                                        :
-                                        <Text>No Payment Generated</Text>    
-                                    }
-                                </View>
+                                <Infoline label="Requested:" value={item.request_id.description} />
+                                <Infoline label="Category:" value={item.service_id.category.name} />
+                                <Infoline label="Service:" value={item.service_id.title} />
+                                <Infoline label="Price:" value={`₱ ${item.transactions[0]?.price || 'Not Set'}`} />
+                                <Infoline label="Paid:" value={item.transactions.length > 0 ? (
+                                        item.transactions[0].isPaid === 'true' && item.transactions[0].paymentSent === 'true' ? (
+                                        'Yes'
+                                        ) : (
+                                        'Not Yet'
+                                        )
+                                    ) : (
+                                        'No Payment Generated'
+                                    )} />
                             </Card.Content>
                         </Card>
+                        :
+                        <Card key={item._id} style={{minWidth:300, maxWidth:350, marginVertical:2, borderColor: item.offer_status === 'waiting' ? 'deeppink' : item.offer_status === 'granted' ? 'green' : 'black', borderWidth: 1}}>
+                            <Card.Title 
+                                title={item.inquiry_id.customer.name} 
+                                subtitle={<Text style={{color: item.offer_status === 'waiting' ? 'deeppink' : item.offer_status === 'granted' ? 'green' : 'red'}}>{item.offer_status}</Text>}
+                                left={()=><Avatar.Image size={40} source={{uri: item.inquiry_id.customer.avatar.url}}/>}
+                                />
+                            <Card.Content>
+                                <Infoline label="Inquiry:" value={item.inquiry_id.instruction} />
+                                <Infoline label="Category:" value={item.service_id.category.name} />
+                                <Infoline label="Service:" value={item.service_id.title} />
+                                <Infoline label="Price:" value={`₱ ${item.transactions[0]?.price || 'Not Set'}`} />
+                                <Infoline label="Paid:" value={item.transactions.length > 0 ? (
+                                item.transactions[0].isPaid === 'true' && item.transactions[0].paymentSent === 'true' ? (
+                                'Yes'
+                                ) : (
+                                'Not Yet'
+                                )
+                                ) : (
+                                'No Payment Generated'
+                                )} />
+                            </Card.Content>
+                        </Card>
+                    }
                     </TouchableOpacity>
 
                 }

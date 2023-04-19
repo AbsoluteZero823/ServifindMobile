@@ -339,7 +339,7 @@ const FreelancerHome = observer(() => {
                         }}>
                         {
                             item.request_id ? 
-                            <Card key={item._id} style={{minWidth:300, maxWidth:350, marginHorizontal:2, borderColor: item.offer_status === 'waiting' ? 'deeppink' : item.offer_status === 'granted' ? 'green' : 'black', borderWidth: 1}}>
+                            <Card key={item._id} style={{minWidth:300, maxWidth:350, marginHorizontal:4, borderColor: item.offer_status === 'waiting' ? 'deeppink' : item.offer_status === 'granted' ? 'green' : 'black', borderWidth: 1}}>
                                 <Card.Title 
                                     title={item.request_id.requested_by.name} 
                                     subtitle={<Text style={{color: item.offer_status === 'waiting' ? 'deeppink' : item.offer_status === 'granted' ? 'green' : 'red'}}>{item.offer_status}</Text>}
@@ -362,7 +362,7 @@ const FreelancerHome = observer(() => {
                                 </Card.Content>
                             </Card>
                             :
-                            <Card key={item._id} style={{minWidth:300, maxWidth:350, marginHorizontal:5, borderColor: item.offer_status === 'waiting' ? 'deeppink' : item.offer_status === 'granted' ? 'green' : 'black', borderWidth: 1}}>
+                            <Card key={item._id} style={{minWidth:300, maxWidth:350, marginRight:4, borderColor: item.offer_status === 'waiting' ? 'deeppink' : item.offer_status === 'granted' ? 'green' : 'black', borderWidth: 1}}>
                                 <Card.Title 
                                     title={item.inquiry_id.customer.name} 
                                     subtitle={<Text style={{color: item.offer_status === 'waiting' ? 'deeppink' : item.offer_status === 'granted' ? 'green' : 'red'}}>{item.offer_status}</Text>}

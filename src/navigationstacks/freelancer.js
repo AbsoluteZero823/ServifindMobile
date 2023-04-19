@@ -13,6 +13,7 @@ import FreelancerServices from '../screens/freelancer/freelancerservices';
 import FreelancerService from '../screens/freelancer/freelancerservice';
 import FreelancerMessage from '../screens/freelancer/freelancermessage';
 import FreelancerMessageTransactionOfferModal from '../screens/freelancer/freelancermessagemodal';
+import FreelancerPremium from '../screens/freelancer/freelancerpremium';
 
 /**
 * This component is used to render Freelancer navigation. It is responsible for rendering the home page and job posts
@@ -41,6 +42,7 @@ export default function FreelancerNavigator(props) {
       <FreelancerStack.Screen name="FreelancerService" component={FreelancerService} options={{presentation:'transparentModal', contentStyle:{backgroundColor:'transparent'}}}/>
 
       <FreelancerStack.Screen name="FreelancerProfile" component={FreelancerProfile} />
+      <FreelancerStack.Screen name="FreelancerPremium" component={FreelancerPremium} options={{presentation:'transparentModal', contentStyle:{backgroundColor:'transparent'}}}/>
     </FreelancerStack.Navigator>
   );
 }

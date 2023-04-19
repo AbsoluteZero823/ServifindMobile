@@ -22,16 +22,6 @@ export const ServiceModel = types
     status: types.optional(types.string, 'approved'),
     images: types.optional(ImagesModel, { public_id: '', url: '' }),
   })
-  .views((self) => ({
-    get image() {
-      return self.images.url || '';
-    },
-  }))
-  .actions((self) => ({
-    setImage(images) {
-      self.images = images;
-    },
-  }));
 
 const ServiceStore = createContext({services: []});
 
