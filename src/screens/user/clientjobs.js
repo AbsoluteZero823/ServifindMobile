@@ -109,7 +109,7 @@ const ClientJobs = observer((props) => {
                 renderItem={({ item }) => (
                     <TouchableOpacity onPress={()=>navigation.navigate('ClientSingleJob',{item: item})}>
                         <Card key={item._id} style={{marginVertical:10, width: 300}}>
-                            <Card.Cover source={{ uri: (item.images?.url || item.image) }}/>
+                            <Card.Cover source={{ uri: (item.images?.url || item.image || 'https://res.cloudinary.com/dawhmjhu1/image/upload/v1651110818/shelter/avatar_rk4v2w.jpg') }}/>
                             <Card.Title title={(item.title || item.name)}/>
                             <Card.Content>
                             <View style={{flexDirection:'row', justifyContent:'space-between', marginBottom:10}}>

@@ -58,7 +58,7 @@ const ClientSingleJob = observer(({route}) => {
             <LoadingScreen/>
             <Modal visible={mainvisible} onDismiss={hideModal} contentContainerStyle={{marginHorizontal:10}}>
             <Card style={{marginTop:50, borderWidth: 1, borderColor:'deeppink'}}>
-                <Card.Cover source={{uri: data.images.url}}/>
+                <Card.Cover source={{uri: data.images?.url || data.image || 'https://res.cloudinary.com/dawhmjhu1/image/upload/v1651110818/shelter/avatar_rk4v2w.jpg'}}/>
                 <Card.Title title={data.title} titleStyle={{color:'deeppink'}} />
                 <Card.Content>
                     <View style={{flexDirection:'row', justifyContent:'space-between', marginBottom:10}}>
@@ -94,9 +94,9 @@ const ClientSingleJob = observer(({route}) => {
                         renderItem={({item}) => (
                             <Card style={{marginVertical:4, borderWidth:1, borderColor:'green'}}>
                                 <Card.Title 
-                                    title={item.user.name} 
+                                    title={item.user.name}
                                     subtitle={format(new Date(item.created_At),"MMM. dd (EEEE), yyyy")}
-                                    subtitleStyle={{fontSize:12, color:'dimgrey'}}
+                                    subtitleStyle={{fontSize:12, color:'dimgrey', marginTop: -10}}
                                     left={()=><Avatar.Image size={40} source={{ uri: item.user.avatar.url }} style={{alignItems:'center'}}/>}
                                     />
                                 <Card.Content>
