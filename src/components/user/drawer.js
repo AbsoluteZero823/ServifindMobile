@@ -28,7 +28,7 @@ export const UserDrawer = (props) => {
         return;
       }
       const freelancer = response.freelancer[0];
-      if (!freelancer || !freelancer.approved_date) {
+      if (!freelancer || !freelancer.approved_date || freelancer.status === 'applying') {
         alert("Your Application is still being processed, Please wait for a while.");
         return;
       }

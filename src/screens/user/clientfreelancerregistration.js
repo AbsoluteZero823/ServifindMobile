@@ -28,7 +28,7 @@ const ClientFreelancerRegistration = observer(({route}) => {
     const [gcash_name, setGcashName] = useState("");
     const [gcash_number, setGcashNumber] = useState("");
     const [schoolId, setSchoolId] = useState("");
-    const [resumeFile, setresumeFile] = useState(null);
+    const [resumePDF, setresumePDF] = useState(null);
     const [validationErrors, setValidationErrors] = useState({});
   
     async function pickImage(setFunction) {
@@ -67,8 +67,8 @@ const ClientFreelancerRegistration = observer(({route}) => {
       if (!schoolId) {
         errors.schoolId = "Please select your School ID";
       }
-      if (!resumeFile) {
-        errors.resumeFile = "Please select your resume";
+      if (!resumePDF) {
+        errors.resumePDF = "Please select your resume";
       }
       setValidationErrors(errors);
       if (Object.keys(errors).length === 0) {
@@ -77,11 +77,7 @@ const ClientFreelancerRegistration = observer(({route}) => {
         formData.append("gcash_number", gcash_number);
         formData.append("qrCode", qrCode);
         formData.append("schoolID", schoolId);
-        formData.append("resume", {
-          uri: resumeFile.uri,
-          name: resumeFile.name,
-          type: "application/pdf",
-        });
+        formData.append("resume", resumePDF);
         try {
           const response = await registerasfreelancer(formData);
           if (response.success === true) {
@@ -107,7 +103,7 @@ const ClientFreelancerRegistration = observer(({route}) => {
         const response = await freelancerstatus();
         if (response.success === true) {
             if(response.freelancer.length > 0){
-                if(response.freelancer[0].approved_date === null || response.freelancer[0].approved_date === undefined){
+                if(response.freelancer[0].approved_date === null || response.freelancer[0].approved_date === undefined || response.freelancer[0].status === 'applying'){
                     setstatus('Pending')
                 }else{
                     const servicesresponse = await getmyServices();
@@ -210,14 +206,14 @@ const ClientFreelancerRegistration = observer(({route}) => {
                     dense={true}
                     label='Resume'
                     placeholder='Resume...'
-                    value={resumeFile ? 'Resume Selected' : 'No Resume Selected'}
+                    value={resumePDF ? 'Resume Selected' : 'No Resume Selected'}
                     mode='outlined'
                     editable={false}
-                    right={<TextInput.Icon icon="file-document-outline" onPress={() => pickImage(setresumeFile)} />}
-                    error={validationErrors?.resumeFile}
+                    right={<TextInput.Icon icon="file-document-outline" onPress={() => pickImage(setresumePDF)} />}
+                    error={validationErrors?.resumePDF}
                 />
                 {
-                    validationErrors?.resumeFile && <HelperText type="error" >{validationErrors.resumeFile}</HelperText>
+                    validationErrors?.resumePDF && <HelperText type="error" >{validationErrors.resumePDF}</HelperText>
                 }
                 </Card.Content>
                 <Card.Actions>
