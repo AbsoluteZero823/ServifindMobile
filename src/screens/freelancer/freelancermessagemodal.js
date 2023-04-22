@@ -102,7 +102,7 @@ const FreelancerMessageTransactionOfferModal = ({route}) => {
             <Modal visible={modalvisible} onDismiss={hideModal} style={{marginHorizontal:10}}>
                 <KeyboardAvoidingView>
                 <Card>
-                    <Card.Title title='Send Offer' titleStyle={{color:'deeppink'}}/>
+                    <Card.Title title='Send Offer' titleStyle={{color:'#9c6f6f'}}/>
                     <Card.Content>
                         {
                             inquirydata &&
@@ -129,7 +129,7 @@ const FreelancerMessageTransactionOfferModal = ({route}) => {
                             value={description}
                             multiline={true}
                         />
-                        <Text style={{color:'deeppink'}}>Payment Details</Text>
+                        <Text style={{color:'#9c6f6f'}}>Payment Details</Text>
                         <TextInput 
                             mode='outlined'
                             label='Price'

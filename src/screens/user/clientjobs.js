@@ -117,7 +117,7 @@ const ClientJobs = observer((props) => {
                                     <Avatar.Image size={40} source={{ uri: item.user.avatar.url }} style={{alignItems:'center'}}/>
                                     <View style={{marginHorizontal:5}}>
                                         <Text>{item.user.name}</Text>
-                                        <Text style={{color:'deeppink'}}>{item.freelancer_id.availability ? 'Available' : 'Not Available'}</Text>
+                                        <Text style={{color:'#9c6f6f'}}>{item.freelancer_id.availability ? 'Available' : 'Not Available'}</Text>
                                     </View>
                                 </View>
                                 <View>
@@ -134,7 +134,7 @@ const ClientJobs = observer((props) => {
                 )}
                 ListEmptyComponent={() => (
                     <Card style={{minWidth: 250, maxWidth:300, justifyContent:'center', alignSelf:'center'}}>
-                        <Card.Title title="No Services Available" titleStyle={{alignSelf:'center', color:'deeppink'}}/>
+                        <Card.Title title="No Services Available" titleStyle={{alignSelf:'center', color:'#9c6f6f'}}/>
                     </Card>
                 )}    
             />

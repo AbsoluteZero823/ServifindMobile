@@ -115,7 +115,7 @@ const ClientSingleJobPosts = observer(({route}) => {
     return (
         <View style={styles.container}>
             <LoadingScreen/>
-            <Card style={{borderColor:'deeppink', borderWidth:1}}>
+            <Card style={{borderColor:'#9c6f6f', borderWidth:1}}>
                 <Card.Title 
                     title={requestdata?.description} 
                     subtitle={requestdata?.category.name}
@@ -142,10 +142,10 @@ const ClientSingleJobPosts = observer(({route}) => {
                         style={{ height: '80%' }}
                         showsVerticalScrollIndicator={false}
                         renderItem={({item})=>
-                            <Card key={item._id} style={{borderColor: item.transactions[0]?.paymentSent ? 'green' : 'deeppink', borderWidth:1, marginVertical:5}}>
+                            <Card key={item._id} style={{borderColor: item.transactions[0]?.paymentSent ? 'green' : '#9c6f6f', borderWidth:1, marginVertical:5}}>
                                 <Card.Title 
                                     title={item.offered_by.name}
-                                    titleStyle={{color:'deeppink'}}
+                                    titleStyle={{color:'#9c6f6f'}}
                                     subtitle={item.offered_by.contact}
                                     subtitleStyle={{color:'dimgrey'}}
                                     left={()=><Avatar.Image size={40} source={{uri: item.offered_by.avatar.url }}/>}
@@ -155,7 +155,7 @@ const ClientSingleJobPosts = observer(({route}) => {
                                             <Menu
                                                 visible={menucollection[item._id]}
                                                 anchor={
-                                                    <IconButton icon='dots-vertical' iconColor='deeppink' onPress={() => setMenuCollection({...menucollection, [item._id]: !menucollection[item._id]})}/>
+                                                    <IconButton icon='dots-vertical' iconColor='#9c6f6f' onPress={() => setMenuCollection({...menucollection, [item._id]: !menucollection[item._id]})}/>
                                                 }
                                                 anchorPosition='bottom'
                                                 onDismiss={() => setMenuCollection({...menucollection, [item._id]: false})}
@@ -177,20 +177,20 @@ const ClientSingleJobPosts = observer(({route}) => {
                                             :
                                             <IconButton 
                                                 icon={item.offer_status === 'cancelled' ? 'cancel' : 'check'} 
-                                                iconColor={item.offer_status === 'cancelled' ? 'red' : item.offer_status === 'granted' ? 'deeppink' : 'green'}/>
+                                                iconColor={item.offer_status === 'cancelled' ? 'red' : item.offer_status === 'granted' ? '#9c6f6f' : 'green'}/>
                                             )
                                         }
                                     />
                                 <Card.Content style={{flex:1}}>
                                     <View style={{flexDirection:'row', justifyContent:'space-between', alignItems:'center'}}>
-                                        <Text variant='bodyLarge' style={{color:'deeppink'}}>Service:</Text>
+                                        <Text variant='bodyLarge' style={{color:'#9c6f6f'}}>Service:</Text>
                                         <Text>{item.service_id.title}</Text>
                                     </View>
                                     <View style={{flexDirection:'row', justifyContent:'space-between', alignItems:'center'}}>
-                                        <Text variant='bodyLarge' style={{color:'deeppink'}}>Offer:</Text>
+                                        <Text variant='bodyLarge' style={{color:'#9c6f6f'}}>Offer:</Text>
                                         <Text>{item.description}</Text>
                                     </View>
-                                    <Text variant='bodyLarge' style={{color:'deeppink'}}>Experience:</Text>
+                                    <Text variant='bodyLarge' style={{color:'#9c6f6f'}}>Experience:</Text>
                                     <Text>{item.service_id.experience}</Text>
                                 </Card.Content>
                                 <Card.Actions>
@@ -238,7 +238,7 @@ const ClientSingleJobPosts = observer(({route}) => {
                                 {
                                 (offersdata.length > 0 & requestdata?.request_status === 'waiting' ) ?
                                 <>
-                                <IconButton icon='tag' size={30} iconColor='deeppink'/>
+                                <IconButton icon='tag' size={30} iconColor='#9c6f6f'/>
                                 <Text variant='titleMedium'>Not satisfied with the current offers?</Text>
                                 <Text style={{textAlign:'center', color:'dimgrey',marginVertical:6}}>Wait for another freelancer to make an offer</Text>
                                 </>
@@ -249,7 +249,7 @@ const ClientSingleJobPosts = observer(({route}) => {
                         }
                         ListEmptyComponent={()=>
                             <SafeAreaView style={{alignItems:'center', alignSelf:'center', justifyContent:'center'}}>
-                                <IconButton icon='chat-processing-outline' size={30} iconColor='deeppink'/>
+                                <IconButton icon='chat-processing-outline' size={30} iconColor='#9c6f6f'/>
                                 <Text variant='titleMedium'>No Offers as of yet!</Text>
                                 <Text style={{textAlign:'center', color:'dimgrey',marginVertical:6}}>Wait for a freelancer to make an offer</Text>
                             </SafeAreaView> 

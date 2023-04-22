@@ -211,7 +211,7 @@ const ClientProfile = observer((props) => {
             <Loading/>
             <View style={{flex:1, alignItems:'center', alignSelf:'center'}}>
                 <View style={{flexDirection:'row', marginBottom:10}}>
-                    <Avatar.Image size={100} style={{backgroundColor:'deeppink', borderColor:'lightpink'}} source={{uri: UserContext.users[0]?.UserDetails?.avatar?.url}}/>
+                    <Avatar.Image size={100} style={{backgroundColor:'#9c6f6f', borderColor:'lightpink'}} source={{uri: UserContext.users[0]?.UserDetails?.avatar?.url}}/>
                     {
                         isEditing ? 
                         <TouchableOpacity style={{position:'absolute', right:-10, bottom:-10}} onPress={()=>pickImage()}>
@@ -262,11 +262,11 @@ const ClientProfile = observer((props) => {
                                     Gender:
                                 </Text>
                                 <View style={{ flexDirection: 'row' }}>
-                                    <RadioButton value="Male" color='deeppink' />
+                                    <RadioButton value="Male" color='#9c6f6f' />
                                     <Text style={{ marginVertical: 8 }}>Male</Text>
                                 </View>
                                 <View style={{ flexDirection: 'row' }}>
-                                    <RadioButton value="Female" color='deeppink' />
+                                    <RadioButton value="Female" color='#9c6f6f' />
                                     <Text style={{ marginVertical: 8 }}>Female</Text>
                                 </View>
                                 </View>
@@ -415,7 +415,7 @@ const ClientProfile = observer((props) => {
                             }
                             ListEmptyComponent={()=>
                                 <View style={{alignItems:'center', alignSelf:'center', maxWidth: 300, marginBottom:20}}>
-                                    <IconButton icon='view-grid-plus' size={30} iconColor='deeppink'/>
+                                    <IconButton icon='view-grid-plus' size={30} iconColor='#9c6f6f'/>
                                     <Text variant='titleMedium'>No Transactions Yet</Text>
                                 </View>
                             }

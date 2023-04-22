@@ -57,16 +57,16 @@ const ClientSingleJob = observer(({route}) => {
         <Portal>
             <LoadingScreen/>
             <Modal visible={mainvisible} onDismiss={hideModal} contentContainerStyle={{marginHorizontal:10}}>
-            <Card style={{marginTop:50, borderWidth: 1, borderColor:'deeppink'}}>
+            <Card style={{marginTop:50, borderWidth: 1, borderColor:'#9c6f6f'}}>
                 <Card.Cover source={{uri: data.images?.url || data.image || 'https://res.cloudinary.com/dawhmjhu1/image/upload/v1651110818/shelter/avatar_rk4v2w.jpg'}}/>
-                <Card.Title title={data.title} titleStyle={{color:'deeppink'}} />
+                <Card.Title title={data.title} titleStyle={{color:'#9c6f6f'}} />
                 <Card.Content>
                     <View style={{flexDirection:'row', justifyContent:'space-between', marginBottom:10}}>
                         <View style={{flexDirection:'row'}}>
                             <Avatar.Image size={40} source={{ uri: data.user.avatar.url }} style={{alignItems:'center'}}/>
                             <View style={{marginHorizontal:5}}>
                                 <Text>{data.user.name}</Text>
-                                <Text style={{color:'deeppink'}}>{data.freelancer_id.availability ? 'Available' : 'Not Available'}</Text>
+                                <Text style={{color:'#9c6f6f'}}>{data.freelancer_id.availability ? 'Available' : 'Not Available'}</Text>
                             </View>
                         </View>
                         <View>
@@ -101,16 +101,16 @@ const ClientSingleJob = observer(({route}) => {
                                     />
                                 <Card.Content>
                                     <View style={{flexDirection:'row', justifyContent:'space-between'}}>
-                                        <Text style={{color:'deeppink'}}>Rating:</Text>
+                                        <Text style={{color:'#9c6f6f'}}>Rating:</Text>
                                         <Text>{item.rating}</Text>
                                     </View>
-                                    <Text style={{color:'deeppink'}}>Comment:</Text>
+                                    <Text style={{color:'#9c6f6f'}}>Comment:</Text>
                                     <Text style={{textAlign:'right'}}>{item.comment}</Text>
                                 </Card.Content>
                             </Card>
                         )}
                         ListEmptyComponent={() => (
-                            <Text style={{textAlign:'center', fontWeight:'bold', color: 'deeppink'}}>No Reviews Available</Text>
+                            <Text style={{textAlign:'center', fontWeight:'bold', color: '#9c6f6f'}}>No Reviews Available</Text>
                         )} 
                     />
                     

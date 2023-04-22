@@ -24,7 +24,7 @@ const Landingpage = observer(()=>{
             <Button style={styles.button} icon="login-variant" mode="outlined" textColor='black' onPress={() => navigation.navigate('Login')}>
                 Login
             </Button>
-            <Button style={styles.button} icon="account-plus" mode="contained" buttonColor='deeppink' textColor='white' onPress={() => navigation.navigate('Register')}>
+            <Button style={styles.button} icon="account-plus" mode="contained" buttonColor='#9c6f6f' textColor='white' onPress={() => navigation.navigate('Register')}>
                 Register
             </Button>
         </View>

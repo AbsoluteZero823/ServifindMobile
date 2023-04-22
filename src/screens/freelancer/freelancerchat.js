@@ -50,8 +50,8 @@ const FreelancerChat = observer(() => {
                 onChangeText={(text) => setSearch(text)}
                 mode='bar'
                 placeholder='Search...'
-                iconColor='deeppink'
-                traileringIconColor='deeppink'
+                iconColor='#9c6f6f'
+                traileringIconColor='#9c6f6f'
                 style={{borderWidth:2, borderColor:'dimgrey'}}
             />
             <FlatList
@@ -82,7 +82,7 @@ const FreelancerChat = observer(() => {
                     <View style={{flexDirection:'row', marginHorizontal: 4, marginVertical: 8}}>
                         <Avatar.Image source={{uri:  item.latestMessage.sender.avatar.url}} size={60}/>
                         <View style={{marginHorizontal: 4, alignSelf: 'center'}}>
-                            <Text variant='titleMedium' style={{color:'deeppink'}}>{item.chatName}</Text>
+                            <Text variant='titleMedium' style={{color:'#9c6f6f'}}>{item.chatName}</Text>
                             {
                                 item.latestMessage.sender._id === item.users[1]._id &&
                                 <Text style={{color:'dimgrey'}}>You: {item.latestMessage.content}</Text>
@@ -97,8 +97,8 @@ const FreelancerChat = observer(() => {
             )}
             ListEmptyComponent={() => (
                 <View style={{alignSelf:'center', backgroundColor:'white', padding:20, marginVertical:20, borderRadius:20}}>
-                    <IconButton icon='chat-processing-outline' iconColor='deeppink' size={60} style={{alignSelf:'center'}}/>
-                    <Text style={{textAlign:'center', color:'black', fontWeight:'bold'}}>Once you connect with a freelancer{`\n`}your messages will appear here{`\n\n`}To get started{`\n`}<Text style={{color:'deeppink'}}>Search for Freelancers</Text>{`\n`}or{`\n`}<Text style={{color:'deeppink'}}>Post a Job</Text></Text>
+                    <IconButton icon='chat-processing-outline' iconColor='#9c6f6f' size={60} style={{alignSelf:'center'}}/>
+                    <Text style={{textAlign:'center', color:'black', fontWeight:'bold'}}>Once you connect with a freelancer{`\n`}your messages will appear here{`\n\n`}To get started{`\n`}<Text style={{color:'#9c6f6f'}}>Search for Freelancers</Text>{`\n`}or{`\n`}<Text style={{color:'#9c6f6f'}}>Post a Job</Text></Text>
                 </View>
             )}
             />

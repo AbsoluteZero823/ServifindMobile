@@ -244,7 +244,7 @@ const ClientCompleteOffer = observer(({route}) => {
                                         value={ gcashreceipt ? 'GCash Receipt Selected' : null}
                                         editable={false}
                                         placeholder='Upload GCash Receipt'
-                                        right={<TextInput.Icon icon="cloud-upload-outline" iconColor='deeppink' onPress={()=>pickImage()}/>}
+                                        right={<TextInput.Icon icon="cloud-upload-outline" iconColor='#9c6f6f' onPress={()=>pickImage()}/>}
                                         error={validationerrors.gcashreceipt}
                                         />
                                     {
@@ -255,7 +255,7 @@ const ClientCompleteOffer = observer(({route}) => {
                                     }
                                     </>
                                     :
-                                    <Text style={{color:'deeppink', textAlign:'center'}}> Cash Transactions are not covered by our application </Text>
+                                    <Text style={{color:'#9c6f6f', textAlign:'center'}}> Cash Transactions are not covered by our application </Text>
                                 }
                                 </View>
                             </View>
@@ -305,7 +305,7 @@ const ClientCompleteOffer = observer(({route}) => {
                     <Card>
                         <Card.Title 
                             title="Freelancer Rating"
-                            right={()=><IconButton icon='chevron-left' iconColor='deeppink' onPress={()=>setappstate("Rate/Report")}/>}
+                            right={()=><IconButton icon='chevron-left' iconColor='#9c6f6f' onPress={()=>setappstate("Rate/Report")}/>}
                             />
                         <Card.Content>
                             <Text>Rate:</Text>
@@ -340,7 +340,7 @@ const ClientCompleteOffer = observer(({route}) => {
                                 Back
                             </Button>
                             <Button
-                                textColor='deeppink'
+                                textColor='#9c6f6f'
                                 mode='outlined'
                                 onPress={()=>Feedbackhandler()}
                                 >
@@ -354,7 +354,7 @@ const ClientCompleteOffer = observer(({route}) => {
                     <Card>
                         <Card.Title 
                             title="Report Freelancer"
-                            right={()=><IconButton icon='chevron-left' iconColor='deeppink' onPress={()=>setappstate("Rate/Report")}/>}
+                            right={()=><IconButton icon='chevron-left' iconColor='#9c6f6f' onPress={()=>setappstate("Rate/Report")}/>}
                             />
                         <Card.Content>
                             <TextInput
@@ -390,7 +390,7 @@ const ClientCompleteOffer = observer(({route}) => {
                                 Back
                             </Button>
                             <Button
-                                textColor='deeppink'
+                                textColor='#9c6f6f'
                                 mode='outlined'
                                 onPress={()=>Reporthandler()}
                                 >

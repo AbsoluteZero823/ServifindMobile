@@ -57,20 +57,20 @@ const FreelancerProjects = observer(() => {
         <View style={styles.container}>
             <Searchbar
                 placeholder="Search...."
-                iconColor='deeppink'
-                style={{borderColor:'deeppink', borderWidth: 1}}
+                iconColor='#9c6f6f'
+                style={{borderColor:'#9c6f6f', borderWidth: 1}}
                 onChangeText={(text) => setsearchquery(text)}
                 right={()=>
                     <Menu
                         visible={visible}
                         onDismiss={closeMenu}
-                        anchor={<IconButton icon='menu' iconColor='deeppink' onPress={openMenu}/>}
+                        anchor={<IconButton icon='menu' iconColor='#9c6f6f' onPress={openMenu}/>}
                         anchorPosition='bottom'
                         >
-                        <Menu.Item onPress={() => setstatusquery(null)} title="All" titleStyle={statusquery === null && {color:'deeppink'}}/>
-                        <Menu.Item onPress={() => setstatusquery('granted')} title="Granted" titleStyle={statusquery === 'granted' && {color:'deeppink'}}/>
-                        <Menu.Item onPress={() => setstatusquery('waiting')} title="Waiting" titleStyle={statusquery === 'waiting' && {color:'deeppink'}}/>
-                        <Menu.Item onPress={() => setstatusquery('cancelled')} title="Cancelled" titleStyle={statusquery === 'cancelled' && {color:'deeppink'}}/>
+                        <Menu.Item onPress={() => setstatusquery(null)} title="All" titleStyle={statusquery === null && {color:'#9c6f6f'}}/>
+                        <Menu.Item onPress={() => setstatusquery('granted')} title="Granted" titleStyle={statusquery === 'granted' && {color:'#9c6f6f'}}/>
+                        <Menu.Item onPress={() => setstatusquery('waiting')} title="Waiting" titleStyle={statusquery === 'waiting' && {color:'#9c6f6f'}}/>
+                        <Menu.Item onPress={() => setstatusquery('cancelled')} title="Cancelled" titleStyle={statusquery === 'cancelled' && {color:'#9c6f6f'}}/>
                     </Menu>
                 }
                 />
@@ -118,12 +118,12 @@ const FreelancerProjects = observer(() => {
                     }}>
                     {
                         item.request_id ? 
-                        <Card key={item._id} style={{minWidth:300, maxWidth:350, marginVertical:2, borderColor: item.offer_status === 'waiting' ? 'deeppink' : item.offer_status === 'granted' ? 'green' : 'black', borderWidth: 1}}>
+                        <Card key={item._id} style={{minWidth:300, maxWidth:350, marginVertical:2, borderColor: item.offer_status === 'waiting' ? '#9c6f6f' : item.offer_status === 'granted' ? 'green' : 'black', borderWidth: 1}}>
                             <Card.Title 
                                 title={item.request_id.requested_by.name} 
                                 subtitle={
                                     <Text style={{
-                                        color: item.offer_status === 'waiting' ? 'deeppink' : item.offer_status === 'granted' ? 'green' : 'red'
+                                        color: item.offer_status === 'waiting' ? '#9c6f6f' : item.offer_status === 'granted' ? 'green' : 'red'
                                     }}>
                                         {
                                         item.offer_status === 'granted' && item.transactions[0]?.status !== 'completed' ? 
@@ -154,10 +154,10 @@ const FreelancerProjects = observer(() => {
                             </Card.Content>
                         </Card>
                         :
-                        <Card key={item._id} style={{minWidth:300, maxWidth:350, marginVertical:2, borderColor: item.offer_status === 'waiting' ? 'deeppink' : item.offer_status === 'granted' ? 'green' : 'black', borderWidth: 1}}>
+                        <Card key={item._id} style={{minWidth:300, maxWidth:350, marginVertical:2, borderColor: item.offer_status === 'waiting' ? '#9c6f6f' : item.offer_status === 'granted' ? 'green' : 'black', borderWidth: 1}}>
                             <Card.Title 
                                 title={item.inquiry_id.customer.name} 
-                                subtitle={<Text style={{color: item.offer_status === 'waiting' ? 'deeppink' : item.offer_status === 'granted' ? 'green' : 'red'}}>{item.offer_status}</Text>}
+                                subtitle={<Text style={{color: item.offer_status === 'waiting' ? '#9c6f6f' : item.offer_status === 'granted' ? 'green' : 'red'}}>{item.offer_status}</Text>}
                                 left={()=><Avatar.Image size={40} source={{uri: item.inquiry_id.customer.avatar.url}}/>}
                                 />
                             <Card.Content>
@@ -182,7 +182,7 @@ const FreelancerProjects = observer(() => {
                 }
                 ListEmptyComponent={
                     <SafeAreaView style={{alignItems:'center', alignSelf:'center', maxWidth: 300, marginBottom:20}}>
-                        <IconButton icon='view-grid-plus' size={30} iconColor='deeppink'/>
+                        <IconButton icon='view-grid-plus' size={30} iconColor='#9c6f6f'/>
                         <Text variant='titleMedium'>No Projects Yet</Text>
                         <Text style={{textAlign:'center', color:'dimgrey',marginVertical:6}}>Accept a Job Request on the marketplace and start earning</Text>
                         <Button mode='contained' buttonColor="salmon" style={{marginVertical:6, width:200}} onPress={()=>(console.log("Redirect Me!"))}>Accept a Request</Button>

@@ -109,7 +109,7 @@ const ClientHome = observer((props) => {
           </View>
           <View style={{flex: 4, padding:5}}>
             <Card style={[styles.cardStyle]}>
-              <Card.Title title={<Text variant='headlineSmall'>Your Job Posts</Text>} right={(props) => <Button mode='text' textColor='deeppink' onPress={()=>(setActive('Jobs'), setAppbarTitle('Job Posting'),navigation.navigate('ClientJobPosting'))}>See all postings</Button>}/>
+              <Card.Title title={<Text variant='headlineSmall'>Your Job Posts</Text>} right={(props) => <Button mode='text' textColor='#9c6f6f' onPress={()=>(setActive('Jobs'), setAppbarTitle('Job Posting'),navigation.navigate('ClientJobPosting'))}>See all postings</Button>}/>
               <Card.Content style={{justifyContent:'center'}}>
               <FlatList
                 data={
@@ -130,15 +130,15 @@ const ClientHome = observer((props) => {
                 keyExtractor={(item) => item._id}
                 renderItem={({item}) => (
                   <TouchableOpacity onPress={()=>navigation.navigate('ClientSingleJobPosts',{_id: item._id})}>
-                    <Card style={{width:'100%', marginBottom:5, borderColor: item.request_status === 'granted' ? 'green' : 'deeppink', borderWidth:1}}>
+                    <Card style={{width:'100%', marginBottom:5, borderColor: item.request_status === 'granted' ? 'green' : '#9c6f6f', borderWidth:1}}>
                       <Card.Title title={item.description} subtitle={<Text style={{color:'grey'}}>{item.category.name}</Text>}
-                      right={(props) => <IconButton icon='open-in-new' iconColor='deeppink'/>}/>
+                      right={(props) => <IconButton icon='open-in-new' iconColor='#9c6f6f'/>}/>
                     </Card>
                   </TouchableOpacity>
                 )}
                 ListEmptyComponent={() => (
                 <SafeAreaView style={{alignItems:'center', alignSelf:'center', maxWidth: 300, marginBottom:20}}>
-                  <IconButton icon='view-grid-plus' size={30} iconColor='deeppink'/>
+                  <IconButton icon='view-grid-plus' size={30} iconColor='#9c6f6f'/>
                   <Text variant='titleMedium'>No active job posts</Text>
                   <Text style={{textAlign:'center', color:'dimgrey',marginVertical:6}}>Post a Job on the marketplace and let a freelancer come to you</Text>
                   <Button mode='contained' buttonColor="salmon" style={{marginVertical:6, width:150}} onPress={()=>(navigation.navigate('ClientPostaJob'))}>Post a Job</Button>
@@ -153,7 +153,7 @@ const ClientHome = observer((props) => {
           </View>
           <View style={{flex:4, padding:5}}>
             <Card style={[styles.cardStyle]}>
-              <Card.Title title={<Text variant='headlineSmall'>Your Inquiries</Text>} right={(props) => <Button mode='text' textColor='deeppink' onPress={()=>(alert("Coming Soon"))}>See all inquiries</Button>}/>
+              <Card.Title title={<Text variant='headlineSmall'>Your Inquiries</Text>} right={(props) => <Button mode='text' textColor='#9c6f6f' onPress={()=>(alert("Coming Soon"))}>See all inquiries</Button>}/>
               <Card.Content>
                 <SafeAreaView>
                   <FlatList
@@ -162,13 +162,13 @@ const ClientHome = observer((props) => {
                     showsVerticalScrollIndicator={false}
                     style={{overflow:'hidden', marginBottom:70}}
                     renderItem={({item}) => (
-                      <Card style={{marginHorizontal:5, marginBottom:5, borderColor:'deeppink', borderWidth:1}}>
-                        <Card.Title title={item.service.title} subtitle={<Text style={{color:'grey'}}>{item.service.category.name}</Text>} right={(props) => <IconButton icon='open-in-new' mode='outlined' iconColor='deeppink' style={{borderColor:'transparent'}}/>}/>
+                      <Card style={{marginHorizontal:5, marginBottom:5, borderColor:'#9c6f6f', borderWidth:1}}>
+                        <Card.Title title={item.service.title} subtitle={<Text style={{color:'grey'}}>{item.service.category.name}</Text>} right={(props) => <IconButton icon='open-in-new' mode='outlined' iconColor='#9c6f6f' style={{borderColor:'transparent'}}/>}/>
                       </Card>
                     )}
                     ListEmptyComponent={() => (
                       <SafeAreaView style={{alignItems:'center', alignSelf:'center', justifyContent:'center'}}>
-                        <IconButton icon='chat-processing-outline' size={30} iconColor='deeppink'/>
+                        <IconButton icon='chat-processing-outline' size={30} iconColor='#9c6f6f'/>
                         <Text variant='titleMedium'>No Active Inquiries Yet</Text>
                         <Text style={{textAlign:'center', color:'dimgrey',marginVertical:6}}>Search for a job on the market place</Text>
                         <Button mode='contained' buttonColor="salmon" style={{marginVertical:6, width:150}} onPress={()=>(

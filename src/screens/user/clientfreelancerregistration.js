@@ -145,9 +145,9 @@ const ClientFreelancerRegistration = observer(({route}) => {
         <Loading/>
         {
             status === 'None' ? 
-            <Card style={{marginHorizontal:20, borderWidth:1, borderColor:'deeppink'}}>
+            <Card style={{marginHorizontal:20, borderWidth:1, borderColor:'#9c6f6f'}}>
                 <Card.Title
-                    title={<Text variant='titleMedium' style={{color:'deeppink'}}>Freelancer Registration</Text>}
+                    title={<Text variant='titleMedium' style={{color:'#9c6f6f'}}>Freelancer Registration</Text>}
                     subtitle={<Text variant='bodySmall' style={{color:'dimgray'}}>Please fill in the form below</Text>}
                 />
                 <Card.Content>
@@ -220,7 +220,7 @@ const ClientFreelancerRegistration = observer(({route}) => {
                     <Button
                         icon='check'
                         mode='outlined'
-                        textColor='deeppink'
+                        textColor='#9c6f6f'
                         onPress={() => {
                             submitHandler();
                         }}
@@ -231,9 +231,9 @@ const ClientFreelancerRegistration = observer(({route}) => {
             </Card>
             :
             <View style={{flex:1, justifyContent:'center'}}>
-                <Card style={{marginHorizontal:20, borderWidth:1, borderColor:'deeppink'}}>
+                <Card style={{marginHorizontal:20, borderWidth:1, borderColor:'#9c6f6f'}}>
                     <Card.Content>
-                        <Text variant='titleMedium' style={{color:'deeppink'}}>You're freelancer application is under consideration</Text>
+                        <Text variant='titleMedium' style={{color:'#9c6f6f'}}>You're freelancer application is under consideration</Text>
                     </Card.Content>
                 </Card>
             </View>

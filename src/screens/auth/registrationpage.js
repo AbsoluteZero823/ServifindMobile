@@ -41,7 +41,7 @@ const Registration = observer(() => {
                     titleStyle={{ textAlign: 'center', fontSize: 20, fontWeight: 'bold' }}
                     right={() => (
                       <RadioButton
-                        color='deeppink'
+                        color='#9c6f6f'
                         value={item.type}
                         status={AuthContext.WhatUserType === item.type ? 'checked' : 'unchecked'}
                       />
@@ -57,12 +57,12 @@ const Registration = observer(() => {
                                           
             />
           </RadioButton.Group>
-          <Button style={styles.inputbutton} disabled={!AuthContext.WhatUserType} onPress={() => {navigation.navigate('Serviform');}} buttonColor='deeppink' textColor='white'>{AuthContext.WhatUserType ? `Apply as a ${AuthContext.WhatUserType}` : 'Create Account' }</Button>
+          <Button style={styles.inputbutton} disabled={!AuthContext.WhatUserType} onPress={() => {navigation.navigate('Serviform');}} buttonColor='#9c6f6f' textColor='white'>{AuthContext.WhatUserType ? `Apply as a ${AuthContext.WhatUserType}` : 'Create Account' }</Button>
         </Card.Content>
         <Card.Actions>
           <View style={styles.cardaction}>
             <Text>Already have an account?</Text>
-            <Button mode='text' textColor='deeppink' onPress={() => {navigation.navigate('Login');}}>
+            <Button mode='text' textColor='#9c6f6f' onPress={() => {navigation.navigate('Login');}}>
               Login
             </Button>
           </View>

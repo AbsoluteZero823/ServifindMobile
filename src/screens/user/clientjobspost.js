@@ -87,8 +87,8 @@ const ClientJobsRequest = observer(() => {
                             value={categoryName}
                             placeholder='Search.....'
                             onChangeText={(text) => setCategoryName(text)}
-                            right={<TextInput.Icon icon={expanded ? 'chevron-up' : 'chevron-down'} iconColor='deeppink' onPress={()=>setExpanded(!expanded)} />}
-                            left={<TextInput.Icon icon='magnify' iconColor='deeppink'/>}
+                            right={<TextInput.Icon icon={expanded ? 'chevron-up' : 'chevron-down'} iconColor='#9c6f6f' onPress={()=>setExpanded(!expanded)} />}
+                            left={<TextInput.Icon icon='magnify' iconColor='#9c6f6f'/>}
                             error={validationerrors.category}
                         />
                         <View style={{backgroundColor:'darksalmon', marginHorizontal:2, borderBottomRightRadius:20, borderBottomLeftRadius:20}}>
@@ -108,7 +108,7 @@ const ClientJobsRequest = observer(() => {
                             dense={true}
                             onChangeText={(text) => setDescription(text)}
                             style={{marginVertical:5}}
-                            right={<TextInput.Icon icon="window-close" iconColor='deeppink' onPress={()=>setDescription('')}/>}
+                            right={<TextInput.Icon icon="window-close" iconColor='#9c6f6f' onPress={()=>setDescription('')}/>}
                             numberOfLines={5}
                             error={validationerrors.description}
                         />

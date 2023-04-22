@@ -65,12 +65,12 @@ const FreelancerProfile = observer((props) => {
             <Loading/>
             <View style={{flex:1, alignItems:'center', alignSelf:'center'}}>
                 <View style={{flexDirection:'row', marginBottom:10}}>
-                    <Avatar.Image size={100} style={{backgroundColor:'deeppink', borderColor:'lightpink'}} source={{uri: UserContext.users[0]?.UserDetails?.avatar?.url}}/>
+                    <Avatar.Image size={100} style={{backgroundColor:'#9c6f6f', borderColor:'lightpink'}} source={{uri: UserContext.users[0]?.UserDetails?.avatar?.url}}/>
                 </View>
                 <Text variant='titleLarge'>{UserContext.users[0]?.UserDetails?.name}</Text>
                 <View style={{flexDirection:'row'}}>
                     <Text variant="titleMedium" style={{alignSelf:'center'}}>Available?</Text>
-                    <Switch color='deeppink' value={Availability} onValueChange={()=>{toggleavailability()}}/>
+                    <Switch color='#9c6f6f' value={Availability} onValueChange={()=>{toggleavailability()}}/>
                 </View>
                 {
                     !FreelancerStore.data[0].isPremium && FreelancerStore.data[0].premiumReceipt === undefined &&
@@ -84,8 +84,8 @@ const FreelancerProfile = observer((props) => {
                 <Card style={{marginVertical:10}}>
                     <Card.Title 
                         title='My Transactions'
-                        titleStyle={{color:'deeppink', fontWeight:'bold', fontSize:20}}
-                        right={()=>transactionlist.length > 0 && <IconButton icon={visibletransaction ? 'chevron-up' : 'chevron-down'} iconColor='deeppink' onPress={()=>setvisibletransaction(!visibletransaction)} style={{marginRight: 8 }}/>}
+                        titleStyle={{color:'#9c6f6f', fontWeight:'bold', fontSize:20}}
+                        right={()=>transactionlist.length > 0 && <IconButton icon={visibletransaction ? 'chevron-up' : 'chevron-down'} iconColor='#9c6f6f' onPress={()=>setvisibletransaction(!visibletransaction)} style={{marginRight: 8 }}/>}
                         />
                     <Card.Content>
                         {   
@@ -93,17 +93,17 @@ const FreelancerProfile = observer((props) => {
                             (visibletransaction &&
                             transactionlist.map((item, index)=>{
                                 return (
-                                    <Card key={index} style={{marginVertical:4, borderColor:'deeppink', borderWidth: 1}}>
+                                    <Card key={index} style={{marginVertical:4, borderColor:'#9c6f6f', borderWidth: 1}}>
                                         <Card.Title 
                                         title={(item.offer_id.request_id?.requested_by?.name || item.offer_id.inquiry_id?.customer?.name)} 
                                         subtitle={<Text>{ item.isPaid === 'true' ? 'Paid' : 'Not Yet Paid' }</Text>}
-                                        titleStyle={{ color:'deeppink' }}
+                                        titleStyle={{ color:'#9c6f6f' }}
                                         subtitleStyle={{ color:'dimgrey' }}
                                         left={()=><Avatar.Image size={50} source={{ uri: (item.offer_id.request_id?.requested_by?.avatar.url || item.offer_id.inquiry_id?.customer?.avatar.url)}}/>}
                                         />
                                         
                                         <Card.Content>
-                                            <Text style={{color: 'deeppink', fontWeight:'bold'}}>PAYMENT DETAILS:</Text>
+                                            <Text style={{color: '#9c6f6f', fontWeight:'bold'}}>PAYMENT DETAILS:</Text>
                                             <Infoline label="Paid:" value={item.paymentSent === 'true' ? 'Yes' : 'No'} />
                                             <Infoline label="Amount:" value={`₱ ${item.price}`} />
                                             <Infoline label="Sent: " value={item.paymentSent === 'true' ? 'Yes' : 'No' }/>
@@ -127,7 +127,7 @@ const FreelancerProfile = observer((props) => {
                             }))
                             :
                             <SafeAreaView style={{alignItems:'center', alignSelf:'center', maxWidth: '100%', marginBottom:20}}>
-                                <IconButton icon='view-grid-plus' size={30} iconColor='deeppink'/>
+                                <IconButton icon='view-grid-plus' size={30} iconColor='#9c6f6f'/>
                                 <Text variant='titleMedium'>No Transactions Yet or Hidden</Text>
                                 <Text style={{textAlign:'center', color:'dimgrey',marginVertical:6}}>Post a Service on the marketplace and let a client come to you</Text>
                             </SafeAreaView>

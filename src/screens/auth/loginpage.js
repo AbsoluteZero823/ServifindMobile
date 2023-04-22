@@ -77,7 +77,7 @@ const LoginPage = observer(() => {
         </Portal>
         
         <Card style={styles.registrationpage}>
-            <Card.Title title="Log in to ServiFind" titleStyle={{textAlign:'center', fontSize: 20, fontWeight: 'bold', color:'deeppink'}} />
+            <Card.Title title="Log in to ServiFind" titleStyle={{textAlign:'center', fontSize: 20, fontWeight: 'bold', color:'#9c6f6f'}} />
             <Card.Content>
                 <TextInput
                     style={styles.input}
@@ -114,15 +114,15 @@ const LoginPage = observer(() => {
                     </HelperText>
                 )}
                 <View style={{flexDirection:'row', alignItems:'center', justifyContent:'space-between'}}>
-                        <Button mode='text' textColor='deeppink' onPress={() => {console.log("Forgot")}}>
+                        <Button mode='text' textColor='#9c6f6f' onPress={() => {console.log("Forgot")}}>
                         Forgot Password?
                         </Button>
-                        <Checkbox.Item label="Remember Me" color='deeppink' uncheckedColor='deeppink' onPress={() => {setchecked(!checked)}} status={checked ? 'checked' : 'unchecked'}/>
+                        <Checkbox.Item label="Remember Me" color='#9c6f6f' uncheckedColor='#9c6f6f' onPress={() => {setchecked(!checked)}} status={checked ? 'checked' : 'unchecked'}/>
                 </View>
-                <Button style={styles.inputbutton} icon='login' onPress={() => {handleLoginForm()}} buttonColor='deeppink' textColor='white'>Login</Button>
+                <Button style={styles.inputbutton} icon='login' onPress={() => {handleLoginForm()}} buttonColor='#9c6f6f' textColor='white'>Login</Button>
                 <View style={{flexDirection:'row', alignItems:'center', justifyContent:'center'}}>
                     <Text>Don't have an account?</Text>
-                    <Button mode='text' textColor='deeppink' onPress={() => {navigation.navigate('Register')}}>
+                    <Button mode='text' textColor='#9c6f6f' onPress={() => {navigation.navigate('Register')}}>
                     Register!
                     </Button>
                 </View>

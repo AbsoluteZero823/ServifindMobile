@@ -58,8 +58,8 @@ const ClientHomePostings = observer(() => {
                 placeholder="Search..."
                 onChangeText={(text) => setsearchquery(text)}
                 mode='bar'
-                iconColor='deeppink'
-                style={{borderColor:'deeppink', borderWidth:1}}
+                iconColor='#9c6f6f'
+                style={{borderColor:'#9c6f6f', borderWidth:1}}
                 right={()=>
                     <Menu
                         visible={visible}
@@ -67,13 +67,13 @@ const ClientHomePostings = observer(() => {
                         style={{marginRight: 20}}
                         anchorPosition='bottom'
                         anchor={
-                            <IconButton icon='menu' iconColor='deeppink' onPress={()=>openMenu()}/>
+                            <IconButton icon='menu' iconColor='#9c6f6f' onPress={()=>openMenu()}/>
                         }
                         >
-                        <Menu.Item onPress={() => setmenuactive('')} title={<Text style={{color: menuactive === '' ? 'deeppink' : 'black'}}>All</Text>} />
-                        <Menu.Item onPress={() => setmenuactive('waiting')} title={<Text style={{color: menuactive === 'waiting' ? 'deeppink' : 'black'}}>Waiting</Text>} />
-                        <Menu.Item onPress={() => setmenuactive('granted')} title={<Text style={{color: menuactive === 'granted' ? 'deeppink' : 'black'}}>Granted</Text>} />
-                        <Menu.Item onPress={() => setmenuactive('cancelled')} title={<Text style={{color: menuactive === 'cancelled' ? 'deeppink' : 'black'}}>Cancelled</Text>} />
+                        <Menu.Item onPress={() => setmenuactive('')} title={<Text style={{color: menuactive === '' ? '#9c6f6f' : 'black'}}>All</Text>} />
+                        <Menu.Item onPress={() => setmenuactive('waiting')} title={<Text style={{color: menuactive === 'waiting' ? '#9c6f6f' : 'black'}}>Waiting</Text>} />
+                        <Menu.Item onPress={() => setmenuactive('granted')} title={<Text style={{color: menuactive === 'granted' ? '#9c6f6f' : 'black'}}>Granted</Text>} />
+                        <Menu.Item onPress={() => setmenuactive('cancelled')} title={<Text style={{color: menuactive === 'cancelled' ? '#9c6f6f' : 'black'}}>Cancelled</Text>} />
                     </Menu>
                 }
             />

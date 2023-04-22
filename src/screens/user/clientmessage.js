@@ -194,7 +194,7 @@ const ClientMessage = observer(({route}) => {
               ]}
             icon='tag'
             >
-            <Text>Freelancer made an Offer with the Price at{`\n`}<Text variant='titleSmall' style={{color:'deeppink'}}>₱ {transactiondetails?.price}</Text>, {`\n`}Would you like to proceed?</Text>
+            <Text>Freelancer made an Offer with the Price at{`\n`}<Text variant='titleSmall' style={{color:'#9c6f6f'}}>₱ {transactiondetails?.price}</Text>, {`\n`}Would you like to proceed?</Text>
         </Banner>
         <View style={{flex: 1}}>
             <FlatList
@@ -260,7 +260,7 @@ const ClientMessage = observer(({route}) => {
                         <Button 
                             mode='outlined'
                             style={{width:200, marginVertical: 4}}
-                            textColor='deeppink'
+                            textColor='#9c6f6f'
                             >
                             View Profile
                         </Button>
@@ -275,7 +275,7 @@ const ClientMessage = observer(({route}) => {
                     onChangeText={(text)=>setContent(text)}
                     multiline
                     numberOfLines={2}
-                    right={<TextInput.Icon icon='send-outline' iconColor='deeppink' onPress={()=>SendMessage()}/>}
+                    right={<TextInput.Icon icon='send-outline' iconColor='#9c6f6f' onPress={()=>SendMessage()}/>}
                 />
             </View>
         </View>

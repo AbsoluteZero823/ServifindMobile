@@ -171,7 +171,7 @@ const FreelancerMessage = observer(({route}) => {
             }
             icon='archive'
             >
-            Your Offer of <Text style={{color:'deeppink'}}>₱ {transactiondetails.price}</Text> <Text>{transactiondetails.offer_id?.offer_status === 'granted' ? 'has been Accepted by the Client' : `is currently ${transactiondetails.offer_id?.offer_status}`}</Text>
+            Your Offer of <Text style={{color:'#9c6f6f'}}>₱ {transactiondetails.price}</Text> <Text>{transactiondetails.offer_id?.offer_status === 'granted' ? 'has been Accepted by the Client' : `is currently ${transactiondetails.offer_id?.offer_status}`}</Text>
         </Banner>
 
         <Banner
@@ -245,7 +245,7 @@ const FreelancerMessage = observer(({route}) => {
                         <Button 
                             mode='outlined'
                             style={{width:200, marginVertical: 4}}
-                            textColor='deeppink'
+                            textColor='#9c6f6f'
                             >
                             View Profile
                         </Button>
@@ -263,12 +263,12 @@ const FreelancerMessage = observer(({route}) => {
                     numberOfLines={2}
                     right={
                         content.length === 0 && inquiry_id !== undefined && !existingtransaction ?
-                        <TextInput.Icon icon='ticket-outline' iconColor='deeppink' onPress={()=>navigation.navigate('FreelancerMessageTransactionOffer', {offer_id, inquiry_id})}/>
+                        <TextInput.Icon icon='ticket-outline' iconColor='#9c6f6f' onPress={()=>navigation.navigate('FreelancerMessageTransactionOffer', {offer_id, inquiry_id})}/>
                         :
                         content.length === 0 && offer_id !== undefined && !existingtransaction ?
-                        <TextInput.Icon icon='tag' iconColor='deeppink' onPress={()=>{}}/>
+                        <TextInput.Icon icon='tag' iconColor='#9c6f6f' onPress={()=>{}}/>
                         :
-                        <TextInput.Icon icon='send-outline' iconColor='deeppink' onPress={()=>SendMessage()}/>
+                        <TextInput.Icon icon='send-outline' iconColor='#9c6f6f' onPress={()=>SendMessage()}/>
                     }
                 />
             </View>

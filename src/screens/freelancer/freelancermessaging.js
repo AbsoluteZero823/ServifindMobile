@@ -59,7 +59,7 @@ const FreelancerMessaging = observer(({route}) => {
     return (
         <Portal>
             <Modal visible={mainVisible} onDismiss={hideModal} contentContainerStyle={{marginHorizontal:10}}>
-                <Card style={{borderColor:'deeppink', borderWidth:1}}>
+                <Card style={{borderColor:'#9c6f6f', borderWidth:1}}>
                     <Card.Content>
                         <SegmentedButtons
                             value={segmentedvalue}
@@ -77,7 +77,7 @@ const FreelancerMessaging = observer(({route}) => {
                                 }
                             ]}
                         />
-                        <Text style={{color:'dimgrey'}}>To: <Text style={{color:'deeppink'}}>{item.requested_by.name}</Text></Text>
+                        <Text style={{color:'dimgrey'}}>To: <Text style={{color:'#9c6f6f'}}>{item.requested_by.name}</Text></Text>
                         {
                             segmentedvalue === 'Offer' && 
                             <>
@@ -86,7 +86,7 @@ const FreelancerMessaging = observer(({route}) => {
                                 label='Service'
                                 editable={false}
                                 value={Service}
-                                right={<TextInput.Icon icon={ServicesVisible ? "chevron-up" : "chevron-down"} iconColor='deeppink' onPress={()=>setServicesVisible(!ServicesVisible)}/>}
+                                right={<TextInput.Icon icon={ServicesVisible ? "chevron-up" : "chevron-down"} iconColor='#9c6f6f' onPress={()=>setServicesVisible(!ServicesVisible)}/>}
                                 error={validationerrors.serviceID}
                             />
                             <View style={{backgroundColor:'darksalmon', marginHorizontal:2, borderBottomRightRadius:20, borderBottomLeftRadius:20}}>
@@ -138,7 +138,7 @@ const FreelancerMessaging = observer(({route}) => {
                         <Button
                         mode='outlined'
                         icon='chat-outline'
-                        textColor='deeppink'
+                        textColor='#9c6f6f'
                         onPress={()=>{
                             sendhandler();
                         }}

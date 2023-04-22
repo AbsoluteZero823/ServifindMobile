@@ -75,7 +75,7 @@ const FreelancerPremium = () => {
       <Loading/>
       <Modal visible={visible} onDismiss={hideModal}>
         <Card style={{padding: 10, margin:8}}>
-          <Card.Title title="Upgrade to Premium" titleStyle={{color:'deeppink'}} />
+          <Card.Title title="Upgrade to Premium" titleStyle={{color:'#9c6f6f'}} />
           {
             modalstate === 'prompt' &&
             <>
@@ -94,9 +94,9 @@ const FreelancerPremium = () => {
             modalstate === 'payment' &&
             <>
             <Card.Content>
-              <Text variant='titleMedium' style={{textAlign:'center', color:'deeppink'}}>ADMIN GCASH ACCOUNT</Text>
+              <Text variant='titleMedium' style={{textAlign:'center', color:'#9c6f6f'}}>ADMIN GCASH ACCOUNT</Text>
               <Image source={require('../../../assets/placeholderQR.png')} style={{width: '100%', marginVertical:4}} />
-              <Text variant='titleMedium' style={{textAlign:'center', color:'deeppink'}}>₱ 500.00</Text>
+              <Text variant='titleMedium' style={{textAlign:'center', color:'#9c6f6f'}}>₱ 500.00</Text>
               <TextInput
                 style={{marginTop:12}}
                 dense={true}

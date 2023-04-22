@@ -167,10 +167,10 @@ const FreelancerHome = observer(() => {
             >
                 {
                     servicemodalvisibility && 
-                    <Card style={{borderColor:'deeppink', borderWidth:1}}>
+                    <Card style={{borderColor:'#9c6f6f', borderWidth:1}}>
                         <Card.Title
                             title={servicemodalvisibility ? 'Add a Service' : 'Add a Project'}
-                            titleStyle={{color:'deeppink'}}
+                            titleStyle={{color:'#9c6f6f'}}
                         />
                         <Card.Content>
                             <TextInput
@@ -178,7 +178,7 @@ const FreelancerHome = observer(() => {
                                 mode='outlined'
                                 value={categoryName}
                                 editable={false}
-                                right={<TextInput.Icon icon={expanded ? 'chevron-up' : 'chevron-down'} iconColor='deeppink' onPress={()=>{setvalidationErrors({}), setExpanded(!expanded)}} />}
+                                right={<TextInput.Icon icon={expanded ? 'chevron-up' : 'chevron-down'} iconColor='#9c6f6f' onPress={()=>{setvalidationErrors({}), setExpanded(!expanded)}} />}
                                 error={validationErrors.category}
                             />
                             <View style={{backgroundColor:'darksalmon', marginHorizontal:2, borderBottomRightRadius:20, borderBottomLeftRadius:20}}>
@@ -238,7 +238,7 @@ const FreelancerHome = observer(() => {
                             }
                         </Card.Content>
                         <Card.Actions>
-                            <Button mode='outlined' textColor='deeppink' onPress={()=>{submithandler()}}>Submit</Button>
+                            <Button mode='outlined' textColor='#9c6f6f' onPress={()=>{submithandler()}}>Submit</Button>
                         </Card.Actions>
                     </Card>
                 }
@@ -246,14 +246,14 @@ const FreelancerHome = observer(() => {
         </Portal>
         <View>
             <Loading/>
-            <Card style={{borderWidth:1, borderColor:'deeppink', margin: 5}}>
+            <Card style={{borderWidth:1, borderColor:'#9c6f6f', margin: 5}}>
                 <Card.Title 
                     title='My Services'
-                    titleStyle={{color:'deeppink', fontSize:24}}
+                    titleStyle={{color:'#9c6f6f', fontSize:24}}
                     right={()=>
                         <Button 
                             icon='eye' 
-                            textColor='deeppink' 
+                            textColor='#9c6f6f' 
                             style={{marginHorizontal:20}}
                             onPress={()=>
                                 // navigation.navigate('FreelancerServices')
@@ -268,15 +268,15 @@ const FreelancerHome = observer(() => {
                     showsHorizontalScrollIndicator={false}
                     renderItem={({item})=>
                         <TouchableOpacity onPress={()=>navigation.navigate('FreelancerService',item._id)}>
-                            <Card key={item._id} style={{borderColor:'deeppink', borderWidth:1, minWidth:300, maxWidth: 300, minHeight:150, marginHorizontal: 5}}>
+                            <Card key={item._id} style={{borderColor:'#9c6f6f', borderWidth:1, minWidth:300, maxWidth: 300, minHeight:150, marginHorizontal: 5}}>
                                 <Card.Title 
                                     title={item.title} 
-                                    titleStyle={{color:'deeppink'}} 
+                                    titleStyle={{color:'#9c6f6f'}} 
                                     subtitle={item.name} 
                                     subtitleStyle={{color:'dimgrey'}}
                                     />
                                 <Card.Content>
-                                    <Text style={{color:'deeppink'}}>Experience:</Text>
+                                    <Text style={{color:'#9c6f6f'}}>Experience:</Text>
                                     <Text>{item.experience}</Text>
                                 </Card.Content>
                                 <Card.Actions>
@@ -298,7 +298,7 @@ const FreelancerHome = observer(() => {
                     }
                     ListEmptyComponent={
                         <SafeAreaView style={{alignItems:'center', alignSelf:'center', maxWidth: '100%', marginBottom:20}}>
-                            <IconButton icon='view-grid-plus' size={30} iconColor='deeppink'/>
+                            <IconButton icon='view-grid-plus' size={30} iconColor='#9c6f6f'/>
                             <Text variant='titleMedium'>No Services Yet</Text>
                             <Text style={{textAlign:'center', color:'dimgrey',marginVertical:6}}>Post a Service on the marketplace and let a client come to you</Text>
                             <Button mode='contained' buttonColor="salmon" style={{marginVertical:6, width:200}} onPress={()=>(setservicemodalvisibility(true))}>Post a Service</Button>
@@ -310,11 +310,11 @@ const FreelancerHome = observer(() => {
                 />
                 </Card.Content>
             </Card>
-            <Card style={{borderWidth:1, borderColor:'deeppink', margin: 5}}>
+            <Card style={{borderWidth:1, borderColor:'#9c6f6f', margin: 5}}>
                 <Card.Title 
                     title='My Projects'
-                    titleStyle={{color:'deeppink', fontSize:24}}
-                    right={()=><Button icon='eye' textColor='deeppink' style={{marginHorizontal:20}} onPress={()=>navigation.navigate('FreelancerProjects')}>See All</Button>}
+                    titleStyle={{color:'#9c6f6f', fontSize:24}}
+                    right={()=><Button icon='eye' textColor='#9c6f6f' style={{marginHorizontal:20}} onPress={()=>navigation.navigate('FreelancerProjects')}>See All</Button>}
                 />
                 <Card.Content>
                 <FlatList
@@ -339,10 +339,10 @@ const FreelancerHome = observer(() => {
                         }}>
                         {
                             item.request_id ? 
-                            <Card key={item._id} style={{minWidth:300, maxWidth:350, marginHorizontal:4, borderColor: item.offer_status === 'waiting' ? 'deeppink' : item.offer_status === 'granted' ? 'green' : 'black', borderWidth: 1}}>
+                            <Card key={item._id} style={{minWidth:300, maxWidth:350, marginHorizontal:4, borderColor: item.offer_status === 'waiting' ? '#9c6f6f' : item.offer_status === 'granted' ? 'green' : 'black', borderWidth: 1}}>
                                 <Card.Title 
                                     title={item.request_id.requested_by.name} 
-                                    subtitle={<Text style={{color: item.offer_status === 'waiting' ? 'deeppink' : item.offer_status === 'granted' ? 'green' : 'red'}}>{item.offer_status}</Text>}
+                                    subtitle={<Text style={{color: item.offer_status === 'waiting' ? '#9c6f6f' : item.offer_status === 'granted' ? 'green' : 'red'}}>{item.offer_status}</Text>}
                                     left={()=><Avatar.Image size={40} source={{uri: item.request_id.requested_by.avatar.url}}/>}
                                     />
                                 <Card.Content>
@@ -362,10 +362,10 @@ const FreelancerHome = observer(() => {
                                 </Card.Content>
                             </Card>
                             :
-                            <Card key={item._id} style={{minWidth:300, maxWidth:350, marginRight:4, borderColor: item.offer_status === 'waiting' ? 'deeppink' : item.offer_status === 'granted' ? 'green' : 'black', borderWidth: 1}}>
+                            <Card key={item._id} style={{minWidth:300, maxWidth:350, marginRight:4, borderColor: item.offer_status === 'waiting' ? '#9c6f6f' : item.offer_status === 'granted' ? 'green' : 'black', borderWidth: 1}}>
                                 <Card.Title 
                                     title={item.inquiry_id.customer.name} 
-                                    subtitle={<Text style={{color: item.offer_status === 'waiting' ? 'deeppink' : item.offer_status === 'granted' ? 'green' : 'red'}}>{item.offer_status}</Text>}
+                                    subtitle={<Text style={{color: item.offer_status === 'waiting' ? '#9c6f6f' : item.offer_status === 'granted' ? 'green' : 'red'}}>{item.offer_status}</Text>}
                                     left={()=><Avatar.Image size={40} source={{uri: item.inquiry_id.customer.avatar.url}}/>}
                                     />
                                 <Card.Content>
@@ -389,7 +389,7 @@ const FreelancerHome = observer(() => {
                     }
                     ListEmptyComponent={
                         <SafeAreaView style={{alignItems:'center', alignSelf:'center', maxWidth: '100%', marginBottom:20}}>
-                            <IconButton icon='view-grid-plus' size={30} iconColor='deeppink'/>
+                            <IconButton icon='view-grid-plus' size={30} iconColor='#9c6f6f'/>
                             <Text variant='titleMedium'>No Projects Yet</Text>
                             <Text style={{textAlign:'center', color:'dimgrey',marginVertical:6}}>Accept a Job Request on the marketplace and start earning</Text>
                             <Button mode='contained' buttonColor="salmon" style={{marginVertical:6, width:200}} onPress={()=>(console.log("Redirect Me!"))}>Accept a Request</Button>

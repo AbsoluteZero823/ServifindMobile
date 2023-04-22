@@ -95,7 +95,7 @@ const FreelancerJobPosts = observer((props) => {
                                     format(item.created_At, 'dd MMM yyyy')
                                 }
                             </Text>
-                            <Text variant='titleMedium' style={{color:'deeppink'}}>Description:</Text>
+                            <Text variant='titleMedium' style={{color:'#9c6f6f'}}>Description:</Text>
                             <Text>{item.description}</Text>
                             
                         </Card.Content>
@@ -103,7 +103,7 @@ const FreelancerJobPosts = observer((props) => {
                             <Button
                                 mode='outlined'
                                 icon='chat-outline'
-                                textColor='deeppink'
+                                textColor='#9c6f6f'
                                 onPress={() => {
                                     navigation.navigate('FreelancerMessaging', item);
                                 }}

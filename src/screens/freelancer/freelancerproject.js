@@ -101,7 +101,7 @@ const FreelancerProject = observer(({route}) => {
                                 (item.request_id?.request_status === 'granted' || item.inquiry_id?.status === 'granted') && item.transactions[0]?.reportedBy.freelancer === "false" &&
                                 <IconButton 
                                     icon='alert-circle-outline' 
-                                    iconColor='deeppink' 
+                                    iconColor='#9c6f6f' 
                                     style={{marginHorizontal:10}} 
                                     size={30}
                                     onPress={()=>
@@ -125,7 +125,7 @@ const FreelancerProject = observer(({route}) => {
                             />
                         <Card.Content>
                             <View>
-                                <Text style={{color: 'deeppink'}}>REQUEST DETAILS:</Text>
+                                <Text style={{color: '#9c6f6f'}}>REQUEST DETAILS:</Text>
                                 {
                                     item.request_id ?
                                     <>
@@ -143,11 +143,11 @@ const FreelancerProject = observer(({route}) => {
                             </View>
                             <Divider style={{marginVertical: 8}} />
                             <View>
-                                <Text style={{color: 'deeppink'}}>SERVICE OFFERED:</Text>
+                                <Text style={{color: '#9c6f6f'}}>SERVICE OFFERED:</Text>
                                 <Infoline label="Name:" value={item.service_id.title} />
                                 <Infoline label="Category:" value={item.service_id.category.name} />
                                 <View>
-                                <Text style={{color: 'deeppink'}}>Experience:</Text>
+                                <Text style={{color: '#9c6f6f'}}>Experience:</Text>
                                 <Text style={{textAlign: 'right'}}>{item.service_id.experience}</Text>
                                 </View>
                             </View>
@@ -156,7 +156,7 @@ const FreelancerProject = observer(({route}) => {
                                 <>
                                 <Divider style={{marginVertical: 8}} />
                                 <View>
-                                <Text style={{color: 'deeppink'}}>PAYMENT DETAILS:</Text>
+                                <Text style={{color: '#9c6f6f'}}>PAYMENT DETAILS:</Text>
                                 <Infoline label="Payment Sent:" value={item.transactions[0].paymentSent === 'true' ? 'Yes' : 'No'} />
                                 <Infoline label="Amount:" value={`₱ ${item.transactions[0].price}`} />
                                 <Infoline label="Status:" value={
@@ -180,7 +180,7 @@ const FreelancerProject = observer(({route}) => {
                         (item.transactions.length === 0 ) ? 
                         <Button
                             mode='outlined'
-                            textColor='deeppink'
+                            textColor='#9c6f6f'
                             onPress={() =>
                             Alert.alert(
                                 'Generate Payment Details',
@@ -229,7 +229,7 @@ const FreelancerProject = observer(({route}) => {
                 {
                     modalstate === 'report' &&
                     <Card>
-                        <Card.Title title='File a Report' right={()=><IconButton icon='chevron-left' iconColor='deeppink' size={30} onPress={()=>setmodalstate('default')}/>}/>
+                        <Card.Title title='File a Report' right={()=><IconButton icon='chevron-left' iconColor='#9c6f6f' size={30} onPress={()=>setmodalstate('default')}/>}/>
                         <Card.Content>
                             <TextInput
                                 label="Reason"
@@ -253,7 +253,7 @@ const FreelancerProject = observer(({route}) => {
                 {
                     modalstate === 'generate' &&
                     <Card>
-                        <Card.Title title='Payment Details' right={()=><IconButton icon='chevron-left' iconColor='deeppink' size={30} onPress={()=>setmodalstate('default')}/>}/>
+                        <Card.Title title='Payment Details' right={()=><IconButton icon='chevron-left' iconColor='#9c6f6f' size={30} onPress={()=>setmodalstate('default')}/>}/>
                         <Card.Content>
                             <TextInput
                                 label="Price"

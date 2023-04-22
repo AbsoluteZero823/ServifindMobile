@@ -18,6 +18,7 @@ const ClientJobsFreelancer = observer(({route}) => {
     */
     async function getfreelancer(){
         AuthContext.letmeload();
+        
         try{
             const freelancerresponse = await getFreelancer(route.params.freelancer_id);
             // This method is called when the server is successful.
@@ -53,7 +54,7 @@ const ClientJobsFreelancer = observer(({route}) => {
         <View style={{margin:10}}>
             {
             freelancerinfo !== undefined &&
-            <Card style={{borderColor:'deeppink', borderWidth: 1}}>
+            <Card style={{borderColor:'#9c6f6f', borderWidth: 1}}>
                 <Card.Title 
                     title={freelancerinfo?.user_id?.name || ''} 
                     subtitle={freelancerinfo?.user_id?.gender || ''}
@@ -66,23 +67,23 @@ const ClientJobsFreelancer = observer(({route}) => {
                 />
                 <Card.Content>
                     <View style={{flexDirection:'row', alignItems:'center', justifyContent:'space-between',marginVertical:8}}>
-                        <Text style={{color:'deeppink', fontWeight:'bold'}}>Email:</Text>
+                        <Text style={{color:'#9c6f6f', fontWeight:'bold'}}>Email:</Text>
                         <Text>{freelancerinfo?.user_id?.email}</Text>
                     </View>
                     <View style={{flexDirection:'row', alignItems:'center', justifyContent:'space-between',marginVertical:8}}>
-                        <Text style={{color:'deeppink', fontWeight:'bold'}}>Contact:</Text>
+                        <Text style={{color:'#9c6f6f', fontWeight:'bold'}}>Contact:</Text>
                         <Text>{freelancerinfo?.user_id?.contact}</Text>
                     </View>
                     <View style={{flexDirection:'row', alignItems:'center', justifyContent:'space-between',marginVertical:8}}>
-                        <Text style={{color:'deeppink', fontWeight:'bold'}}>Joined At:</Text>
+                        <Text style={{color:'#9c6f6f', fontWeight:'bold'}}>Joined At:</Text>
                         <Text>{freelancerinfo?.approved_date !== undefined ? format(new Date(freelancerinfo?.approved_date), "MMM. dd (EEEE), yyyy") : null}</Text>
                     </View>
                     <View style={{flexDirection:'row', alignItems:'center', justifyContent:'space-between',marginVertical:8}}>
-                        <Text style={{color:'deeppink', fontWeight:'bold'}}>Available:</Text>
+                        <Text style={{color:'#9c6f6f', fontWeight:'bold'}}>Available:</Text>
                         <Text>{freelancerinfo?.availability ? 'Yes' : 'No'}</Text>
                     </View>
                     <View style={{flexDirection:'row', alignItems:'center', justifyContent:'space-between',marginVertical:8}}>
-                        <Text style={{color:'deeppink', fontWeight:'bold'}}>Resume:</Text>
+                        <Text style={{color:'#9c6f6f', fontWeight:'bold'}}>Resume:</Text>
                         <Text style={{color:'dimgrey'}}>Download</Text>
                     </View>
                     <Text variant='titleLarge'>Services Offered:</Text>
@@ -95,16 +96,16 @@ const ClientJobsFreelancer = observer(({route}) => {
                             showsVerticalScrollIndicator={false}
                             style={{alignContent:'center'}}
                             renderItem={({item})=> (
-                                <Card style={{margin:5, borderWidth:1, borderColor: 'deeppink', minWidth:250}}>
+                                <Card style={{margin:5, borderWidth:1, borderColor: '#9c6f6f', minWidth:250}}>
                                     <Card.Cover source={{uri: item.images.url}} />
                                     <Card.Title 
                                         title={item.title} 
-                                        titleStyle={{color:'deeppink'}}
+                                        titleStyle={{color:'#9c6f6f'}}
                                         subtitle={item.category.name} 
                                         subtitleStyle={{color:'dimgrey'}}
                                         />
                                     <Card.Content>
-                                        <Text style={{color:'deeppink'}}>Experience:</Text>
+                                        <Text style={{color:'#9c6f6f'}}>Experience:</Text>
                                         <Text>{item.experience}</Text>
                                     </Card.Content>
                                 </Card>

@@ -22,14 +22,14 @@ const ServiForm = observer(() => {
             value: 'login',
             label: 'Login',
             uncheckedColor: 'white',
-            style: {backgroundColor: active === 'login' ? 'deeppink' : value.includes('login') ? 'salmon' : 'transparent'},
+            style: {backgroundColor: active === 'login' ? '#9c6f6f' : value.includes('login') ? 'salmon' : 'transparent'},
             disabled : value.includes('login') ? false : true,
         },
         {
             value: 'details',
             label: 'Details',
             uncheckedColor: 'white',
-            style: {backgroundColor: active === 'details' ? 'deeppink' : value.includes('details') ? 'salmon' : 'transparent'},
+            style: {backgroundColor: active === 'details' ? '#9c6f6f' : value.includes('details') ? 'salmon' : 'transparent'},
             disabled : value.includes('details') ? false : true,
         },
         ];
@@ -38,7 +38,7 @@ const ServiForm = observer(() => {
             value: 'payments',
             label: 'Payments',
             uncheckedColor: 'white',
-            style: {backgroundColor: active === 'payments' ? 'deeppink' : value.includes('payments') ? 'salmon' : 'transparent'},
+            style: {backgroundColor: active === 'payments' ? '#9c6f6f' : value.includes('payments') ? 'salmon' : 'transparent'},
             disabled : value.includes('payments') ? false : true,
         });
         }
@@ -250,7 +250,7 @@ const ServiForm = observer(() => {
                         <Button 
                             style={styles.inputbutton} 
                             icon='chevron-double-right' 
-                            mode='contained' buttonColor='deeppink' textColor='white' 
+                            mode='contained' buttonColor='#9c6f6f' textColor='white' 
                             onPress={()=>{
                                 const isValid = handleLoginForm(); 
                                 if (isValid) value.push('details'),setActive('details');
@@ -327,11 +327,11 @@ const ServiForm = observer(() => {
                                 Gender:
                             </Text>
                             <View style={{ flexDirection: 'row' }}>
-                                <RadioButton value="Male" color='deeppink' />
+                                <RadioButton value="Male" color='#9c6f6f' />
                                 <Text style={{ marginVertical: 8 }}>Male</Text>
                             </View>
                             <View style={{ flexDirection: 'row' }}>
-                                <RadioButton value="Female" color='deeppink' />
+                                <RadioButton value="Female" color='#9c6f6f' />
                                 <Text style={{ marginVertical: 8 }}>Female</Text>
                             </View>
                             </View>
@@ -377,7 +377,7 @@ const ServiForm = observer(() => {
                         <Button 
                             style={styles.inputbutton} 
                             icon={AuthContext.WhatUserType === 'Freelancer' ? 'chevron-double-right' : 'account-plus' }
-                            mode='contained' buttonColor='deeppink' textColor='white' 
+                            mode='contained' buttonColor='#9c6f6f' textColor='white' 
                             onPress={()=>{
                                 const isValid = handleDetailsForm();
                                 if (isValid){
@@ -396,7 +396,7 @@ const ServiForm = observer(() => {
                         </>
                         : active === 'payments' ? 
                         <>
-                        {/* <Button style={styles.inputbutton} icon='account-plus' mode='contained' buttonColor='deeppink' textColor='white' onPress={()=>{handleFormSubmit()}}>Create Account</Button> */}
+                        {/* <Button style={styles.inputbutton} icon='account-plus' mode='contained' buttonColor='#9c6f6f' textColor='white' onPress={()=>{handleFormSubmit()}}>Create Account</Button> */}
                         </>
                         : null
                     }
@@ -405,7 +405,7 @@ const ServiForm = observer(() => {
             <Card.Actions>
                 <View style={styles.cardaction}>
                     <Text>Already have an account?</Text>
-                    <Button mode='text' textColor='deeppink' onPress={() => {navigation.navigate('Login');}}>
+                    <Button mode='text' textColor='#9c6f6f' onPress={() => {navigation.navigate('Login');}}>
                         Login
                     </Button>
                 </View>
