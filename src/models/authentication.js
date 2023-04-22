@@ -82,10 +82,10 @@ const Auth = types
         return self.role;
     },
     /**
-    * Gets the loading state of the game. This is used to determine if the game is in a loading state or not.
+    * Gets the loading state of the app. This is used to determine if the app is in a loading state or not.
     * 
     * 
-    * @return { boolean } True if the game is loading false otherwise. Defaults to false if isLoading is false
+    * @return { boolean } True if the app is loading false otherwise. Defaults to false if isLoading is false
     */
     get loadingstate(){
         return self.isLoading;

@@ -28,7 +28,6 @@ const FreelancerMessage = observer(({route}) => {
         if(chatId){
             socket.emit('setup', UserContext.users[0]);
             socket.on('connected', async() => {
-                console.log('Connected to server:', socket.connected);
                 socket.emit('join chat', chatId);
                 ToastAndroid.show('Connected', ToastAndroid.SHORT);
             });
@@ -113,8 +112,12 @@ const FreelancerMessage = observer(({route}) => {
     }
 
     const [completedtransaction, setcompletedtransaction] = useState(false);
-    const [bannervisibility, setbannervisibility] = useState(false);
+    const [bannermainvisibility, setbannermainvisibility] = useState(false);
     const [existingtransaction, setexistingtransaction] = useState(false);
+    const [existingtransactionbanner, setexistingtransactionbanner] = useState(false);
+    const [transactiondetails, settransactiondetails] = useState({});
+    const [actionsarray, setactionsarray] = useState([]);
+    
     
     async function FetchOfferAndTransaction(){
         try{
@@ -122,10 +125,31 @@ const FreelancerMessage = observer(({route}) => {
             const transactionresponse = await FetchTransactionbyOfferorInquiry({offer_id, inquiry_id});
             if(transactionresponse.success){
                 if(transactionresponse.transaction.status === 'completed'){
-                    setbannervisibility(true);
+                    setbannermainvisibility(true);
                     setcompletedtransaction(true);
                 }else{
+                    settransactiondetails(transactionresponse.transaction)
+                    if (transactionresponse.transaction.offer_id?.offer_status === 'processing') {
+                        setactionsarray([
+                            {
+                            label: 'Hide',
+                            onPress: () => setexistingtransactionbanner(false),
+                            },
+                        ])
+                    } else if (transactionresponse.transaction.offer_id?.offer_status === 'cancelled') {
+                        setactionsarray([
+                            {
+                            label: 'Edit',
+                            onPress: () => navigation.navigate('FreelancerMessageTransactionOffer', { offer_id, inquiry_id, transactiondetails }),
+                            },
+                            {
+                            label: 'Hide',
+                            onPress: () => setexistingtransactionbanner(false),
+                            },
+                        ])
+                    }
                     setexistingtransaction(true);
+                    setexistingtransactionbanner(true);
                 }
             }
             AuthContext.donewithload();
@@ -141,21 +165,32 @@ const FreelancerMessage = observer(({route}) => {
         <Loading/>
         <View style={{flex: 1}}>
         <Banner
-            visible={bannervisibility}
+            visible={existingtransactionbanner}
+            actions={
+                actionsarray
+            }
+            icon='archive'
+            >
+            Your Offer of <Text style={{color:'deeppink'}}>₱ {transactiondetails.price}</Text> <Text>{transactiondetails.offer_id?.offer_status === 'granted' ? 'has been Accepted by the Client' : `is currently ${transactiondetails.offer_id?.offer_status}`}</Text>
+        </Banner>
+
+        <Banner
+            visible={bannermainvisibility}
             actions={[
                 {
                   label: 'Yes',
-                  onPress: () => {setbannervisibility(false), console.log('Archived')},
+                  onPress: () => {setbannermainvisibility(false), console.log('Archived')},
                 },
                 {
                   label: 'No',
-                  onPress: () => setbannervisibility(false),
+                  onPress: () => setbannermainvisibility(false),
                 },
               ]}
             icon='archive'
             >
             This Transaction is already completed. Archive?
         </Banner>
+
         <FlatList
             ref={flatListRef}
             style={{ marginHorizontal: 8 }}

@@ -1,9 +1,9 @@
 import { observer } from 'mobx-react';
 import React, { useContext, useEffect, useState, useCallback, useRef } from 'react';
-import { View, FlatList, ToastAndroid, Keyboard, RefreshControl } from 'react-native';
+import { View, FlatList, ToastAndroid, Keyboard, RefreshControl, Alert } from 'react-native';
 import { Button, Text, Avatar, TextInput, Banner } from 'react-native-paper';
 import AuthStore from '../../models/authentication';
-import { getChat, fetchMessages, sendMessage, FetchTransactionbyOfferorInquiry, acceptanOffer, refuseanOffer, URL } from '../../../services/apiendpoints';
+import { getChat, fetchMessages, sendMessage, FetchTransactionbyOfferorInquiry, acceptanOffer, refuseanOffer, refuseaPrice, URL } from '../../../services/apiendpoints';
 import { format } from 'date-fns';
 import Loading from '../../components/loading';
 import UserStore from '../../models/user';
@@ -70,7 +70,6 @@ const ClientMessage = observer(({route}) => {
                     const messageresponse = await fetchMessages(chatresponse.isChat._id);
                     if(messageresponse.length > 0){
                         setMessagesCollection(messageresponse);
-                        console.log(MessagesCollection[0]);
                     }else{
                         alert("An Error has Occured");
                     }
@@ -126,17 +125,31 @@ const ClientMessage = observer(({route}) => {
 
     async function refusehandler(){
         AuthContext.letmeload();
-        try{
-            const response = await refuseanOffer({offer_id, inquiry_id});
-            if(response.success){
+        try {
+            Alert.alert(
+            "Refuse?",
+            'Select an Option',
+            [
+            {text: 'Refuse the Offer', onPress: async () => {
+                AuthContext.letmeload();
+                const response = await refuseanOffer({offer_id, inquiry_id});
                 alert(response.message);
-            }else{
-                alert(response);
-            }
-            onRefresh();
-        }catch(error){
-            AuthContext.donewithload();
-            console.log(error);
+                AuthContext.donewithload();
+            }},
+            {text: 'Refuse the Price', onPress: async () => {
+                AuthContext.letmeload();
+                const response = await refuseaPrice({offer_id, inquiry_id});
+                alert(response.message);
+                AuthContext.donewithload();
+            }},
+            {text: 'Cancel', onPress: () => {
+                // do nothing
+            }}
+            ]
+            );
+        } catch (error) {
+        AuthContext.donewithload();
+        console.log(error);
         }
         AuthContext.donewithload();
     }
@@ -213,7 +226,7 @@ const ClientMessage = observer(({route}) => {
                     <View style={{flexDirection, alignItems: 'center', marginVertical: 4}}>
                         {showAvatar && item.sender._id !== loggedInUser._id && <Avatar.Image source={avatarSource} size={40} />}
                         <View style={{marginLeft: showAvatar ? 12 : 52, maxWidth: '80%'}}>
-                            {showName && <Text style={{color: 'dimgrey', marginBottom: 4, textAlign}}>{item.sender.name}</Text>}
+                            {showName && <Text style={{color: 'dimgrey', marginBottom: 4, textAlign}}>{item.sender.name === UserContext.users[0].name ? 'You' : item.sender.name }</Text>}
                             <Text style={{
                                     backgroundColor: 'salmon',
                                     paddingHorizontal: 20,

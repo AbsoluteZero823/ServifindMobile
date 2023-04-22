@@ -327,7 +327,16 @@ export async function cancelmyRequest(id){
 */
 export async function refuseanOffer(props){
   try{
-    const refuseresponse = await axios.post(`${API_URL}/myrequest/offer/refuse`, props , AxiosConfig);
+    const refuseresponse = await axios.post(`${API_URL}/myrequest/offer/refuseoffer`, props , AxiosConfig);
+    return refuseresponse.data;
+  }catch(error){
+    return error;
+  }
+}
+
+export async function refuseaPrice(props){
+  try{
+    const refuseresponse = await axios.post(`${API_URL}/myrequest/offer/refuseprice`, props , AxiosConfig);
     return refuseresponse.data;
   }catch(error){
     return error;

@@ -17,8 +17,8 @@ const Resume = types.model({
 });
 
 const premiumReceipt = types.model({
-  public_id: types.string,
-  url: types.string,
+  public_id: types.maybe(types.string),
+  url: types.maybe(types.string),
 });
 
 export const Freelancer = types
