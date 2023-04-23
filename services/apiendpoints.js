@@ -552,6 +552,15 @@ export async function createmyServices(props){
   }
 }
 
+export async function editmyServices(props){
+  try{
+    const editservicesresponse = await axios.put(`${API_URL}/service/${props._id}`, props, AxiosConfig);
+    return editservicesresponse.data;
+  }catch(error){
+    return error.response.data
+  }
+}
+
 // FREELANCER OFFERS
 /**
 * Get my offers from Axios. com. This is a wrapper around the API call that allows you to get the list of offers that you have registered with Axios.

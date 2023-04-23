@@ -6,7 +6,7 @@ import Infoline from '../../components/infoline';
 import { View, FlatList, SafeAreaView, RefreshControl, TouchableOpacity } from 'react-native';
 import { Button, Card, Text, IconButton, Portal, Modal, TextInput, List, HelperText, Avatar} from 'react-native-paper';
 
-import { getmyServices, createmyServices, myOffers } from '../../../services/apiendpoints';
+import { getmyServices, createmyServices, editmyServices, myOffers } from '../../../services/apiendpoints';
 import FreelancerStore from '../../models/freelancer';
 import CategoryStore from '../../models/category';
 import UserStore from '../../models/user';
@@ -104,11 +104,13 @@ const FreelancerHome = observer(() => {
 
     const CategoryContext = useContext(CategoryStore);
     const CategoryCollection = CategoryContext.categories;
+    const [serviceeditmodalvisibility, setserviceeditmodalvisibility] = useState(false);
     const [servicemodalvisibility, setservicemodalvisibility] = useState(false);
     const [expanded, setExpanded] = useState(false);
     const [validationErrors, setvalidationErrors] = useState({});
 
-    const [title, setTitle] = useState('');
+    const [_id, set_id] = useState('');
+    const [price, setprice] = useState('');
     const [category, setCategory] = useState('');
     const [name, setname] = useState('');
     const [Description, setDescription] = useState('');
@@ -122,6 +124,9 @@ const FreelancerHome = observer(() => {
         }
         if(!name){
             Errors.name = "name is required";
+        }
+        if(!price){
+            Errors.price = "price is required";
         }
         if(!Description){
             Errors.Description = "Description is required";
@@ -154,10 +159,47 @@ const FreelancerHome = observer(() => {
             console.log(error);
         }
     }
+
+    async function edithandler(){
+        const Errors = {};
+        if(!name){
+            Errors.name = "name is required";
+        }
+        if(!price){
+            Errors.price = "price is required";
+        }
+        if(!Description){
+            Errors.Description = "Description is required";
+        }
+        if(Object.keys(Errors).length > 0){
+            setvalidationErrors(Errors);
+            return;
+        }
+        try{
+            setserviceeditmodalvisibility(false);
+            AuthContext.letmeload()
+            const submitresponse = await editmyServices({
+                _id: _id,
+                name: name,
+                priceStarts_At: price,
+                description: Description,
+                image: image
+            });
+            AuthContext.donewithload();
+            if(submitresponse.success){
+                alert("Service Edited Successfully");
+            }else{
+                alert(submitresponse.message);
+            }
+        }catch(error){
+            console.log(error);
+        }
+    }
+
     return (
         <>
+        <Loading/>
         <Portal>
-            <Loading/>
             <Modal visible={servicemodalvisibility} onDismiss={()=>setservicemodalvisibility(false)}
                 contentContainerStyle = {{marginHorizontal:20}}
             >
@@ -190,23 +232,23 @@ const FreelancerHome = observer(() => {
                             }
                             <TextInput
                                 mode='outlined'
-                                label='Title'
-                                placeholder='Service Name'
-                                onChangeText={(Text)=>{setvalidationErrors({}),setTitle(Text)}}
-                                error={validationErrors.title}
-                            />
-                            {
-                                validationErrors.title && <HelperText type="error" visible={true}>{validationErrors.title}</HelperText>
-                            }
-                            <TextInput
-                                mode='outlined'
-                                label='Short Name'
-                                placeholder='Short Name'
+                                label='Name'
+                                placeholder='Name'
                                 onChangeText={(Text)=>{setvalidationErrors({}),setname(Text)}}
                                 error={validationErrors.name}
                             />
                             {
                                 validationErrors.name && <HelperText type="error" visible={true}>{validationErrors.name}</HelperText>
+                            }
+                            <TextInput
+                                mode='outlined'
+                                label='Pricing Reference'
+                                placeholder='Your Reference for Pricing'
+                                onChangeText={(Text)=>{setvalidationErrors({}),setprice(Text)}}
+                                error={validationErrors.price}
+                            />
+                            {
+                                validationErrors.price && <HelperText type="error" visible={true}>{validationErrors.price}</HelperText>
                             }
                             <TextInput
                                 mode='outlined'
@@ -239,6 +281,81 @@ const FreelancerHome = observer(() => {
                     </Card>
                 }
             </Modal>
+            <Modal visible={serviceeditmodalvisibility} onDismiss={()=>setserviceeditmodalvisibility(false)}
+                contentContainerStyle = {{marginHorizontal:20}}
+            >
+                {
+                    serviceeditmodalvisibility && 
+                    <Card style={{borderColor:'#9c6f6f', borderWidth:1}}>
+                        <Card.Title
+                            title={'Add a Service'}
+                            titleStyle={{color:'#9c6f6f'}}
+                        />
+                        <Card.Content>
+                            <TextInput
+                                label="Category"
+                                mode='outlined'
+                                value={categoryName}
+                                disabled={true}
+                                editable={false}
+                                right={<TextInput.Icon icon={expanded ? 'chevron-up' : 'chevron-down'} iconColor='#9c6f6f' onPress={()=>{setvalidationErrors({}), setExpanded(!expanded)}} />}
+                                error={validationErrors.category}
+                            />
+                            <TextInput
+                                mode='outlined'
+                                label='Name'
+                                placeholder='Name'
+                                value={name}
+                                onChangeText={(Text)=>{setvalidationErrors({}),setname(Text)}}
+                                error={validationErrors.name}
+                            />
+                            {
+                                validationErrors.name && <HelperText type="error" visible={true}>{validationErrors.name}</HelperText>
+                            }
+                            <TextInput
+                                mode='outlined'
+                                label='Pricing Reference'
+                                placeholder='Your Reference for Pricing'
+                                keyboardType='numeric'
+                                value={price}
+                                onChangeText={(Text)=>{setvalidationErrors({}),setprice(Text)}}
+                                error={validationErrors.price}
+                            />
+                            {
+                                validationErrors.price && <HelperText type="error" visible={true}>{validationErrors.price}</HelperText>
+                            }
+                            <TextInput
+                                mode='outlined'
+                                label='Description'
+                                placeholder='Description'
+                                value={Description}
+                                multiline={true}
+                                onChangeText={(Text)=>{setvalidationErrors({}),setDescription(Text)}}
+                                error={validationErrors.Description}
+                            />
+                            {
+                                validationErrors.Description && <HelperText type="error" visible={true}>{validationErrors.Description}</HelperText>
+                            }
+                            <TextInput
+                                dense={true}
+                                label='Image'
+                                placeholder='Upload Image'
+                                mode='outlined'
+                                editable={false}
+                                value={image ? "Image Selected" : null}
+                                right={<TextInput.Icon icon="image-outline" onPress={() => {setvalidationErrors({}),pickImage()}} />}
+                                error={validationErrors.image}
+                            />
+                            {
+                                validationErrors.image && <HelperText type="error" visible={true}>{validationErrors.image}</HelperText>
+                            }
+                        </Card.Content>
+                        <Card.Actions>
+                            <Button mode='outlined' textColor='#9c6f6f' onPress={()=>{edithandler()}}>Submit</Button>
+                        </Card.Actions>
+                    </Card>
+                }
+            </Modal>
         </Portal>
         <View>
             <Loading/>
@@ -266,18 +383,42 @@ const FreelancerHome = observer(() => {
                         <TouchableOpacity onPress={()=>navigation.navigate('FreelancerService',item._id)}>
                             <Card key={item._id} style={{borderColor:'#9c6f6f', borderWidth:1, minWidth:300, maxWidth: 300, minHeight:150, marginHorizontal: 5}}>
                                 <Card.Title 
-                                    title={item.title} 
+                                    title={item.title || item.name} 
                                     titleStyle={{color:'#9c6f6f'}} 
-                                    subtitle={item.name} 
+                                    subtitle={item.category.name}
                                     subtitleStyle={{color:'dimgrey'}}
+                                    right={()=>
+                                        <IconButton 
+                                            icon='pencil'
+                                            iconColor='#9c6f6f' 
+                                            style={{marginHorizontal:20}}
+                                            onPress={()=>{
+                                                set_id(item._id),
+                                                setserviceeditmodalvisibility(true),
+                                                setCategoryName(item.category.name),
+                                                setDescription(item.description),
+                                                setname(item.name),
+                                                setprice(item.price)
+                                            }}
+                                        />}
                                     />
                                 <Card.Content>
-                                    <Text style={{color:'#9c6f6f'}}>Description:</Text>
-                                    <Text>{item.Description}</Text>
+                                    {
+                                        item.description ?
+                                        <>
+                                        <Text style={{color:'#9c6f6f'}}>Description:</Text>
+                                        <Text>{item.description}</Text>
+                                        </>
+                                        :
+                                        item.experience ?
+                                        <>
+                                        <Text style={{color:'#9c6f6f'}}>Experience:</Text>
+                                        <Text>{item.experience}</Text>
+                                        </>
+                                        :
+                                        null
+                                    }
                                 </Card.Content>
-                                <Card.Actions>
-                                    <Text style={{color:'dimgrey'}}>Category: {item.category.name}</Text>
-                                </Card.Actions>
                             </Card>
                         </TouchableOpacity>
                     }
@@ -345,7 +486,7 @@ const FreelancerHome = observer(() => {
                                 <Card.Content>
                                     <Infoline label="Requested:" value={item.request_id.description} />
                                     <Infoline label="Category:" value={item.service_id.category.name} />
-                                    <Infoline label="Service:" value={item.service_id.title} />
+                                    <Infoline label="Service:" value={item.service_id.title || item.service_id.name} />
                                     <Infoline label="Price:" value={`₱ ${item.transactions[0]?.price || 'Not Set'}`} />
                                     <Infoline label="Paid:" value={item.transactions.length > 0 ? (
                                             item.transactions[0].isPaid === 'true' && item.transactions[0].paymentSent === 'true' ? (
@@ -368,7 +509,7 @@ const FreelancerHome = observer(() => {
                                 <Card.Content>
                                     <Infoline label="Inquiry:" value={item.inquiry_id.instruction} />
                                     <Infoline label="Category:" value={item.service_id.category.name} />
-                                    <Infoline label="Service:" value={item.service_id.title} />
+                                    <Infoline label="Service:" value={item.service_id.title || item.service_id.name} />
                                     <Infoline label="Price:" value={`₱ ${item.transactions[0]?.price || 'Not Set'}`} />
                                     <Infoline label="Paid:" value={item.transactions.length > 0 ? (
                                     item.transactions[0].isPaid === 'true' && item.transactions[0].paymentSent === 'true' ? (
