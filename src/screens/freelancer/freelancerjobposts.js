@@ -108,7 +108,7 @@ const FreelancerJobPosts = observer((props) => {
                                     navigation.navigate('FreelancerMessaging', item);
                                 }}
                                 >
-                                Message
+                                Offer
                             </Button>
                         </Card.Actions>
                     </Card>

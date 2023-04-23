@@ -15,7 +15,7 @@ const CaptureStack = createNativeStackNavigator();
 export default function CaptureNavigator() {
   return (
     <CaptureStack.Navigator 
-      screenOptions={{headerShown: false}}
+      screenOptions={{headerShown: false, animation: 'slide_from_right'}}
       initialRouteName="Landingpage">
       <CaptureStack.Screen name="Landingpage" component={Landingpage}/>
       <CaptureStack.Screen name="Login" component={LoginPage}/>

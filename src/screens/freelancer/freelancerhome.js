@@ -110,24 +110,21 @@ const FreelancerHome = observer(() => {
 
     const [title, setTitle] = useState('');
     const [category, setCategory] = useState('');
-    const [shortname, setShortname] = useState('');
-    const [experience, setExperience] = useState('');
+    const [name, setname] = useState('');
+    const [Description, setDescription] = useState('');
     const [image, setImage]= useState('');
     const [categoryName, setCategoryName] = useState('');
 
     async function submithandler(){
         const Errors = {};
-        if(!title){
-            Errors.title = "Title is required";
-        }
         if(!category){
             Errors.category = "Category is required";
         }
-        if(!shortname){
-            Errors.shortname = "Shortname is required";
+        if(!name){
+            Errors.name = "name is required";
         }
-        if(!experience){
-            Errors.experience = "Experience is required";
+        if(!Description){
+            Errors.Description = "Description is required";
         }
         if(!image){
             Errors.image = "Image is required";
@@ -139,11 +136,10 @@ const FreelancerHome = observer(() => {
         try{
             AuthContext.letmeload()
             const submitresponse = await createmyServices({
-                title: title,
-                name: shortname,
+                name: name,
                 category: category,
                 user: UserContext.users[0]._id,
-                experience: experience,
+                Description: Description,
                 freelancer_id: FreelancerContext.data[0]?._id,
                 image: image
             });
@@ -169,7 +165,7 @@ const FreelancerHome = observer(() => {
                     servicemodalvisibility && 
                     <Card style={{borderColor:'#9c6f6f', borderWidth:1}}>
                         <Card.Title
-                            title={servicemodalvisibility ? 'Add a Service' : 'Add a Project'}
+                            title={'Add a Service'}
                             titleStyle={{color:'#9c6f6f'}}
                         />
                         <Card.Content>
@@ -195,7 +191,7 @@ const FreelancerHome = observer(() => {
                             <TextInput
                                 mode='outlined'
                                 label='Title'
-                                placeholder='Service Title'
+                                placeholder='Service Name'
                                 onChangeText={(Text)=>{setvalidationErrors({}),setTitle(Text)}}
                                 error={validationErrors.title}
                             />
@@ -206,22 +202,22 @@ const FreelancerHome = observer(() => {
                                 mode='outlined'
                                 label='Short Name'
                                 placeholder='Short Name'
-                                onChangeText={(Text)=>{setvalidationErrors({}),setShortname(Text)}}
-                                error={validationErrors.shortname}
+                                onChangeText={(Text)=>{setvalidationErrors({}),setname(Text)}}
+                                error={validationErrors.name}
                             />
                             {
-                                validationErrors.shortname && <HelperText type="error" visible={true}>{validationErrors.shortname}</HelperText>
+                                validationErrors.name && <HelperText type="error" visible={true}>{validationErrors.name}</HelperText>
                             }
                             <TextInput
                                 mode='outlined'
-                                label='Experience'
-                                placeholder='Experience'
+                                label='Description'
+                                placeholder='Description'
                                 multiline={true}
-                                onChangeText={(Text)=>{setvalidationErrors({}),setExperience(Text)}}
-                                error={validationErrors.experience}
+                                onChangeText={(Text)=>{setvalidationErrors({}),setDescription(Text)}}
+                                error={validationErrors.Description}
                             />
                             {
-                                validationErrors.experience && <HelperText type="error" visible={true}>{validationErrors.experience}</HelperText>
+                                validationErrors.Description && <HelperText type="error" visible={true}>{validationErrors.Description}</HelperText>
                             }
                             <TextInput
                                 dense={true}
@@ -276,8 +272,8 @@ const FreelancerHome = observer(() => {
                                     subtitleStyle={{color:'dimgrey'}}
                                     />
                                 <Card.Content>
-                                    <Text style={{color:'#9c6f6f'}}>Experience:</Text>
-                                    <Text>{item.experience}</Text>
+                                    <Text style={{color:'#9c6f6f'}}>Description:</Text>
+                                    <Text>{item.Description}</Text>
                                 </Card.Content>
                                 <Card.Actions>
                                     <Text style={{color:'dimgrey'}}>Category: {item.category.name}</Text>
@@ -335,6 +331,7 @@ const FreelancerHome = observer(() => {
                     showsHorizontalScrollIndicator={false}
                     renderItem={({item})=>
                         <TouchableOpacity onPress={()=>{
+                            console.log(item)
                             navigation.navigate('FreelancerProject', item);
                         }}>
                         {

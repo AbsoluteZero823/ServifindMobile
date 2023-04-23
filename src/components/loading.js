@@ -11,7 +11,7 @@ export default LoadingScreen = observer(() => {
         <Portal>
             <Dialog visible={AuthContext.loadingstate} style={{backgroundColor:'transparent', shadowColor:'transparent'}}>
             <Dialog.Content>
-                <ActivityIndicator animating={AuthContext.loadingstate} size={100} color='deeppink' />
+                <ActivityIndicator animating={AuthContext.loadingstate} size={100} color='#9c6f6f' />
             </Dialog.Content>
             </Dialog>
         </Portal>

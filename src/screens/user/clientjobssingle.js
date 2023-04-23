@@ -59,7 +59,7 @@ const ClientSingleJob = observer(({route}) => {
             <Modal visible={mainvisible} onDismiss={hideModal} contentContainerStyle={{marginHorizontal:10}}>
             <Card style={{marginTop:50, borderWidth: 1, borderColor:'#9c6f6f'}}>
                 <Card.Cover source={{uri: data.images?.url || data.image || 'https://res.cloudinary.com/dawhmjhu1/image/upload/v1651110818/shelter/avatar_rk4v2w.jpg'}}/>
-                <Card.Title title={data.title} titleStyle={{color:'#9c6f6f'}} />
+                <Card.Title title={data.title || data.name} titleStyle={{color:'#9c6f6f'}} />
                 <Card.Content>
                     <View style={{flexDirection:'row', justifyContent:'space-between', marginBottom:10}}>
                         <View style={{flexDirection:'row'}}>
@@ -71,28 +71,48 @@ const ClientSingleJob = observer(({route}) => {
                         </View>
                         <View>
                             <View style={{flexDirection:'row', justifyContent:'space-between'}}>
-                                <Avatar.Icon icon='star' size={20} color='green' style={{backgroundColor:'transparent'}}/>
+                                <Avatar.Icon icon='star' size={20} color='#9c6f6f' style={{backgroundColor:'transparent'}}/>
                                 <Text>{data.avgRating !== null ? data.avgRating : '0'} / 5</Text>
                                 <Text style={{color:'dimgrey'}}>({data.ratings !== undefined ? data.ratings.length : '0'})</Text>
                             </View>
                             <TouchableOpacity style={{flexDirection:'row', justifyContent:'space-between'}} onPress={()=>{setmainVisible(false),navigation.navigate('ClientFreelancer',{freelancer_id: data.freelancer_id._id})}}>
-                                <Avatar.Icon icon='eye' size={20} color='green' style={{backgroundColor:'transparent'}}/>
-                                <Text style={{color:'green'}}>See Profile</Text>
+                                <Avatar.Icon icon='eye' size={20} color='#9c6f6f' style={{backgroundColor:'transparent'}}/>
+                                <Text style={{color:'#9c6f6f'}}>See Profile</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
                     <Divider/>
-                    <View style={{marginVertical:10}}>
-                        <Text style={{color:'green', marginBottom: 4}}>Experience:</Text>
-                        <Text>{data.experience}</Text>
-                    </View>
-                    <Text style={{color:'green', marginVertical: 2}}>Reviews:</Text>
+                    {
+                        console.log(data)
+                    }
+                    {
+                        data.experience &&
+                        <View style={{marginVertical:10}}>
+                            <Text style={{color:'#9c6f6f', marginBottom: 4}}>Experience:</Text>
+                            <Text>{data.experience}</Text>
+                        </View>
+                    }
+                    {
+                        data.description &&
+                        <View style={{marginVertical:10}}>
+                            <Text style={{color:'#9c6f6f', marginBottom: 4}}>Description:</Text>
+                            <Text>{data.description}</Text>
+                        </View>
+                    }
+                    {
+                        data.priceStarts_At &&
+                        <View style={{flexDirection:'row', justifyContent:'space-between', marginVertical:10}}>
+                            <Text style={{color:'#9c6f6f'}}>Price Starts At:</Text>
+                            <Text>₱ {data.priceStarts_At}</Text>
+                        </View>
+                    }
+                    <Text style={{color:'#9c6f6f', marginVertical: 2}}>Reviews:</Text>
                     <FlatList
                         data={data.ratings}
                         horizontal={data.ratings.length > 1 ? true : false}
                         showsHorizontalScrollIndicator={false}
                         renderItem={({item}) => (
-                            <Card style={{marginVertical:4, borderWidth:1, borderColor:'green'}}>
+                            <Card style={{marginVertical:4, marginHorizontal: data.ratings.length > 1 ? 4 : 0, width: data.ratings.length > 1 ? 300 : '100%', borderWidth:1, borderColor:'#9c6f6f'}}>
                                 <Card.Title 
                                     title={item.user.name}
                                     subtitle={format(new Date(item.created_At),"MMM. dd (EEEE), yyyy")}
@@ -126,7 +146,7 @@ const ClientSingleJob = observer(({route}) => {
             </Card>
         </Modal>
         <Modal visible={Inquirevisible} onDismiss={()=>{setInquirevisible(false)}} contentContainerStyle={{marginHorizontal:10}}>
-            <Card style={{borderWidth:1, borderColor:'green'}}>
+            <Card style={{borderWidth:1, borderColor:'#9c6f6f'}}>
                 <Card.Title title='Send Inquire Message' subtitle={'To: '+data.user.name} right={()=><IconButton style={{marginHorizontal:20}} iconColor='maroon' icon='window-close' onPress={()=>{setInquirevisible(false)}}/>}/>
                 <Card.Content>
                     <TextInput
@@ -135,7 +155,7 @@ const ClientSingleJob = observer(({route}) => {
                         placeholder='Type here...'
                         dense={true}
                         onChangeText={(text) => setInquirevalue(text)}
-                        right={<TextInput.Icon icon='send' iconColor='green' onPress={()=>{sendInquiry()}}/>}
+                        right={<TextInput.Icon icon='send' iconColor='#9c6f6f' onPress={()=>{sendInquiry()}}/>}
                     />
                 </Card.Content>
             </Card>

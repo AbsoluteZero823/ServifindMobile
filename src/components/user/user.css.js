@@ -13,7 +13,7 @@ header: {
 },
 cardStyle:{
     flex:1, 
-    borderColor:'deeppink', 
+    borderColor:'#9c6f6f', 
     borderWidth:1, 
 }
 });

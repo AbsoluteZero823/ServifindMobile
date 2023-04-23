@@ -15,11 +15,11 @@ export default function CategoryCard(props){
         activeCategory.push(props.category)
         navigation.navigate('ClientJobs')
         }}>
-        <Card style={{alignSelf:'center', minHeight: 100, maxHeight: 100, marginHorizontal:2.5, minWidth: 220, borderColor:'deeppink', borderWidth:1}}>
-            <Card.Title title={props.category.name} titleStyle={{ color: 'deeppink' }} />
+        <Card style={{alignSelf:'center', minHeight: 100, maxHeight: 100, marginHorizontal:2.5, minWidth: 220, borderColor:'#9c6f6f', borderWidth:1}}>
+            <Card.Title title={props.category.name} titleStyle={{ color: '#9c6f6f' }} />
             <Card.Content>
                 <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent:'center' }}>
-                    <Avatar.Icon icon="face-agent" size={32} style={{backgroundColor:'transparent'}} color='deeppink' />
+                    <Avatar.Icon icon="face-agent" size={32} style={{backgroundColor:'transparent'}} color='#9c6f6f' />
                     <Text><Text style={styles.highlight}>{props.category.serviceCount} </Text>Freelancer Services</Text>
                 </View>
             </Card.Content>

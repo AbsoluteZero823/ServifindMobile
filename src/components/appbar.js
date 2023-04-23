@@ -31,14 +31,14 @@ export const CustomAppBar = observer((props) => {
                         onChangeText={(text)=>setjobsearchquery(text)} 
                         placeholder='Search...' 
                         icon='magnify' 
-                        iconColor='deeppink' 
+                        iconColor='#9c6f6f' 
                         onFocus={()=> DrawerActive ? Keyboard.dismiss() : <></> }
                         style={{marginRight:10, borderColor:'dimgrey', borderWidth:2}} 
                         right={()=>
                             searchisLoading ? null : 
                             <>
                             {
-                                jobsearchquery && <IconButton icon='window-close' size={20} iconColor='deeppink' onPress={()=>setjobsearchquery('')}/>
+                                jobsearchquery && <IconButton icon='window-close' size={20} iconColor='#9c6f6f' onPress={()=>setjobsearchquery('')}/>
                             }
                             <Menu
                                 visible={menuvisible}
@@ -48,7 +48,7 @@ export const CustomAppBar = observer((props) => {
                                     <Button 
                                     mode='text' 
                                     icon='chevron-down' 
-                                    textColor='deeppink' 
+                                    textColor='#9c6f6f' 
                                     contentStyle={{flexDirection:'row-reverse'}}
                                     onPress={()=>setmenuvisible(true)}
                                     >
@@ -68,9 +68,9 @@ export const CustomAppBar = observer((props) => {
                 }/>
                 :  
                 <>
-                <Appbar.Content title={AppbarTitle} titleStyle={{color:'deeppink', fontWeight:'bold',fontSize:28, marginLeft:10}}/>
+                <Appbar.Content title={AppbarTitle} titleStyle={{color:'#9c6f6f', fontWeight:'bold',fontSize:28, marginLeft:10}}/>
                 <TouchableOpacity onPress={()=>{setActive('Jobs'), setAppbarTitle('Jobs'),navigation.navigate(AuthContext.myrole === 'customer' ? 'ClientJobs' : 'FreelancerJobPosts')}}>
-                    <Appbar.Action icon='magnify' color='deeppink' size={26}/>
+                    <Appbar.Action icon='magnify' color='#9c6f6f' size={26}/>
                 </TouchableOpacity>
                 </>
             }
@@ -82,7 +82,7 @@ export const CustomAppBar = observer((props) => {
                         : 
                         drawer.current.openDrawer()
                 }}>
-                <Avatar.Image size={34} source={{uri: UserContext.users[0]?.UserDetails?.avatar?.url}} style={{backgroundColor:'deeppink'}}/>
+                <Avatar.Image size={34} source={{uri: UserContext.users[0]?.UserDetails?.avatar?.url}} style={{backgroundColor:'#9c6f6f'}}/>
             </TouchableOpacity>
         </Appbar.Header>
     )

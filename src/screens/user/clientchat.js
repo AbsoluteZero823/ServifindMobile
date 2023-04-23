@@ -29,6 +29,7 @@ const ClientChat = observer(() => {
         AuthContext.letmeload();
         try{
             const fetchmychatsresponse = await fetchChats();
+            console.log(fetchmychatsresponse.chats[0])
             if(fetchmychatsresponse.success){
                 setChatsCollection(fetchmychatsresponse.chats);
             }else{
@@ -59,14 +60,11 @@ const ClientChat = observer(() => {
             <FlatList
             data={ ChatsCollection.filter((chat)=>{
                 if (chat.chatName.toLowerCase().includes(search.toLowerCase())){
-                    if (!chat.offer_id && !chat.inquiry_id) {
-                        return false;
-                    }
                     if (chat.inquiry_id && chat.users[0]._id === UserContext.users[0]._id) {
                         return true;
                     }
                     if (chat.offer_id && chat.users[0]._id === UserContext.users[0]._id) {
-                        return false;
+                        return true;
                     }
                 }
             })}

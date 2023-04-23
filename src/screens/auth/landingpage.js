@@ -10,7 +10,7 @@ const Landingpage = observer(()=>{
     return (
         <View style={styles.container}>
             <View style={styles.landingpage}>
-            <Image source={require('../../../assets/icon.png')} style={styles.logo} />
+            <Image source={require('../../../assets/app_icon.png')} style={styles.logo} resizeMethod='scale' resizeMode='contain'/>
             <Text style={styles.title}>Welcome to <Text style={styles.highlight}>ServiFind</Text></Text>
             <View style={{flexDirection:'row', alignSelf:'center'}}>
                 <View>

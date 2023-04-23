@@ -24,11 +24,10 @@ const ClientCompleteOffer = observer(({route}) => {
     const [appstate, setappstate] = useState('');
 
     useEffect(()=>{
-        if (item.transactions[0]?.isPaid) {
+        if (item.transactions[0].isPaid === "true") {
             setappstate('Rate/Report Disclaimer');
             settransactioninfo(item.transactions[0]);
-        }else if ((item.transactions[0] !== null || item.transactions[0] !== undefined) && item.transactions[0]?.isPaid === false){
-            setprice = item.transactions[0].price;
+        }else if ((item.transactions[0] !== null || item.transactions[0] !== undefined) && item.transactions[0].isPaid === "false"){
             setappstate('Disclaimer');
         }else{
             setappstate('Disclaimer');
@@ -71,6 +70,9 @@ const ClientCompleteOffer = observer(({route}) => {
         try{
             if (price === ''){
                 Errors.price = 'Price not set';
+            }
+            if (parseInt(price) < parseInt(item.transactions[0].price)){
+                Errors.price = 'Payment too low';
             }
             if (segmentedvalue === 'gcash'){
                 if (gcashreceipt === undefined){
@@ -200,7 +202,15 @@ const ClientCompleteOffer = observer(({route}) => {
                         <Card.Title title="Freelancer Payment Info" subtitle="Pay your Freelancer" subtitleStyle={{color:'dimgrey'}}/>
                         <Card.Content>
                             <TextInput
-                                label='Price'
+                                label='Your Freelancer Requests'
+                                mode='outlined'
+                                editable={false}
+                                disabled={true}
+                                value={item.transactions[0].price}
+                                left={<TextInput.Icon icon='currency-php' color='dimgrey'/>}
+                            />
+                            <TextInput
+                                label={'Payment'}
                                 mode='outlined'
                                 placeholder='₱0,000.00'
                                 keyboardType='number-pad'
@@ -310,11 +320,11 @@ const ClientCompleteOffer = observer(({route}) => {
                         <Card.Content>
                             <Text>Rate:</Text>
                             <View style={[{flexDirection:'row', justifyContent:'space-around'}, validationerrors.starrating ? {borderWidth: 2, borderColor: 'darkred', borderRadius: 5} : null]}>
-                                <IconButton icon='star' onPress={()=>setstarrating(1)} iconColor={starrating >= 1 ? 'salmon' : 'dimgrey'}/>
-                                <IconButton icon='star' onPress={()=>setstarrating(2)} iconColor={starrating >= 2 ? 'salmon' : 'dimgrey'}/>
-                                <IconButton icon='star' onPress={()=>setstarrating(3)} iconColor={starrating >= 3 ? 'salmon' : 'dimgrey'}/>
-                                <IconButton icon='star' onPress={()=>setstarrating(4)} iconColor={starrating >= 4 ? 'salmon' : 'dimgrey'}/>
-                                <IconButton icon='star' onPress={()=>setstarrating(5)} iconColor={starrating >= 5 ? 'salmon' : 'dimgrey'}/>
+                                <IconButton icon='star' onPress={()=>setstarrating(1)} iconColor={starrating >= 1 ? '#9c6f6f' : 'dimgrey'}/>
+                                <IconButton icon='star' onPress={()=>setstarrating(2)} iconColor={starrating >= 2 ? '#9c6f6f' : 'dimgrey'}/>
+                                <IconButton icon='star' onPress={()=>setstarrating(3)} iconColor={starrating >= 3 ? '#9c6f6f' : 'dimgrey'}/>
+                                <IconButton icon='star' onPress={()=>setstarrating(4)} iconColor={starrating >= 4 ? '#9c6f6f' : 'dimgrey'}/>
+                                <IconButton icon='star' onPress={()=>setstarrating(5)} iconColor={starrating >= 5 ? '#9c6f6f' : 'dimgrey'}/>
                             </View>
                             {
                                 validationerrors.starrating && <HelperText type='error' visible={validationerrors.starrating}>{validationerrors.starrating}</HelperText>

@@ -9,7 +9,7 @@ const styles = StyleSheet.create({
     marginVertical: 2,
   },
   label: {
-    color: 'deeppink',
+    color: '#9c6f6f',
     width: '30%',
   },
   text: {

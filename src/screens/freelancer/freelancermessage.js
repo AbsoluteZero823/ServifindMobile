@@ -9,9 +9,10 @@ import { format } from 'date-fns';
 import Loading from '../../components/loading';
 import { useNavigation } from '@react-navigation/native';
 import io from 'socket.io-client';
+import OfferStore from '../../models/offer';
 
 const FreelancerMessage = observer(({route}) => {
-
+    const OfferContext = useContext(OfferStore);
     const UserContext = useContext(UserStore);
     const AuthContext = useContext(AuthStore);
     const navigation = useNavigation();
@@ -221,7 +222,7 @@ const FreelancerMessage = observer(({route}) => {
                     {showAvatar && item.sender._id !== loggedInUser._id && <Avatar.Image source={avatarSource} size={40} />}
                     <View style={{marginLeft: showAvatar ? 12 : 52}}>
                     {showName && <Text style={{color: 'dimgrey', marginBottom: 4, textAlign}}>{item.sender.name}</Text>}
-                    <Text style={{backgroundColor: 'salmon', paddingHorizontal: 20, paddingVertical: 4, borderRadius: 20, color: 'white', fontWeight: '500', textAlign, flexShrink: 1}}>
+                    <Text style={{backgroundColor: '#9c6f6f', paddingHorizontal: 20, paddingVertical: 4, borderRadius: 20, color: 'white', fontWeight: '500', textAlign, flexShrink: 1}}>
                         {item.content}
                     </Text>
                     </View>
@@ -266,7 +267,7 @@ const FreelancerMessage = observer(({route}) => {
                         <TextInput.Icon icon='ticket-outline' iconColor='#9c6f6f' onPress={()=>navigation.navigate('FreelancerMessageTransactionOffer', {offer_id, inquiry_id})}/>
                         :
                         content.length === 0 && offer_id !== undefined && !existingtransaction ?
-                        <TextInput.Icon icon='tag' iconColor='#9c6f6f' onPress={()=>{}}/>
+                        <TextInput.Icon icon='tag' iconColor='#9c6f6f' onPress={()=>navigation.navigate('FreelancerProject', OfferContext.offers.find(offer => offer._id === offer_id))}/>
                         :
                         <TextInput.Icon icon='send-outline' iconColor='#9c6f6f' onPress={()=>SendMessage()}/>
                     }

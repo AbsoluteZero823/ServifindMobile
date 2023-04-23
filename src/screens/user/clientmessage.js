@@ -71,10 +71,10 @@ const ClientMessage = observer(({route}) => {
                     if(messageresponse.length > 0){
                         setMessagesCollection(messageresponse);
                     }else{
-                        alert("An Error has Occured");
+                        ToastAndroid.show('No Messages', ToastAndroid.SHORT);
                     }
                 }else if(chatresponse.FullChat !== undefined){
-                    console.log("Empty for now!");
+                    console.log(chatresponse.FullChat);
                 }
             }else{
                 alert('An Error has Occured');
@@ -228,7 +228,7 @@ const ClientMessage = observer(({route}) => {
                         <View style={{marginLeft: showAvatar ? 12 : 52, maxWidth: '80%'}}>
                             {showName && <Text style={{color: 'dimgrey', marginBottom: 4, textAlign}}>{item.sender.name === UserContext.users[0].name ? 'You' : item.sender.name }</Text>}
                             <Text style={{
-                                    backgroundColor: 'salmon',
+                                    backgroundColor: '#9c6f6f',
                                     paddingHorizontal: 20,
                                     paddingVertical: 4,
                                     borderRadius: 20,

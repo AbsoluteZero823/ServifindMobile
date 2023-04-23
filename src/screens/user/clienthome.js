@@ -141,7 +141,7 @@ const ClientHome = observer((props) => {
                   <IconButton icon='view-grid-plus' size={30} iconColor='#9c6f6f'/>
                   <Text variant='titleMedium'>No active job posts</Text>
                   <Text style={{textAlign:'center', color:'dimgrey',marginVertical:6}}>Post a Job on the marketplace and let a freelancer come to you</Text>
-                  <Button mode='contained' buttonColor="salmon" style={{marginVertical:6, width:150}} onPress={()=>(navigation.navigate('ClientPostaJob'))}>Post a Job</Button>
+                  <Button mode='contained' buttonColor='#9c6f6f' style={{marginVertical:6, width:150}} onPress={()=>(navigation.navigate('ClientPostaJob'))}>Post a Job</Button>
                 </SafeAreaView>
                 )}
                 refreshControl={
@@ -163,7 +163,7 @@ const ClientHome = observer((props) => {
                     style={{overflow:'hidden', marginBottom:70}}
                     renderItem={({item}) => (
                       <Card style={{marginHorizontal:5, marginBottom:5, borderColor:'#9c6f6f', borderWidth:1}}>
-                        <Card.Title title={item.service.title} subtitle={<Text style={{color:'grey'}}>{item.service.category.name}</Text>} right={(props) => <IconButton icon='open-in-new' mode='outlined' iconColor='#9c6f6f' style={{borderColor:'transparent'}}/>}/>
+                        <Card.Title title={item.service.title || item.service.name} subtitle={<Text style={{color:'grey'}}>{item.service.category.name}</Text>} right={(props) => <IconButton icon='open-in-new' mode='outlined' iconColor='#9c6f6f' style={{borderColor:'transparent'}}/>}/>
                       </Card>
                     )}
                     ListEmptyComponent={() => (
@@ -171,7 +171,7 @@ const ClientHome = observer((props) => {
                         <IconButton icon='chat-processing-outline' size={30} iconColor='#9c6f6f'/>
                         <Text variant='titleMedium'>No Active Inquiries Yet</Text>
                         <Text style={{textAlign:'center', color:'dimgrey',marginVertical:6}}>Search for a job on the market place</Text>
-                        <Button mode='contained' buttonColor="salmon" style={{marginVertical:6, width:150}} onPress={()=>(
+                        <Button mode='contained' buttonColor='#9c6f6f' style={{marginVertical:6, width:150}} onPress={()=>(
                           setAppbarTitle('Jobs'),
                           setActive('Jobs'),
                           setActiveCategory([]),

@@ -57,7 +57,7 @@ export default Jobpostcard = (passeddata) => {
                     left={() => (
                         <Avatar.Icon 
                             icon={item.request_status === 'waiting' ? 'clock-outline' : item.request_status === 'granted' ? 'check-decagram-outline' : 'cancel'} 
-                            color={item.request_status === 'waiting' ? 'salmon' : item.request_status === 'granted' ? 'green' : 'red'}
+                            color={item.request_status === 'waiting' ? '#9c6f6f' : item.request_status === 'granted' ? 'green' : 'red'}
                             size={40} 
                             style={{marginRight:10, backgroundColor:'transparent'}} />
                     )}
@@ -109,7 +109,7 @@ export default Jobpostcard = (passeddata) => {
                             value={newdescription}
                             onChangeText={(text) => setnewdescription(text)}
                             style={{marginVertical:5}}
-                            right={<TextInput.Icon icon="window-close" iconColor='deeppink' onPress={()=>setnewdescription('')}/>}
+                            right={<TextInput.Icon icon="window-close" iconColor='#9c6f6f' onPress={()=>setnewdescription('')}/>}
                             numberOfLines={5}
                         />
                         :
@@ -118,7 +118,7 @@ export default Jobpostcard = (passeddata) => {
                     
                 </Card.Content>
                 <Card.Actions>
-                    <Text style={{color: item.request_status === 'waiting' ? 'salmon' : item.request_status === 'granted' ? 'green' : 'red'}}>{item.request_status.toUpperCase()}</Text>
+                    <Text style={{color: item.request_status === 'waiting' ? '#9c6f6f' : item.request_status === 'granted' ? 'green' : 'red'}}>{item.request_status.toUpperCase()}</Text>
                 </Card.Actions>
             </Card>                                           
         </TouchableOpacity>

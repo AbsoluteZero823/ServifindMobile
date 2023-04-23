@@ -19,7 +19,7 @@ export const FreelancerDrawer = (props) => {
   
   return (
     // Adds the home and Board icons to the appbar. This is a bit hacky but I don't know how to make it
-    <Drawer.Section style={{paddingTop:20, marginBottom:20,  marginTop:20, flex:1, backgroundColor:'darksalmon', borderTopLeftRadius:30, borderBottomLeftRadius:20}} showDivider={false}>
+    <Drawer.Section style={{paddingTop:20, marginBottom:20,  marginTop:20, flex:1, backgroundColor:'#e28743', borderTopLeftRadius:30, borderBottomLeftRadius:20}} showDivider={false}>
       <Drawer.CollapsedItem 
         focusedIcon="home-outline"
         unfocusedIcon="home"

@@ -23,11 +23,11 @@ export const JobsHeader = observer((props) => {
     }
     return (
         <View style={{ flexDirection:'row', marginHorizontal:10, marginVertical:5}}>
-            <Avatar.Icon icon='account-multiple' size={20} style={{backgroundColor:'transparent'}} color='deeppink'/>
+            <Avatar.Icon icon='account-multiple' size={20} style={{backgroundColor:'transparent'}} color='#9c6f6f'/>
             <TouchableOpacity onPress={()=>{backtoHome()}}>
                 <Text>Freelancers</Text>
             </TouchableOpacity>
-            <Avatar.Icon icon='chevron-double-right' size={20} style={{backgroundColor:'transparent'}} color='deeppink'/>
+            <Avatar.Icon icon='chevron-double-right' size={20} style={{backgroundColor:'transparent'}} color='#9c6f6f'/>
             {
                 active ? 
                 <Text>{active}</Text> 
@@ -36,7 +36,7 @@ export const JobsHeader = observer((props) => {
                 data={ CategoryContext.categories }
                 keyExtractor={item => item._id}
                 horizontal={true}
-                ItemSeparatorComponent={() => <Avatar.Icon icon='align-horizontal-distribute' size={20} style={{backgroundColor:'transparent'}} color='deeppink'/>}
+                ItemSeparatorComponent={() => <Avatar.Icon icon='align-horizontal-distribute' size={20} style={{backgroundColor:'transparent'}} color='#9c6f6f'/>}
                 showsHorizontalScrollIndicator={false}
                 renderItem={({item}) => 
                     <TouchableOpacity onPress={()=>pushtoactiveCategory(item)}>

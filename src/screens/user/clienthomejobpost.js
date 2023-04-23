@@ -122,7 +122,7 @@ const ClientSingleJobPosts = observer(({route}) => {
                     titleStyle={{marginLeft:10}}
                     subtitleStyle={{marginLeft:10, color:'dimgrey'}}
                     left={()=><Avatar.Image size={50} source={{uri: UserContext.users[0].avatar.url }}/>}
-                    right={()=><Avatar.Icon style={{backgroundColor:'transparent'}} color={requestdata?.request_status === 'waiting' ? 'salmon' : requestdata?.request_status === 'granted' ? 'green' : 'red'} icon={requestdata?.request_status === 'waiting' ? 'clock-outline' : requestdata?.request_status === 'granted' ? 'check-decagram' : 'cancel'}/>}
+                    right={()=><Avatar.Icon style={{backgroundColor:'transparent'}} color={requestdata?.request_status === 'waiting' ? '#9c6f6f' : requestdata?.request_status === 'granted' ? 'green' : 'red'} icon={requestdata?.request_status === 'waiting' ? 'clock-outline' : requestdata?.request_status === 'granted' ? 'check-decagram' : 'cancel'}/>}
                 />
                 <Card.Content>
                     <FlatList
@@ -143,6 +143,9 @@ const ClientSingleJobPosts = observer(({route}) => {
                         showsVerticalScrollIndicator={false}
                         renderItem={({item})=>
                             <Card key={item._id} style={{borderColor: item.transactions[0]?.paymentSent ? 'green' : '#9c6f6f', borderWidth:1, marginVertical:5}}>
+                                {
+                                    console.log(item.transactions[0])
+                                }
                                 <Card.Title 
                                     title={item.offered_by.name}
                                     titleStyle={{color:'#9c6f6f'}}
@@ -165,11 +168,11 @@ const ClientSingleJobPosts = observer(({route}) => {
                                                     <Menu.Item onPress={() => navigation.navigate('ClientCompleteOffer',item)} title="Generate Payment"/>
                                                 }
                                                 {
-                                                    item.transactions[0]?.isPaid === false &&
+                                                    item.transactions[0]?.isPaid === "false" &&
                                                     <Menu.Item onPress={() => navigation.navigate('ClientCompleteOffer',item)} title="Complete Payment"/>
                                                 }
                                                 {
-                                                    (item.transactions[0]?.isPaid && item.transactions[0]?.isRated === false && item.transactions[0]?.reportedBy.client === false) &&
+                                                    (item.transactions[0]?.isPaid && item.transactions[0]?.isRated === "false" && item.transactions[0]?.reportedBy.client === "false") &&
                                                     <Menu.Item onPress={() => navigation.navigate('ClientCompleteOffer',item)} title="Rate/Report"/>
                                                 }
                                                 <Menu.Item onPress={() => setMenuCollection({...menucollection, [item._id]: !menucollection[item._id]})} title="Cancel" />
@@ -182,16 +185,39 @@ const ClientSingleJobPosts = observer(({route}) => {
                                         }
                                     />
                                 <Card.Content style={{flex:1}}>
+                                    <Text variant='bodyLarge' style={{color:'#9c6f6f'}}>Offer:</Text>
+                                    <Text style={{textAlign:'right'}}>{item.description}</Text>
+                                    <View style={{flexDirection:'row', justifyContent:'space-between', alignItems:'center'}}>
+                                        <Text variant='bodyLarge' style={{color:'#9c6f6f'}}>Price:</Text>
+                                        <Text>{item.price ? `₱ ${item.price}` : 'No Price Set'}</Text>
+                                    </View>
                                     <View style={{flexDirection:'row', justifyContent:'space-between', alignItems:'center'}}>
                                         <Text variant='bodyLarge' style={{color:'#9c6f6f'}}>Service:</Text>
-                                        <Text>{item.service_id.title}</Text>
+                                        <Text>{item.service_id.title || item.service_id.name}</Text>
                                     </View>
-                                    <View style={{flexDirection:'row', justifyContent:'space-between', alignItems:'center'}}>
-                                        <Text variant='bodyLarge' style={{color:'#9c6f6f'}}>Offer:</Text>
-                                        <Text>{item.description}</Text>
-                                    </View>
-                                    <Text variant='bodyLarge' style={{color:'#9c6f6f'}}>Experience:</Text>
-                                    <Text>{item.service_id.experience}</Text>
+                                    
+                                    {
+                                        item.priceStarts_At &&
+                                        <View style={{flexDirection:'row', justifyContent:'space-between', alignItems:'center'}}>
+                                            <Text variant='bodyLarge' style={{color:'#9c6f6f'}}>Price Starts At:</Text>
+                                            <Text>{item.priceStarts_At}</Text>
+                                        </View>
+                                    }
+                                    {
+                                        item.service_id.experience ?
+                                        <>
+                                        <Text variant='bodyLarge' style={{color:'#9c6f6f'}}>Experience:</Text>
+                                        <Text>{item.service_id.experience}</Text>
+                                        </>
+                                        :
+                                        item.service_id.description ?
+                                        <>
+                                        <Text variant='bodyLarge' style={{color:'#9c6f6f'}}>Description:</Text>
+                                        <Text>{item.service_id.description}</Text>
+                                        </>
+                                        :
+                                        console.log(item)
+                                    }
                                 </Card.Content>
                                 <Card.Actions>
                                     {
@@ -264,7 +290,7 @@ const ClientSingleJobPosts = observer(({route}) => {
                         requestdata?.request_status === 'waiting' && <Button 
                         icon='cancel' 
                         mode='contained'
-                        buttonColor='salmon'
+                        buttonColor='#9c6f6f'
                         onPress={()=>Alert.alert('Cancel Post?','Are you sure you want to cancel this posting?',[
                         {
                             text: 'Cancel',

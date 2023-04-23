@@ -67,7 +67,6 @@ const LoginPage = observer(() => {
         }
     }
     return (
-        
         <View style={styles.container}>
         <Loading/>
         <Portal>

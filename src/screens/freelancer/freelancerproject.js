@@ -255,8 +255,18 @@ const FreelancerProject = observer(({route}) => {
                     <Card>
                         <Card.Title title='Payment Details' right={()=><IconButton icon='chevron-left' iconColor='#9c6f6f' size={30} onPress={()=>setmodalstate('default')}/>}/>
                         <Card.Content>
+                            {
+                                item.price &&
+                                <TextInput
+                                    label="Your Offer Price"
+                                    mode='outlined'
+                                    placeholder={`₱ ${item.price}`}
+                                    editable={false}
+                                    disabled={true}
+                                />
+                            }
                             <TextInput
-                                label="Price"
+                                label="Your Transaction Price"
                                 mode='outlined'
                                 placeholder='₱ 0,000.00'
                                 keyboardType='numeric'

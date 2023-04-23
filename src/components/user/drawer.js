@@ -22,56 +22,82 @@ export const UserDrawer = (props) => {
   async function switchover() {
     AuthContext.letmeload();
     try {
+      const userEmail = UserContext.users[0].email;
+      if (!userEmail.endsWith('@tup.edu.ph') && !userEmail === 'zephyr@gmail.com') {
+        alert('You must have an email address from @tup.edu.ph domain to use this feature');
+        AuthContext.donewithload();
+        return;
+      }
+
       const response = await freelancerstatus();
+
       if (!response.success) {
         alert(response.errMessage);
+        AuthContext.donewithload();
         return;
       }
+
       const freelancer = response.freelancer[0];
-      if (!freelancer || !freelancer.approved_date || freelancer.status === 'applying') {
-        alert("Your Application is still being processed, Please wait for a while.");
-        return;
-      }
-      const servicesresponse = await getmyServices();
-      FreelancerContext.data = [Freelancer.create(freelancer)];
-      ServicesContext.services = servicesresponse.services.map(service => ({
-        _id: service._id,
-        title: service.title,
-        name: service.name,
-        category: Category.create(service.category),
-        user: User.create(service.user),
-        experience: service.experience,
-        freelancer_id: Freelancer.create({
-          ...service.freelancer_id, 
-        }),
-        status: service.status,
-        images: { 
-          public_id: service.images.public_id, 
-          url: service.images.url, 
+      if (freelancer){
+        if (freelancer?.approved_date === undefined && freelancer?.status !== 'applying') {
+          AuthContext.donewithload();
+          alert("Your Application is still being processed, Please wait for a while.");
+          return;
         }
-      }));
-      AuthContext.setmyrole('Freelancer');
-      navigation.navigate('FreelancerHome');
+  
+        
+        if (freelancer.status === 'approved'){
+          const servicesresponse = await getmyServices();
+          FreelancerContext.data = [Freelancer.create(freelancer)];
+          ServicesContext.services = servicesresponse.services.map(service => ({
+            _id: service._id,
+            title: service.title,
+            name: service.name,
+            category: Category.create(service.category),
+            user: User.create(service.user),
+            experience: service.experience,
+            freelancer_id: Freelancer.create({
+              ...service.freelancer_id, 
+            }),
+            status: service.status,
+            images: { 
+              public_id: service.images.public_id, 
+              url: service.images.url, 
+            }
+          }));
+          AuthContext.setmyrole('Freelancer');
+          navigation.navigate('FreelancerHome');
+          AuthContext.donewithload();
+        }else if(freelancer.status === 'rejected'){
+          alert('Your application has been rejected');
+        }
+      } else {
+        AuthContext.donewithload();
+        alert("You need to apply first for a freelancer status!");
+        navigation.navigate("ClientFreelancerRegistration");
+      }
+      
     } catch (error) {
+      AuthContext.donewithload();
       console.log(error);
     }
-    AuthContext.donewithload();
   }
   
   
   return (
-    <Drawer.Section style={{paddingTop:20, marginBottom:20,  marginTop:20, flex:1, backgroundColor:'salmon', borderTopLeftRadius:30, borderBottomLeftRadius:20}} showDivider={false}>
+    <Drawer.Section style={{paddingTop:20, marginBottom:20,  marginTop:20, flex:1, backgroundColor:'#e28743', borderTopLeftRadius:30, borderBottomLeftRadius:20}} showDivider={false}>
       <Drawer.CollapsedItem 
-        focusedIcon="home-outline"
-        unfocusedIcon="home"
-        label={<Text style={{color:'white', fontWeight:'600', fontSize:14}}>Home</Text>}
-        active={active === 'Home'}
-        onPress={() => {
-          setAppbarTitle('Browse Talent');
-          setActive('Home');
-          navigation.navigate('ClientHome');
-        }}
-        />
+          focusedIcon="home-outline"
+          unfocusedIcon="home"
+          label={<Text style={{color:'white', fontWeight:'600', fontSize:14}}>Home</Text>}
+          active={active === 'Home'}
+          onPress={() => {
+              setAppbarTitle('Browse Talent');
+              setActive('Home');
+              navigation.navigate('ClientHome');
+          }}
+          style={{color: 'white'}}
+      />
       <Drawer.CollapsedItem 
         focusedIcon="feature-search-outline"
         unfocusedIcon="feature-search"

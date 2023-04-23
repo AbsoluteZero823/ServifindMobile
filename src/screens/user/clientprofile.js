@@ -215,7 +215,7 @@ const ClientProfile = observer((props) => {
                     {
                         isEditing ? 
                         <TouchableOpacity style={{position:'absolute', right:-10, bottom:-10}} onPress={()=>pickImage()}>
-                            <Avatar.Icon size={38} icon="camera" style={{backgroundColor:'salmon'}} color='white'/>
+                            <Avatar.Icon size={38} icon="camera" style={{backgroundColor:'#9c6f6f'}} color='white'/>
                         </TouchableOpacity>
                         : <></>
                     }
@@ -231,7 +231,7 @@ const ClientProfile = observer((props) => {
                         right={(props) => 
                             <View>
                                 <TouchableOpacity style={{position:'absolute', top:-25, left:-40}} onPress={()=>setisEditing(!isEditing)}>
-                                    <Avatar.Icon icon={isEditing ? 'window-close' : 'pencil'} size={28} color='white' style={{backgroundColor: isEditing ? 'maroon' : 'salmon'}}/>
+                                    <Avatar.Icon icon={isEditing ? 'window-close' : 'pencil'} size={28} color='white' style={{backgroundColor: isEditing ? 'maroon' : '#9c6f6f'}}/>
                                 </TouchableOpacity>
                                 {
                                     isEditing ? 
@@ -366,7 +366,7 @@ const ClientProfile = observer((props) => {
                                       value: 'cancel',
                                       icon: 'window-close',
                                       label: 'Cancel',
-                                      style: {backgroundColor:'salmon'},
+                                      style: {backgroundColor:'#9c6f6f'},
                                       checkedColor: 'white',
                                       uncheckedColor: 'white',
                                       onPress: () => {
@@ -392,7 +392,7 @@ const ClientProfile = observer((props) => {
                                 />
                             </View>
                             : 
-                            <Button icon='lock' mode='outlined' onPress={()=>{setisPassword(!isPassword)}} buttonColor='salmon' textColor='white'>Change Password</Button>
+                            <Button icon='lock' mode='outlined' onPress={()=>{setisPassword(!isPassword)}} buttonColor='#9c6f6f' textColor='white'>Change Password</Button>
                         }
                         </View>
                     </Card.Content>

@@ -122,7 +122,7 @@ const ClientJobs = observer((props) => {
                                 </View>
                                 <View>
                                     <View style={{flexDirection:'row', justifyContent:'space-between'}}>
-                                        <Avatar.Icon icon='star' size={20} color='green' style={{backgroundColor:'transparent'}}/>
+                                        <Avatar.Icon icon='star' size={20} color='#9c6f6f' style={{backgroundColor:'transparent'}}/>
                                         <Text>{item.avgRating !== null ? item.avgRating : '0'} / 5</Text>
                                         <Text style={{color:'dimgrey'}}>({item.ratings !== undefined ? item.ratings.length : '0'})</Text>
                                     </View>

@@ -13,11 +13,13 @@ const ImagesModel = types.model('Images', {
 export const ServiceModel = types
   .model('Service', {
     _id: types.identifier,
-    title: types.string,
+    title: types.maybe(types.string),
     name: types.string,
     category: Category,
     user: User,
-    experience: types.string,
+    description: types.maybe(types.string),
+    experience: types.maybe(types.string),
+    priceStarts_At: types.maybe(types.string),
     freelancer_id: Freelancer,
     status: types.optional(types.string, 'approved'),
     images: types.optional(ImagesModel, { public_id: '', url: '' }),

@@ -5,11 +5,10 @@ const styles = StyleSheet.create({
       flex: 1,
       justifyContent: 'center',
       alignSelf: 'center',
-      minWidth: 300,
-      maxWidth: 500,
+      width:'100%',
+      backgroundColor: 'mistyrose',
     },
     landingpage: {
-      width: 300,
       alignItems:'center'
     },
     registrationpage:{
@@ -28,7 +27,6 @@ const styles = StyleSheet.create({
         marginTop:10,
     },  
     logo: {
-      width: 100,
       height: 100,
       marginBottom: 20,
     },
@@ -39,7 +37,7 @@ const styles = StyleSheet.create({
       textAlign:'center'
     },
     highlight:{
-        color: 'deeppink',
+        color: '#9c6f6f',
         fontWeight: 'bold',
     },
     subtitle: {
