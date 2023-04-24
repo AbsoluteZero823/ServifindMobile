@@ -190,7 +190,9 @@ const ServiForm = observer(() => {
             let name = firstName + ' ' + lastName;
             const response = await register(email, password, name, contact, gender, age, avatar);
             if(response.success === true){
+                AuthContext.donewithload();
                 alert("Your Account has been created, A confirmation link has been sent to your email account!.");
+                reroute();
                 return (response);
             }else if(response.success === false && response.error.statusCode){
                 setErrorCode(response.error.statusCode);
@@ -225,6 +227,8 @@ const ServiForm = observer(() => {
                     alert(
                     "Your Account has been created, A confirmation link has been sent to your email account!."
                     );
+                    AuthContext.donewithload();
+                    reroute();
                 } else {
                     alert(response.errMessage);
                 }
@@ -491,7 +495,6 @@ const ServiForm = observer(() => {
                                         value.push('payments'),setActive('payments');
                                     }else{
                                         registerClient();
-                                        reroute();
                                     }
                                 }
                                 }}
@@ -588,7 +591,6 @@ const ServiForm = observer(() => {
                                 const isValid = handlePaymentsForm();
                                 if (isValid){
                                     registermeasafreelancer();
-                                    navigation.navigate('Login');
                                 }}
                             }
                             >

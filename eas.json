@@ -4,18 +4,13 @@
         "developmentClient": true,
         "distribution": "internal",
         "channel": "master",
-        "env": {
-          "API_URL": "http://localhost:4002/api/v1",
-          "ENVIRONMENT": "development"
-        }
+      },
+      "standalone": {
+        "distribution": "internal",
       },
       "production": {
         "distribution": "store",
         "releaseChannel": "prod",
-        "env": {
-          "API_URL": "https://api.example.com",
-          "ENVIRONMENT": "production"
-        }
       }
     }
   }
