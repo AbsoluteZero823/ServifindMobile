@@ -16,7 +16,7 @@ const FreelancerMessageTransactionOfferModal = ({route}) => {
     const navigation = useNavigation();
 
     const [inquirydata, setinquirydata] = useState();
-    const [modalvisible, setModalvisible] = useState(true);
+    const [modalvisible, setModalvisible] = useState(false);
     const [modalinfo, setmodalinfo] = useState();
     const [date, setDate] = useState(new Date());
     const [showDatePicker, setShowDatePicker] = useState(false);
@@ -24,6 +24,14 @@ const FreelancerMessageTransactionOfferModal = ({route}) => {
     const hideModal = () => {
         setModalvisible(false);
         navigation.goBack();
+    }
+
+    const hidemodalhere = () => {
+        setModalvisible(false);
+    }
+
+    const openmodalhere = () => {
+        setModalvisible(true);
     }
 
     useEffect(()=>{
@@ -43,13 +51,16 @@ const FreelancerMessageTransactionOfferModal = ({route}) => {
 
     async function fetchInquiry(){
         AuthContext.letmeload();
+        hidemodalhere();
         try{
-            const response = await getSingleInquiry(route.params.inquiry_id);
+            const response = await getSingleInquiry(route.params.inquiry_id._id);
             if(response.success){
                 setinquirydata(response.inquiry.service_id);
             }
+            openmodalhere();
             AuthContext.donewithload();
         }catch(error){
+            hideModal();
             AuthContext.donewithload();
             console.log(error);
         }
@@ -61,17 +72,20 @@ const FreelancerMessageTransactionOfferModal = ({route}) => {
     async function SendOfferandTransactionbyInquiry(){
         AuthContext.letmeload();
         try{
+            hidemodalhere();
             const response = await AddOfferandTransactionbyInquiry({...route.params, service_id: inquirydata._id, price, description, expected_Date: date});
             if(response.success){
                 AuthContext.donewithload();
                 alert(response.message);
-                hideModal;
+                hideModal()
             }else{
                 console.log(response);
                 alert("An Error Occurred!");
+                openmodalhere();
             }
             AuthContext.donewithload();
         }catch(error){
+            openmodalhere()
             AuthContext.donewithload();
             console.log(error);
         }

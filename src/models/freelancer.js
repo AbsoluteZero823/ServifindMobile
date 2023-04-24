@@ -23,6 +23,7 @@ const premiumReceipt = types.model({
 
 export const Freelancer = types
   .model({
+    _id: types.string,
     status: types.optional(types.string, 'applying'), // "applying", "approved", "restricted", "rejected"
     approved_date: types.maybeNull(types.string),
     isPremium: types.optional(types.boolean, false),

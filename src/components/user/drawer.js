@@ -30,7 +30,7 @@ export const UserDrawer = (props) => {
       }
 
       const response = await freelancerstatus();
-
+      console.log(response)
       if (!response.success) {
         alert(response.errMessage);
         AuthContext.donewithload();
@@ -39,16 +39,13 @@ export const UserDrawer = (props) => {
 
       const freelancer = response.freelancer[0];
       if (freelancer){
-        if (freelancer?.approved_date === undefined && freelancer?.status !== 'applying') {
+        if (freelancer.approved_date === undefined && freelancer.status === 'applying') {
           AuthContext.donewithload();
           alert("Your Application is still being processed, Please wait for a while.");
           return;
-        }
-  
-        
-        if (freelancer.status === 'approved'){
+        }else if (freelancer.status === 'approved'){
           const servicesresponse = await getmyServices();
-          FreelancerContext.data = [Freelancer.create(freelancer)];
+          FreelancerContext.data[0] = Freelancer.create(freelancer);
           ServicesContext.services = servicesresponse.services.map(service => ({
             _id: service._id,
             title: service.title,

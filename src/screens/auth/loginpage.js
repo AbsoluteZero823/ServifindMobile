@@ -62,7 +62,7 @@ const LoginPage = observer(() => {
                 AuthContext.donewithload();
             }else{
                 AuthContext.donewithload();
-                alert('An Error has occured!');
+                alert(response.messasge);
             }
         }
     }

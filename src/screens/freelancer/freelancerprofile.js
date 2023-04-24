@@ -73,7 +73,7 @@ const FreelancerProfile = observer((props) => {
                     <Switch color='#9c6f6f' value={Availability} onValueChange={()=>{toggleavailability()}}/>
                 </View>
                 {
-                    !FreelancerStore.data[0].isPremium && FreelancerStore.data[0].premiumReceipt === undefined &&
+                    !FreelancerStore.data[0].isPremium && !FreelancerStore.data[0].premiumReceipt.isPaymentReceived &&
                     <Button mode='text' textColor='dimgrey' onPress={()=>{FreelancerStore.data.premiumReceipt === undefined ? navigation.navigate('FreelancerPremium') : alert("You may have a pending premium application. Wait for further updates")}}>
                         Go Premium
                     </Button>

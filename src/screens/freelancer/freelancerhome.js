@@ -145,7 +145,8 @@ const FreelancerHome = observer(() => {
                 category: category,
                 user: UserContext.users[0]._id,
                 Description: Description,
-                freelancer_id: FreelancerContext.data[0]?._id,
+                freelancer_id: FreelancerContext.data[0]._id,
+                priceStarts_At: price,
                 image: image
             });
             AuthContext.donewithload();
@@ -153,7 +154,7 @@ const FreelancerHome = observer(() => {
             if(submitresponse.success){
                 alert("Service Created Successfully");
             }else{
-                alert(submitresponse.message);
+                alert(submitresponse.errMessage || submitresponse.message);
             }
         }catch(error){
             console.log(error);
@@ -244,6 +245,7 @@ const FreelancerHome = observer(() => {
                                 mode='outlined'
                                 label='Pricing Reference'
                                 placeholder='Your Reference for Pricing'
+                                keyboardType='numeric'
                                 onChangeText={(Text)=>{setvalidationErrors({}),setprice(Text)}}
                                 error={validationErrors.price}
                             />
