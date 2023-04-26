@@ -146,14 +146,13 @@ const ClientFreelancerRegistration = observer(({route}) => {
 
         const freelancer = response.freelancer[0];
         if (freelancer) {
+          setstatus('Existing');
           if (freelancer.approved_date === undefined && freelancer.status !== 'applying') {
             AuthContext.donewithload();
             alert("Your Application is still being processed, Please wait for a while.");
             navigation.goBack();
             return;
           }
-  
-          
           if (freelancer.status === 'approved'){
             const servicesresponse = await getmyServices();
             FreelancerContext.data = [Freelancer.create(freelancer)];
@@ -178,6 +177,7 @@ const ClientFreelancerRegistration = observer(({route}) => {
             AuthContext.donewithload();
           }else if(freelancer.status === 'rejected'){
             alert('Your application has been rejected');
+            AuthContext.letmeload();
           }
         } else {
           AuthContext.donewithload();
@@ -188,6 +188,7 @@ const ClientFreelancerRegistration = observer(({route}) => {
         AuthContext.donewithload();
         console.log(error);
       }
+      AuthContext.letmeload();
     }
 
     useEffect(()=>{
