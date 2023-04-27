@@ -20,6 +20,20 @@ export const CustomAppBar = observer((props) => {
             setjobisLoading(false);
         }, 1000)
     },[jobsearchquery])
+
+    const [ShorthandName, setShorthandName] = useState('');
+
+    useEffect(()=>{
+        if (UserContext && UserContext.users && UserContext.users[0] && UserContext.users[0].UserDetails) {
+            const name = UserContext.users[0].UserDetails.name;
+            const firstInitial = name[0];
+            const lastSpaceIndex = name.lastIndexOf(' ');
+            const lastInitial = lastSpaceIndex > 0 ? name[lastSpaceIndex + 1] : '';
+            const initials = `${firstInitial}${lastInitial}`.toUpperCase();
+            setShorthandName(initials);
+          }
+    },[UserContext])
+
     return (
         <Appbar.Header style={{justifyContent:'flex-end', backgroundColor:'transparent'}}>
             {
@@ -82,7 +96,14 @@ export const CustomAppBar = observer((props) => {
                         : 
                         drawer.current.openDrawer()
                 }}>
-                <Avatar.Image size={34} source={{uri: UserContext.users[0]?.UserDetails?.avatar?.url}} style={{backgroundColor:'#9c6f6f'}}/>
+                
+                
+                {
+                    UserContext.users[0]?.UserDetails?.avatar?.url ?
+                    <Avatar.Image size={34} source={{uri: UserContext.users[0]?.UserDetails?.avatar?.url}} style={{backgroundColor:'#9c6f6f'}}/>
+                    :
+                    <Avatar.Text size={34} label={ShorthandName || 'SF'} />
+                }
             </TouchableOpacity>
         </Appbar.Header>
     )

@@ -8,6 +8,7 @@ import Loading from '../../components/loading';
 import Error from '../../components/err/error';
 import styles from '../../components/authentication/authentication.css';
 import { login } from '../../../services/apiendpoints';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import UserStore, { User } from '../../models/user';
 import AuthStore from '../../models/authentication';
@@ -55,6 +56,10 @@ const LoginPage = observer(() => {
             }else if(response.success === true && response.token){
                 if(UserContext.users.length === 0){
                     UserContext.users.push(User.create(response.user));
+                    if(checked){
+                        await AsyncStorage.setItem('token', response.token);
+                        await AsyncStorage.setItem('userinfo',JSON.stringify(response.user));
+                    }
                     AuthContext.loggedin(response.token, 'customer');
                 }else{
                     alert('An Error has occured!');

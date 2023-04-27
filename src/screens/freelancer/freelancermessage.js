@@ -130,27 +130,30 @@ const FreelancerMessage = observer(({route}) => {
                     setcompletedtransaction(true);
                 }else{
                     settransactiondetails(transactionresponse.transaction)
-                    if (transactionresponse.transaction.offer_id?.offer_status === 'processing') {
-                        setactionsarray([
-                            {
-                            label: 'Hide',
-                            onPress: () => setexistingtransactionbanner(false),
-                            },
-                        ])
-                    } else if (transactionresponse.transaction.offer_id?.offer_status === 'cancelled') {
-                        setactionsarray([
-                            {
-                            label: 'Edit',
-                            onPress: () => navigation.navigate('FreelancerMessageTransactionOffer', { offer_id, inquiry_id, transactiondetails }),
-                            },
-                            {
-                            label: 'Hide',
-                            onPress: () => setexistingtransactionbanner(false),
-                            },
-                        ])
+                    if(transactiondetails !== undefined || transactiondetails !== null){
+                        if (transactionresponse.transaction.offer_id?.offer_status === 'processing') {
+                            setactionsarray([
+                                {
+                                label: 'Hide',
+                                onPress: () => setexistingtransactionbanner(false),
+                                },
+                            ])
+                        } else if (transactionresponse.transaction.offer_id?.offer_status === 'cancelled') {
+                            setactionsarray([
+                                {
+                                label: 'Edit',
+                                onPress: () => navigation.navigate('FreelancerMessageTransactionOffer', { offer_id, inquiry_id, transactiondetails: transactionresponse.transaction }),
+                                },
+                                {
+                                label: 'Hide',
+                                onPress: () => setexistingtransactionbanner(false),
+                                },
+                            ])
+                        }
+                        setexistingtransaction(true);
+                        setexistingtransactionbanner(true);
                     }
-                    setexistingtransaction(true);
-                    setexistingtransactionbanner(true);
+                    
                 }
             }
             AuthContext.donewithload();

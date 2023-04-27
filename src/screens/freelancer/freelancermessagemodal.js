@@ -17,7 +17,6 @@ const FreelancerMessageTransactionOfferModal = ({route}) => {
 
     const [inquirydata, setinquirydata] = useState();
     const [modalvisible, setModalvisible] = useState(false);
-    const [modalinfo, setmodalinfo] = useState();
     const [date, setDate] = useState(new Date());
     const [showDatePicker, setShowDatePicker] = useState(false);
 
@@ -36,18 +35,7 @@ const FreelancerMessageTransactionOfferModal = ({route}) => {
 
     useEffect(()=>{
         fetchInquiry();
-        setmodalinfo(route.params.transactiondetails);
     },[]);
-
-    useEffect(()=>{
-        setPrice(modalinfo?.price);
-        setDescription(modalinfo?.offer_id.description);
-        if (modalinfo && modalinfo?.expected_Date !== undefined) {
-            console.log(modalinfo?.expected_Date);
-            setDate(new Date(modalinfo?.expected_Date))
-        };
-    },[modalinfo])
-    
 
     async function fetchInquiry(){
         AuthContext.letmeload();
@@ -108,6 +96,14 @@ const FreelancerMessageTransactionOfferModal = ({route}) => {
 
     const currentDate = new Date();
     const maxDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 30); // limit to 30 days from today
+
+    useEffect(()=>{
+        if(route.params.transactiondetails){
+            setDate(new Date(route.params.transactiondetails.expected_Date));
+            setPrice(route.params.transactiondetails.price);
+            setDescription(route.params.transactiondetails.offer_id.description);
+        }
+    },[])
 
     return (
         <KeyboardAvoidingView>

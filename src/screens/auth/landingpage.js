@@ -1,12 +1,30 @@
-import React from 'react';
-import { View, Image} from 'react-native';
+import React, {useEffect, useContext} from 'react';
+import { View, Image } from 'react-native';
 import { Button, Text } from 'react-native-paper';
 import { observer } from "mobx-react";
 import { useNavigation } from '@react-navigation/native';
 import styles from '../../components/authentication/authentication.css';
+import AuthStore from '../../models/authentication';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import UserStore, { User } from '../../models/user';
 
 const Landingpage = observer(()=>{
     const navigation = useNavigation();
+    const AuthContext = useContext(AuthStore);
+    const UserContext = useContext(UserStore);
+    useEffect(()=>{
+        async function isRemembered(){
+            const token = await AsyncStorage.getItem('token');
+            if(token){
+                AuthContext.loggedin(token, 'customer');
+            }
+            const user = await AsyncStorage.getItem('userinfo');
+            if(user){
+                UserContext.users.push(User.create(JSON.parse(user)));
+            }
+        }
+        isRemembered();
+    },[])
     return (
         <View style={styles.container}>
             <View style={styles.landingpage}>

@@ -96,7 +96,7 @@ const FreelancerPremium = () => {
             <Card.Content>
               <Text variant='titleMedium' style={{textAlign:'center', color:'#9c6f6f'}}>ADMIN GCASH ACCOUNT</Text>
               <Image source={require('../../../assets/placeholderQR.png')} style={{width: '100%', marginVertical:4}} />
-              <Text variant='titleMedium' style={{textAlign:'center', color:'#9c6f6f'}}>₱ 500.00</Text>
+              <Text variant='titleMedium' style={{textAlign:'center', color:'#9c6f6f'}}>₱ 50.00</Text>
               <TextInput
                 style={{marginTop:12}}
                 dense={true}

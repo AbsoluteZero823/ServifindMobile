@@ -173,6 +173,10 @@ const ClientMessage = observer(({route}) => {
 
     const flatListRef = useRef();
 
+    useEffect(()=>{
+        console.log(transactiondetails)
+    },[])
+
     return (
         <>
         <Loading/>
@@ -194,8 +198,26 @@ const ClientMessage = observer(({route}) => {
               ]}
             icon='tag'
             >
-            <Text>Freelancer made an Offer with the Price at{`\n`}<Text variant='titleSmall' style={{color:'#9c6f6f'}}>₱ {transactiondetails?.price}</Text>, {`\n`}Would you like to proceed?</Text>
+            <Text>Freelancer made an Offer with the Price at{`\n`}
+            <Text variant='titleSmall' style={{color:'#9c6f6f'}}>₱ {transactiondetails?.price}</Text>, 
+            {`\n`}with an Expected Completion Date at{`\n`}
+            <Text variant='titleSmall' style={{color:'#9c6f6f'}}>{transactiondetails && format(new Date(transactiondetails?.expected_Date),"MMM, dd, yyyy")}</Text>,
+            {`\n`}Would you like to proceed?</Text>
         </Banner>
+        {
+            !bannervisibility && transactiondetails?.status === 'waiting' &&
+            <Banner
+            visible={!bannervisibility}
+            actions={[
+                {
+                    label: 'Show',
+                    onPress: () => {setbannervisibility(true)},
+                },
+              ]}
+            >
+            <Text>Freelancer has an Active Offer</Text>
+        </Banner>
+        }
         <View style={{flex: 1}}>
             <FlatList
                 ref={flatListRef}

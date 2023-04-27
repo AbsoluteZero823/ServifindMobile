@@ -5,7 +5,7 @@ import { Drawer, Text} from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import AuthStore from '../../models/authentication';
 import UserStore from '../../models/user';
-import ServiceStore from '../../models/service';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // Exports Freelancer's view drawer. It is used to build the view
 export const FreelancerDrawer = (props) => {
@@ -92,9 +92,11 @@ export const FreelancerDrawer = (props) => {
               },
               {
                 text: 'Yes', 
-                onPress: () => {
+                onPress: async() => {
                   setDrawerActive(false);
                   setActive('Home');
+                  await AsyncStorage.removeItem('token');
+                  await AsyncStorage.removeItem('userinfo');
                   AuthContext.logout();
                   UserContext.users = [];
                   alert('Signed Out');

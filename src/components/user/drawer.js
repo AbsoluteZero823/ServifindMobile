@@ -8,7 +8,7 @@ import ServiceStore, { ServiceModel } from '../../models/service';
 import { Category } from '../../models/category';
 import FreelancerStore, { Freelancer } from '../../models/freelancer';
 import { freelancerstatus, getmyServices } from '../../../services/apiendpoints';
-import { isValid } from 'date-fns';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const UserDrawer = (props) => {
   const FreelancerContext = useContext(FreelancerStore);
@@ -152,9 +152,11 @@ export const UserDrawer = (props) => {
               },
               {
                 text: 'Yes', 
-                onPress: () => {
+                onPress: async () => {
                   setDrawerActive(false);
                   setActive('Home');
+                  await AsyncStorage.removeItem('token');
+                  await AsyncStorage.removeItem('userinfo');
                   AuthContext.logout();
                   UserContext.users = [];
                   alert('Signed Out');
