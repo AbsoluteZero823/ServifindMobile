@@ -79,16 +79,21 @@ const ClientChat = observer(() => {
                     inquiry_id: item.inquiry_id
                     })}>
                     <View style={{flexDirection:'row', marginHorizontal: 4, marginVertical: 8}}>
+                        {
+                            console.log(item)
+                        }
                         <Avatar.Image source={{uri: item.users[1].avatar.url}} size={60}/>
                         <View style={{marginHorizontal: 4, alignSelf: 'center'}}>
                             <Text variant='titleMedium' style={{color:'#9c6f6f'}}>{item.chatName}</Text>
                             {
-                                item.latestMessage.sender._id === item.users[0]._id &&
-                                <Text style={{color:'dimgrey'}}>You: {item.latestMessage.content}</Text>
-                            }
-                            {
-                                item.latestMessage.sender._id === item.users[1]._id &&
-                                <Text style={{color:'dimgrey'}}>{item.latestMessage.sender.name}: {item.latestMessage.content}</Text>
+                                item.latestMessage ?
+                                    item.latestMessage.sender?._id === item.users[0]._id ?
+                                    <Text style={{color:'dimgrey'}}>You: {item.latestMessage.content}</Text>
+                                    :
+                                    item.latestMessage.sender._id === item.users[1]._id &&
+                                    <Text style={{color:'dimgrey'}}>{item.latestMessage.sender.name}: {item.latestMessage.content}</Text>
+                                :
+                                <Text style={{color:'dimgrey'}}>Start Chatting Now</Text>
                             }
                         </View>
                     </View>

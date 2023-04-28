@@ -17,6 +17,8 @@ const ClientCompleteOffer = observer(({route}) => {
     const navigation = useNavigation();
     const item = route.params;
 
+    
+
     const [segmentedvalue, setsegmentedValue] = useState('cash');
     const [price, setprice] = useState('');
     const [gcashreceipt, setgcashreceipt] = useState();
@@ -24,10 +26,10 @@ const ClientCompleteOffer = observer(({route}) => {
     const [appstate, setappstate] = useState('');
 
     useEffect(()=>{
-        if (item.transactions[0].isPaid === "true") {
+        if (item.transactions[0]?.isPaid === "true") {
             setappstate('Rate/Report Disclaimer');
             settransactioninfo(item.transactions[0]);
-        }else if ((item.transactions[0] !== null || item.transactions[0] !== undefined) && item.transactions[0].isPaid === "false"){
+        }else if ((item.transactions[0] !== null || item.transactions[0] !== undefined) && item.transactions[0]?.isPaid === "false"){
             setappstate('Disclaimer');
         }else{
             setappstate('Disclaimer');
@@ -68,10 +70,10 @@ const ClientCompleteOffer = observer(({route}) => {
     async function submithandler(){
         const Errors = {};
         try{
-            if (price === ''){
+            if (!price){
                 Errors.price = 'Price not set';
             }
-            if (parseInt(price) < parseInt(item.transactions[0].price)){
+            if (parseInt(price) < (parseInt(item.transactions[0]?.price) || parseInt(item.price))){
                 Errors.price = 'Payment too low';
             }
             if (segmentedvalue === 'gcash'){
@@ -85,17 +87,22 @@ const ClientCompleteOffer = observer(({route}) => {
                 return false;
             } else {
                 setValidationErrors({});
+                AuthContext.letmeload();
                 const completeresponse = await completeanOffer({
                     offer_id: item._id,
                     price: price,
+                    expected_Date: new Date(),
                 })
+                console.log(completeresponse)
                 if (completeresponse.success){
                     console.log(completeresponse.transaction);
                     settransactioninfo(completeresponse.transaction);
                     setappstate("Rate/Report");
                     alert("Success");
+                    AuthContext.donewithload();
                 }else{
                     alert("Error");
+                    AuthContext.donewithload();
                 }
             }
         }catch(error){
@@ -201,14 +208,25 @@ const ClientCompleteOffer = observer(({route}) => {
                     <Card>
                         <Card.Title title="Freelancer Payment Info" subtitle="Pay your Freelancer" subtitleStyle={{color:'dimgrey'}}/>
                         <Card.Content>
-                            <TextInput
-                                label='Your Freelancer Requests'
+                            {
+                                item.transactions[0]?.service_id?.priceStarts_At &&
+                                <TextInput
+                                label='Their Service Starts At'
                                 mode='outlined'
                                 editable={false}
-                                disabled={true}
-                                value={item.transactions[0].price}
+                                value={item.transactions[0]?.service_id?.priceStarts_At}
                                 left={<TextInput.Icon icon='currency-php' color='dimgrey'/>}
                             />
+                            }
+                            {
+                                 // check the type of item.price
+                                item.price && (
+                                  <View style={{flexDirection:'row', justifyContent:'space-between'}}>
+                                    <Text>Price:</Text>
+                                    <Text>₱ {item.price}</Text>
+                                  </View>
+                                )
+                            }
                             <TextInput
                                 label={'Payment'}
                                 mode='outlined'

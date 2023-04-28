@@ -45,7 +45,8 @@ const FreelancerProject = observer(({route}) => {
         try{
             const generateResponse = await generateTransaction({
                 price: generatePrice, 
-                offer_id: item._id
+                offer_id: item._id,
+                expected_Date: new Date()
                 })
             if (generateResponse.success){
                 AuthContext.donewithload();
@@ -260,17 +261,19 @@ const FreelancerProject = observer(({route}) => {
                                 <TextInput
                                     label="Your Offer Price"
                                     mode='outlined'
-                                    placeholder={`₱ ${item.price}`}
+                                    value={`${item.price}`}
                                     editable={false}
                                     disabled={true}
+                                    left={<TextInput.Icon icon='currency-php' color='dimgrey'/>}
                                 />
                             }
                             <TextInput
                                 label="Your Transaction Price"
                                 mode='outlined'
-                                placeholder='₱ 0,000.00'
+                                placeholder='0,000.00'
                                 keyboardType='numeric'
                                 onChangeText={(text) => setgeneratePrice(text)}
+                                left={<TextInput.Icon icon='currency-php' color='dimgrey'/>}
                             />
                         </Card.Content>
                         <Card.Actions>

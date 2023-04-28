@@ -68,6 +68,7 @@ const FreelancerMessage = observer(({route}) => {
         try{
             AuthContext.letmeload();
             const chatresponse = await getChat({offerId: offer_id, userId: receiver, inquiryId: inquiry_id});
+            console.log(chatresponse)
             if(chatresponse.success){
                 if(chatresponse.isChat !== undefined){
                     setReceiverProfile(chatresponse.isChat.users[0]);
@@ -77,7 +78,7 @@ const FreelancerMessage = observer(({route}) => {
                     if(messageresponse.length > 0){
                         setMessagesCollection(messageresponse);
                     }else{
-                        alert("An Error has Occured");
+                        ToastAndroid.show('No Messages', ToastAndroid.SHORT);
                     }
                 }else if(chatresponse.FullChat !== undefined){
                     console.log("Empty for now!");

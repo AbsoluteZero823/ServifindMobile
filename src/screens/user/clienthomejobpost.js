@@ -101,6 +101,8 @@ const ClientSingleJobPosts = observer(({route}) => {
         AuthContext.donewithload();
     }
 
+    
+
     const [refreshing, setRefreshing] = useState(false);
 
     const onRefresh = useCallback(() => {
@@ -175,7 +177,10 @@ const ClientSingleJobPosts = observer(({route}) => {
                                                     (item.transactions[0]?.isPaid && item.transactions[0]?.isRated === "false" && item.transactions[0]?.reportedBy.client === "false") &&
                                                     <Menu.Item onPress={() => navigation.navigate('ClientCompleteOffer',item)} title="Rate/Report"/>
                                                 }
-                                                <Menu.Item onPress={() => setMenuCollection({...menucollection, [item._id]: !menucollection[item._id]})} title="Cancel" />
+                                                {
+                                                    !item.transactions[0]?.isPaid &&
+                                                    <Menu.Item onPress={() => setMenuCollection({...menucollection, [item._id]: !menucollection[item._id]})} title="Cancel" />
+                                                }
                                             </Menu>
                                             :
                                             <IconButton 

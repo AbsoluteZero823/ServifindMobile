@@ -1,7 +1,7 @@
 import axios from 'axios';
 import AuthStore from '../src/models/authentication';
 
-export const URL = 'https://servifind-backend-exy1.onrender.com';
+export const URL = 'http://192.168.45.99:4002';
 
 const API_URL=`${URL}/api/v1`;
 
