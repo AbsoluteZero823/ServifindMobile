@@ -68,7 +68,7 @@ const LoginPage = observer(() => {
                 AuthContext.donewithload();
             }else{
                 AuthContext.donewithload();
-                alert(response.messasge);
+                alert(response.message);
             }
         }
     }
