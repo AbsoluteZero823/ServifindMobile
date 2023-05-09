@@ -29,7 +29,6 @@ export const UserDrawer = (props) => {
         return;
       }
       const response = await freelancerstatus();
-      console.log(response)
       if (!response.success) {
         alert(response.errMessage);
         AuthContext.donewithload();

@@ -117,9 +117,8 @@ const ClientFreelancerRegistration = observer(({route}) => {
         try {
           const response = await registerasfreelancer(formData);
           if (response.success === true) {
-            alert(
-              "Your Account has been created, A confirmation link has been sent to your email account!."
-            );
+            console.log(response)
+            alert(response.message);
             freelancerstatus();
           } else {
             alert(response.errMessage);

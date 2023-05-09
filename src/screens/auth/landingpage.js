@@ -20,6 +20,7 @@ const Landingpage = observer(()=>{
             }
             const user = await AsyncStorage.getItem('userinfo');
             if(user){
+                UserContext.users = [];
                 UserContext.users.push(User.create(JSON.parse(user)));
             }
         }

@@ -147,7 +147,7 @@ const FreelancerHome = observer(() => {
                 Description: Description,
                 freelancer_id: FreelancerContext.data[0]._id,
                 priceStarts_At: price,
-                image: image
+                images: image
             });
             AuthContext.donewithload();
             setservicemodalvisibility(false);
