@@ -23,12 +23,11 @@ export const UserDrawer = (props) => {
     AuthContext.letmeload();
     try {
       const userEmail = UserContext.users[0].email;
-      if (!userEmail.endsWith('@tup.edu.ph') && !userEmail === 'zephyr@gmail.com') {
+      if (!userEmail.endsWith('@tup.edu.ph')) {
         alert('You must have an email address from @tup.edu.ph domain to use this feature');
         AuthContext.donewithload();
         return;
       }
-
       const response = await freelancerstatus();
       console.log(response)
       if (!response.success) {

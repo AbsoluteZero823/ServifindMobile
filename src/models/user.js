@@ -17,7 +17,7 @@ export const User = types.model('User', {
   createdAt: types.optional(types.string, 'Unknown'),
   isAdmin: types.optional(types.boolean, false),
   resetPasswordToken: types.maybeNull(types.string),
-  resetPasswordExpire: types.maybeNull(types.Date),
+  resetPasswordExpire: types.maybeNull(types.string),
 }).actions((self) => ({
     logout(){
         self._id = null;

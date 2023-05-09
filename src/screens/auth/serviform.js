@@ -189,15 +189,14 @@ const ServiForm = observer(() => {
         try{
             let name = firstName + ' ' + lastName;
             const response = await register(email, password, name, contact, gender, age, avatar);
+            console.log(response)
             if(response.success === true){
                 AuthContext.donewithload();
                 alert("Your Account has been created, A confirmation link has been sent to your email account!.");
                 reroute();
                 return (response);
-            }else if(response.success === false && response.error.statusCode){
-                setErrorCode(response.error.statusCode);
-                setErrorMessage(response.errMessage);
-                setVisible(true);
+            }else if(response.success === false && response.message){
+                alert(response.message)
             }
         }catch(error){
             console.log(error);

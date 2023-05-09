@@ -44,6 +44,7 @@ const LoginPage = observer(() => {
         }else{
             AuthContext.letmeload();
             const response = await login(email, password);
+            console.log(response)
             if (response.success === false && response.error) {
                 const errors = {};
                 errors.email = 'Check your Email Spelling and Try Again';
