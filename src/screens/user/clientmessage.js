@@ -116,7 +116,6 @@ const ClientMessage = observer(({route}) => {
         try{
             AuthContext.letmeload();
             const transactionresponse = await FetchTransactionbyOfferorInquiry({offer_id, inquiry_id});
-            console.log(transactionresponse)
             if(transactionresponse.success && transactionresponse.transaction.offer_id.offer_status === 'waiting'){
                 setbannervisibility(true);
                 settransactiondetails(transactionresponse.transaction);

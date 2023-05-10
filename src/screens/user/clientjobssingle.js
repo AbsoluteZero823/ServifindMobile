@@ -1,7 +1,7 @@
 import { observer } from 'mobx-react';
 import React, { useContext, useState } from 'react';
 import { View, TouchableOpacity, FlatList} from 'react-native';
-import { Button, Card, Text, Avatar, Divider, IconButton, Portal, Modal, TextInput} from 'react-native-paper';
+import { Button, Card, Text, Avatar, Divider, IconButton, Portal, Modal, TextInput, HelperText} from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import { createanInquiry, getChat, sendMessage } from '../../../services/apiendpoints';
 import { format } from 'date-fns';
@@ -17,10 +17,17 @@ const ClientSingleJob = observer(({route}) => {
     const [Inquirevisible, setInquirevisible] = useState(false);
     const hideModal = () => {setmainVisible(false), navigation.goBack()};
 
+    const [errors, seterrors] = useState({});
+
     /**
     * Send an Inquiry to Freelancer and set visibility to
     */
     async function sendInquiry() {
+        if(!Inquirevalue){
+            seterrors({Inquirevalue: 'Please enter an Inquiry Message'})
+            console.log(errors.Inquirevalue)
+            return;
+        };
         AuthContext.letmeload();
         let body = {};
         body.instruction = Inquirevalue;
@@ -156,7 +163,11 @@ const ClientSingleJob = observer(({route}) => {
                         dense={true}
                         onChangeText={(text) => setInquirevalue(text)}
                         right={<TextInput.Icon icon='send' iconColor='#9c6f6f' onPress={()=>{sendInquiry()}}/>}
+                        error={errors.Inquirevalue}
                     />
+                    <HelperText type='error' visible={errors.Inquirevalue}>
+                        {errors.Inquirevalue}
+                    </HelperText>
                 </Card.Content>
             </Card>
         </Modal>

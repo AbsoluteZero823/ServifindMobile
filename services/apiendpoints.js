@@ -2,6 +2,7 @@ import axios from 'axios';
 import AuthStore from '../src/models/authentication';
 
 export const URL = 'https://servifind-app.onrender.com';
+// export const URL = 'http://192.168.176.99:4002';
 
 const API_URL=`${URL}/api/v1`;
 
@@ -62,6 +63,17 @@ export async function register(email, password, name, contact, gender, age, avat
     return response.data;
   }catch(error){
     return error.response.data;
+  }
+}
+
+export async function initialasfreelancer(props){
+  try{
+    console.log(props)
+    const freelancerresponse = await axios.post(`${API_URL}/freelancers/initial/register`, props);
+    console.log(freelancerresponse)
+    return freelancerresponse.data;
+  }catch(error){
+    return error.response.data
   }
 }
 

@@ -181,6 +181,8 @@ const ClientCompleteOffer = observer(({route}) => {
         }
     }
 
+    console.log(item.transactions[0]?.offer_id?.service_id?.freelancer_id?.qrCode.url);
+
     return (
         <Portal>
             <Loading/>
@@ -257,9 +259,12 @@ const ClientCompleteOffer = observer(({route}) => {
                                     segmentedvalue === 'gcash' ? 
                                     <>
                                     <Image
-                                        source={{uri: item.service_id.freelancer_id.qrCode.url}}
+                                        source={{uri: (item.service_id?.freelancer_id?.qrCode?.url || item.transactions[0]?.offer_id?.service_id?.freelancer_id?.qrCode.url)}}
                                         style={{height: 300, width: 300, borderRadius: 10, marginVertical: 10}}
                                         />
+                                        <Text variant='headlineSmall' style={{alignSelf:'center', textAlign:'center'}}>
+                                            GCASH NUMBER: {item.service_id?.freelancer_id?.gcash_num || item.transactions[0]?.offer_id?.service_id?.freelancer_id?.gcash_num}
+                                        </Text>
                                     <TextInput
                                         label='GCash Receipt'
                                         mode='outlined'

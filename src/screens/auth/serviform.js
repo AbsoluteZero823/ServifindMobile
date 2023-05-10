@@ -1,11 +1,11 @@
 import * as ImagePicker from 'expo-image-picker';
 import React, { useState, useContext } from 'react';
 import { ScrollView, View} from 'react-native';
-import { Button, Card, Text, RadioButton, TextInput, HelperText, SegmentedButtons, Portal, Modal, Menu, IconButton } from 'react-native-paper';
+import { Button, Card, Text, RadioButton, TextInput, HelperText, SegmentedButtons, Portal, Modal } from 'react-native-paper';
 import { observer } from 'mobx-react';
 import Error from '../../components/err/error';
 import styles from '../../components/authentication/authentication.css';
-import { login, register, registerasfreelancer } from '../../../services/apiendpoints';
+import { initialasfreelancer, register } from '../../../services/apiendpoints';
 import { useNavigation } from '@react-navigation/native';
 import Loading from '../../components/loading';
 import AuthStore from '../../models/authentication';
@@ -209,9 +209,10 @@ const ServiForm = observer(() => {
     }
 
     async function registermeasafreelancer(){
-        const userinfo = await registerClient();
+        AuthContext.letmeload();
+        let name = firstName + ' ' + lastName;
+        const userinfo = await register(email, password, name, contact, gender, age, avatar);
         if(userinfo.success){
-            AuthContext.letmeload();
             try{
                 const formData = new FormData();
                 formData.append("gcash_name", gcash_name);
@@ -221,20 +222,21 @@ const ServiForm = observer(() => {
                 formData.append("resume", resumePDF);
                 formData.append("course", course);
                 formData.append("user_id", userinfo.user._id);
-                const response = await registerasfreelancer(formData);
-                if (response.success === true) {
-                    alert(
-                    "Your Account has been created, A confirmation link has been sent to your email account!."
-                    );
-                    AuthContext.donewithload();
-                    reroute();
+                const response = await initialasfreelancer(formData);
+                console.log(response)
+                if (response.success) {
+                    console.log(response)
+                    alert(response.message);
                 } else {
-                    alert(response.errMessage);
+                    alert(response.message);
                 }
             }catch(error){
                 AuthContext.donewithload();
                 console.log(error);
             }
+            AuthContext.donewithload();
+        }else if(response.success === false && response.message){
+            alert(response.message)
             AuthContext.donewithload();
         }
     }
