@@ -16,9 +16,6 @@ const ClientCompleteOffer = observer(({route}) => {
     const AuthContext = useContext(AuthStore);
     const navigation = useNavigation();
     const item = route.params;
-
-    
-
     const [segmentedvalue, setsegmentedValue] = useState('cash');
     const [price, setprice] = useState('');
     const [gcashreceipt, setgcashreceipt] = useState();
@@ -209,14 +206,11 @@ const ClientCompleteOffer = observer(({route}) => {
                         <Card.Title title="Freelancer Payment Info" subtitle="Pay your Freelancer" subtitleStyle={{color:'dimgrey'}}/>
                         <Card.Content>
                             {
-                                item.transactions[0]?.service_id?.priceStarts_At &&
-                                <TextInput
-                                label='Their Service Starts At'
-                                mode='outlined'
-                                editable={false}
-                                value={item.transactions[0]?.service_id?.priceStarts_At}
-                                left={<TextInput.Icon icon='currency-php' color='dimgrey'/>}
-                            />
+                                item.transactions[0]?.offer_id?.price &&
+                                <View style={{flexDirection:'row', justifyContent:'space-between'}}>
+                                    <Text>Price:</Text>
+                                    <Text>₱ {item.transactions[0]?.offer_id?.price}</Text>
+                                </View>
                             }
                             {
                                  // check the type of item.price

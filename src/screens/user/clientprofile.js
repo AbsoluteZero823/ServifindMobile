@@ -406,7 +406,7 @@ const ClientProfile = observer((props) => {
                             renderItem={({item}) => 
                                 <Card style={{borderWidth:1, borderColor:'green', minWidth: 250}}>
                                     <Card.Title 
-                                        title={item.offer_id.service_id.title} 
+                                        title={item.offer_id.service_id.title || item.offer_id.service_id.name} 
                                         subtitle={item.isPaid ? "Paid" : "Not Paid"} 
                                         subtitleStyle={{color:'green'}}
                                         left={()=><Avatar.Image source={{ uri:item.offer_id.offered_by.avatar.url }} size={50} />}

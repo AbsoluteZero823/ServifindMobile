@@ -79,9 +79,6 @@ const ClientChat = observer(() => {
                     inquiry_id: item.inquiry_id
                     })}>
                     <View style={{flexDirection:'row', marginHorizontal: 4, marginVertical: 8}}>
-                        {
-                            console.log(item)
-                        }
                         <Avatar.Image source={{uri: item.users[1].avatar.url}} size={60}/>
                         <View style={{marginHorizontal: 4, alignSelf: 'center'}}>
                             <Text variant='titleMedium' style={{color:'#9c6f6f'}}>{item.chatName}</Text>

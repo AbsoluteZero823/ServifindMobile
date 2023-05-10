@@ -8,9 +8,11 @@ import { format } from 'date-fns';
 import Loading from '../../components/loading';
 import UserStore from '../../models/user';
 import io from 'socket.io-client';
+import { useNavigation } from '@react-navigation/native';
 
 const ClientMessage = observer(({route}) => {
     const { offer_id, receiver, inquiry_id } = route.params;
+    const navigation = useNavigation();
     const UserContext = useContext(UserStore);
     const AuthContext = useContext(AuthStore);
 
@@ -108,14 +110,20 @@ const ClientMessage = observer(({route}) => {
 
     const [transactiondetails, settransactiondetails] = useState();
     const [bannervisibility, setbannervisibility] = useState(false);
+    const [ongoingtransaction, setOngoingTransaction] = useState(false);
 
     async function FetchOfferAndTransaction(){
         try{
             AuthContext.letmeload();
             const transactionresponse = await FetchTransactionbyOfferorInquiry({offer_id, inquiry_id});
+            console.log(transactionresponse)
             if(transactionresponse.success && transactionresponse.transaction.offer_id.offer_status === 'waiting'){
                 setbannervisibility(true);
                 settransactiondetails(transactionresponse.transaction);
+            }
+            if(transactionresponse.transaction.status === 'processing'){
+                settransactiondetails(transactionresponse.transaction);
+                setOngoingTransaction(true);
             }
             AuthContext.donewithload();
         }catch(error){
@@ -207,16 +215,37 @@ const ClientMessage = observer(({route}) => {
         {
             !bannervisibility && transactiondetails?.status === 'waiting' &&
             <Banner
-            visible={!bannervisibility}
-            actions={[
-                {
-                    label: 'Show',
-                    onPress: () => {setbannervisibility(true)},
-                },
-              ]}
-            >
-            <Text>Freelancer has an Active Offer</Text>
-        </Banner>
+                visible={!bannervisibility}
+                actions={[
+                    {
+                        label: 'Show',
+                        onPress: () => {setbannervisibility(true)},
+                    },
+                ]}
+                >
+                <Text>Freelancer has an Active Offer</Text>
+            </Banner>
+        }
+        {
+            ongoingtransaction &&
+            <Banner
+                visible={ongoingtransaction}
+                actions={[
+                    {
+                        label: "Confirm",
+                        onPress: () => {
+                            const details = {
+                                transactions: [
+                                    transactiondetails
+                                ]
+                            }
+                            transactiondetails && navigation.navigate('ClientCompleteOffer',details)
+                        }
+                    }
+                ]}
+                >
+                <Text>Complete Transaction?</Text>
+            </Banner>
         }
         <View style={{flex: 1}}>
             <FlatList

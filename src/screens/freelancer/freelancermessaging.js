@@ -10,7 +10,6 @@ import UserStore from '../../models/user';
 
 
 const FreelancerMessaging = observer(({route}) => {
-    const UserContext = useContext(UserStore);
     const ServiceContext = useContext(ServiceStore);
     const item = route.params;
 
@@ -58,6 +57,9 @@ const FreelancerMessaging = observer(({route}) => {
         }
     }
 
+    console.log(ServiceContext.services
+        .filter((service) => service.category._id === item.category._id));
+
     return (
         <Portal>
             <Modal visible={mainVisible} onDismiss={hideModal} contentContainerStyle={{marginHorizontal:10}}>
@@ -90,11 +92,11 @@ const FreelancerMessaging = observer(({route}) => {
                                 <List.Item
                                 key={service._id}
                                 onPress={() => {
-                                    setService(service.title);
+                                    setService(service.title || service.name);
                                     setServiceID(service._id);
                                     setServicesVisible(false);
                                 }}
-                                title={service.title}
+                                title={service.title || service.name}
                                 titleStyle={{ color: 'white' }}
                                 />
                             ))
