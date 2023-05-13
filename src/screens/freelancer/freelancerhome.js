@@ -371,8 +371,7 @@ const FreelancerHome = observer(() => {
                             textColor='#9c6f6f' 
                             style={{marginHorizontal:20}}
                             onPress={()=>
-                                // navigation.navigate('FreelancerServices')
-                                alert("In Development!")
+                                navigation.navigate('FreelancerServices')
                             }
                             >See All</Button>}
                     />
