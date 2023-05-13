@@ -19,15 +19,13 @@ import Freelancer from '../../models/freelancer';
 import { ServiceModel } from '../../models/service';
 
 const ClientHome = observer((props) => {
-  const navigation = useNavigation();
+    const navigation = useNavigation();
     const CategoryContext = useContext(CategoryStore);
     const [CategoryCollection, setCategoryCollection] = useState([]);
     const InquiryContext = useContext(InquiryStore);
     const [InquiryCollection, setInquiryCollection] = useState([]);
     const RequestContext = useContext(RequestStore);
-
     const AuthContext = useContext(AuthStore);
-
     const setAppbarTitle = props.params.props[0];
     const setActive = props.params.props[1];
     const setActiveCategory = props.params.props[3];
@@ -79,6 +77,7 @@ const ClientHome = observer((props) => {
         console.log(error);
         AuthContext.donewithload();
       }}
+
     useEffect(() => {
       getData();
     }, []);
@@ -109,7 +108,7 @@ const ClientHome = observer((props) => {
           </View>
           <View style={{flex: 4, padding:5}}>
             <Card style={[styles.cardStyle]}>
-              <Card.Title title={<Text variant='headlineSmall'>Your Job Posts</Text>} right={(props) => <Button mode='text' textColor='#9c6f6f' onPress={()=>(setActive('Jobs'), setAppbarTitle('Job Posting'),navigation.navigate('ClientJobPosting'))}>See all postings</Button>}/>
+              <Card.Title title={<Text variant='headlineSmall'>Your Job Posts</Text>} right={(props) => <Button mode='text' textColor='#9c6f6f' onPress={()=>(setActive('Jobs'), setAppbarTitle('Job Posting'),navigation.navigate('ClientJobPosting'))}>See all</Button>}/>
               <Card.Content style={{justifyContent:'center'}}>
               <FlatList
                 data={
@@ -153,7 +152,7 @@ const ClientHome = observer((props) => {
           </View>
           <View style={{flex:4, padding:5}}>
             <Card style={[styles.cardStyle]}>
-              <Card.Title title={<Text variant='headlineSmall'>Your Inquiries</Text>} right={(props) => <Button mode='text' textColor='#9c6f6f' onPress={()=>(alert("Coming Soon"))}>See all inquiries</Button>}/>
+              <Card.Title title={<Text variant='headlineSmall'>Your Inquiries</Text>} right={(props) => <Button mode='text' textColor='#9c6f6f' onPress={()=>(navigation.navigate("ClientInquiries"))}>See all</Button>}/>
               <Card.Content>
                 <SafeAreaView>
                   <FlatList

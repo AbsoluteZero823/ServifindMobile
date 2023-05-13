@@ -144,7 +144,7 @@ const FreelancerHome = observer(() => {
                 name: name,
                 category: category,
                 user: UserContext.users[0]._id,
-                Description: Description,
+                description: Description,
                 freelancer_id: FreelancerContext.data[0]._id,
                 priceStarts_At: price,
                 images: image

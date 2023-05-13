@@ -90,12 +90,10 @@ const ClientCompleteOffer = observer(({route}) => {
                     price: price,
                     expected_Date: new Date(),
                 })
-                console.log(completeresponse)
                 if (completeresponse.success){
-                    console.log(completeresponse.transaction);
                     settransactioninfo(completeresponse.transaction);
                     setappstate("Rate/Report");
-                    alert("Success");
+                    alert(completeresponse.message);
                     AuthContext.donewithload();
                 }else{
                     alert("Error");
@@ -116,7 +114,7 @@ const ClientCompleteOffer = observer(({route}) => {
             if (starrating === 0){
                 Errors.starrating = 'Please select a star rating'
             }
-            if (freelancerfeedback === undefined){
+            if (typeof freelancerfeedback === 'undefined'){
                 Errors.feedback = 'Please fill in the feedback form'
             }
             if (Object.keys(Errors).length > 0){
@@ -125,7 +123,7 @@ const ClientCompleteOffer = observer(({route}) => {
                 const feedbackresponse = await ratefreelancer({
                     rating: starrating,
                     comment: freelancerfeedback,
-                    service_id: item.service_id._id,
+                    service_id: item.service_id?._id || item.transactions[0].offer_id.service_id._id,
                     transaction_id: transactioninfo._id
                 });
                 if (feedbackresponse.success){
@@ -138,6 +136,7 @@ const ClientCompleteOffer = observer(({route}) => {
                     alert(feedbackresponse.message);
                 }
             }
+            AuthContext.donewithload();
         }catch(error){
             AuthContext.donewithload();
             console.log(error);
@@ -147,7 +146,6 @@ const ClientCompleteOffer = observer(({route}) => {
     const [freelancerreason, setFreelancerReason] = useState();
     const [freelancerreport, setFreelancerReport] = useState();
     async function Reporthandler(){
-        AuthContext.letmeload();
         const Errors = {};
         try{
             if (freelancerreport === undefined){
@@ -159,6 +157,7 @@ const ClientCompleteOffer = observer(({route}) => {
             if (Object.keys(Errors).length > 0){
                 setValidationErrors(Errors);
             }else{
+                AuthContext.letmeload();
                 const reportresponse = await reportfreelancer({
                     _id: transactioninfo._id,
                     reason: freelancerreason,
@@ -174,14 +173,13 @@ const ClientCompleteOffer = observer(({route}) => {
                     alert(reportresponse.message);
 
                 }
+                AuthContext.donewithload();
             }
         }catch(error){
             AuthContext.donewithload();
             console.log(error);
         }
     }
-
-    console.log(item.transactions[0]?.offer_id?.service_id?.freelancer_id?.qrCode.url);
 
     return (
         <Portal>

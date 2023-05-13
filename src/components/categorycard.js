@@ -12,7 +12,8 @@ export default function CategoryCard(props){
     <TouchableOpacity onPress={()=>{
         setAppbarTitle('Jobs'),
         setActive('Jobs'),
-        activeCategory.push(props.category)
+        activeCategory.length = 0,
+        activeCategory.push(props.category),
         navigation.navigate('ClientJobs')
         }}>
         <Card style={{alignSelf:'center', minHeight: 100, maxHeight: 100, marginHorizontal:2.5, minWidth: 220, borderColor:'#9c6f6f', borderWidth:1}}>

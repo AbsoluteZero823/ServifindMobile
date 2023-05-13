@@ -122,7 +122,11 @@ const ClientMessage = observer(({route}) => {
             }
             if(transactionresponse.transaction.status === 'processing'){
                 settransactiondetails(transactionresponse.transaction);
-                setOngoingTransaction(true);
+                if(transactionresponse.transaction.offer_id.offer_status === "granted" && transactionresponse.transaction.isPaid === "false"){
+                    setOngoingTransaction(true);
+                }else{
+                    setOngoingTransaction(false);
+                }
             }
             AuthContext.donewithload();
         }catch(error){
@@ -179,10 +183,6 @@ const ClientMessage = observer(({route}) => {
     }
 
     const flatListRef = useRef();
-
-    useEffect(()=>{
-        console.log(transactiondetails)
-    },[])
 
     return (
         <>

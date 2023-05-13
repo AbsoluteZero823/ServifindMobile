@@ -14,6 +14,8 @@ import ClientSingleJobPosts from '../screens/user/clienthomejobpost';
 import ClientFreelancerRegistration from '../screens/user/clientfreelancerregistration';
 import ClientCompleteOffer from '../screens/user/clientcompleteoffer';
 import ClientMessage from '../screens/user/clientmessage';
+import ClientInquiries from '../screens/user/clientinquiries';
+import ClientInquiry from '../screens/user/clientinquiry';
 
 const ClientStack = createNativeStackNavigator();
 /**
@@ -26,6 +28,8 @@ export default function ClientNavigator(props) {
     <ClientStack.Navigator initialRouteName='ClientHome' screenOptions={{headerShown: false, animation:'slide_from_right', navigationBarHidden:true, statusBarTranslucent:true, statusBarStyle:'dark', contentStyle:{backgroundColor:'mistyrose'}}}>
       <ClientStack.Group>
         <ClientStack.Screen name="ClientHome" children={() => <ClientHome params={props} />}/>
+        <ClientStack.Screen name="ClientInquiries" component={ClientInquiries}/>
+        <ClientStack.Screen name="ClientInquiry" component={ClientInquiry}/>
         <ClientStack.Screen name="ClientPostaJob" component={ClientJobsRequest} options={{presentation:'transparentModal', contentStyle:{backgroundColor:'transparent'}}}/>
         <ClientStack.Screen name="ClientJobPosting" component={ClientHomePostings}/>
         <ClientStack.Screen name="ClientSingleJobPosts" component={ClientSingleJobPosts}/>
