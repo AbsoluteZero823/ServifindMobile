@@ -69,12 +69,12 @@ const ClientJobs = observer((props) => {
 
     useEffect(() => {
         setservicescollection(ServiceContext.services.filter((service) => {
-        const { title, user } = service;
-        // check if title or user name match the search query
+        const { name, user } = service;
+        // check if name or user name match the search query
         // Returns true if the filterby is services or Freelancers
         if (Filterby === 'Services' && Filterwith) {
-            const titleMatch = title?.toLowerCase().includes(Filterwith.toLowerCase());
-            return titleMatch;
+            const nameMatch = name?.toLowerCase().includes(Filterwith.toLowerCase());
+            return nameMatch;
         // Returns true if the user is a user name or user name
         } else if (Filterby === 'Freelancers' && Filterwith) {
             const nameMatch = user?.name?.toLowerCase().includes(Filterwith.toLowerCase());
@@ -110,7 +110,7 @@ const ClientJobs = observer((props) => {
                     <TouchableOpacity onPress={()=>navigation.navigate('ClientSingleJob',{item: item})}>
                         <Card key={item._id} style={{marginVertical:10, width: 300}}>
                             <Card.Cover source={{ uri: (item.images?.url || item.image || 'https://res.cloudinary.com/dawhmjhu1/image/upload/v1651110818/shelter/avatar_rk4v2w.jpg') }}/>
-                            <Card.Title title={(item.title || item.name)}/>
+                            <Card.Title title={(item.name)}/>
                             <Card.Content>
                             <View style={{flexDirection:'row', justifyContent:'space-between', marginBottom:10}}>
                                 <View style={{flexDirection:'row'}}>

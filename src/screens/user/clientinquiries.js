@@ -105,7 +105,7 @@ const ClientInquiries = observer(() => {
                     let item = inquiries.item
                     return (
                         <TouchableOpacity onPress={() => {
-                            alert("Big Wow")
+                            navigation.navigate("ClientChat");
                         }}
                         >
                             <Card style={{ marginHorizontal: 4, marginBottom: 4, borderColor: item.status === "pending" ? '#9c6f6f' : item.status === "granted" ? 'green' : 'red', borderWidth: 1 }}>

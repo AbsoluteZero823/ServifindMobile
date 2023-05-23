@@ -48,7 +48,7 @@ const FreelancerService = observer(({route}) => {
                             horizontal={serviceratings.length > 1 ? true : false}
                             showsHorizontalScrollIndicator={false}
                             renderItem={({item})=>
-                                <Card key={item._id} style={{borderWidth:1, borderColor: '#9c6f6f', minWidth: 250, maxWidth: 300}}>
+                                <Card key={item._id} style={{borderWidth:1, borderColor: '#9c6f6f', minWidth: 250, maxWidth: 300, marginHorizontal:2}}>
                                     <Card.Title 
                                         title={item.user.name} 
                                         subtitle={item.user.email}

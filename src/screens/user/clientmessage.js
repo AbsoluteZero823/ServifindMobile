@@ -92,7 +92,7 @@ const ClientMessage = observer(({route}) => {
         try{
             Keyboard.dismiss();
             AuthContext.letmeload();
-            const sendmessageresponse = await sendMessage({content: content, chatId: chatId});
+            const sendmessageresponse = await sendMessage({content: content.trim(), chatId: chatId});
             if(sendmessageresponse.success){
                 socket.emit('new message',sendmessageresponse.message);
                 setContent('');
@@ -119,8 +119,7 @@ const ClientMessage = observer(({route}) => {
             if(transactionresponse.success && transactionresponse.transaction.offer_id.offer_status === 'waiting'){
                 setbannervisibility(true);
                 settransactiondetails(transactionresponse.transaction);
-            }
-            if(transactionresponse.transaction.status === 'processing'){
+            }else if(transactionresponse.transaction?.status === 'processing'){
                 settransactiondetails(transactionresponse.transaction);
                 if(transactionresponse.transaction.offer_id.offer_status === "granted" && transactionresponse.transaction.isPaid === "false"){
                     setOngoingTransaction(true);

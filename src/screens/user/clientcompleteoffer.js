@@ -123,8 +123,8 @@ const ClientCompleteOffer = observer(({route}) => {
                 const feedbackresponse = await ratefreelancer({
                     rating: starrating,
                     comment: freelancerfeedback,
-                    service_id: item.service_id?._id || item.transactions[0].offer_id.service_id._id,
-                    transaction_id: transactioninfo._id
+                    service_id: (item.service_id?._id || item.transactions[0].offer_id.service_id._id),
+                    transaction_id: (transactioninfo?._id || item.transactions[0]?._id)
                 });
                 if (feedbackresponse.success){
                     AuthContext.donewithload();
@@ -158,11 +158,12 @@ const ClientCompleteOffer = observer(({route}) => {
                 setValidationErrors(Errors);
             }else{
                 AuthContext.letmeload();
+                console.log(item.transactions[0])
                 const reportresponse = await reportfreelancer({
-                    _id: transactioninfo._id,
+                    _id: (item.service_id?._id || item.transactions[0].offer_id.service_id._id),
                     reason: freelancerreason,
                     description: freelancerreport,
-                    user_reported: item.offered_by._id
+                    user_reported: (item.offered_by?._id || item.transactions[0].offer_id?.offered_by)
                 });
                 if(reportresponse.success){
                     AuthContext.donewithload();

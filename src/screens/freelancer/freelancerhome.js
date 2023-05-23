@@ -384,7 +384,7 @@ const FreelancerHome = observer(() => {
                         <TouchableOpacity onPress={()=>navigation.navigate('FreelancerService',item._id)}>
                             <Card key={item._id} style={{borderColor:'#9c6f6f', borderWidth:1, minWidth:300, maxWidth: 300, minHeight:150, marginHorizontal: 5}}>
                                 <Card.Title 
-                                    title={item.title || item.name} 
+                                    title={item.name} 
                                     titleStyle={{color:'#9c6f6f'}} 
                                     subtitle={item.category.name}
                                     subtitleStyle={{color:'dimgrey'}}

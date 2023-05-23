@@ -8,7 +8,7 @@ import Loading from '../../components/loading';
 
 import UserStore from '../../models/user';
 import AuthStore from '../../models/authentication';
-import { updatePassword, updateProfile, getmyReports, getmyTransactions} from '../../../services/apiendpoints';
+import { updatePassword, updateProfile, getmyTransactions} from '../../../services/apiendpoints';
 import { useEffect } from 'react';
 
 const ClientProfile = observer((props) => {
@@ -17,6 +17,10 @@ const ClientProfile = observer((props) => {
     const UserContext = useContext(UserStore);
     const AuthContext = useContext(AuthStore);
     const [validationErrors, setvalidationErrors] = useState({});
+
+    const [age, setAge] = useState(UserContext.users[0].UserDetails.age);
+    const [contact, setContact] = useState(UserContext.users[0].UserDetails.contact);
+    const [gender, setGender] = useState(UserContext.users[0].UserDetails.gender);
     
     /**
     * Handles the request to update a user's profile. This is called when the user clicks the update
@@ -37,10 +41,14 @@ const ClientProfile = observer((props) => {
             if (Object.keys(errors).length > 0) {
                 setvalidationErrors(errors);
             } else {
-            const response = await updateProfile(UserContext.users[0].ProfileDetails);
+            const response = await updateProfile({name: UserContext.users[0].UserDetails.name, age, gender, contact});
+            console.log(response)
             // if profile was successfully updated
             if (response.success) {
                 setisEditing(false);
+                UserContext.users[0].setGender(gender);
+                UserContext.users[0].setAge(age);
+                UserContext.users[0].setContacts(contact);
                 alert("Profile Updated Successfully");
             }else{
                 alert(response);
@@ -178,33 +186,17 @@ const ClientProfile = observer((props) => {
         
     }
 
-    const [reports_collection, set_reports_collection] = useState([]);
-    /**
-    * Gets all reports from My Mentat and stores them in Reports collection
-    */
-    async function getAllmyReports(){
-        AuthContext.letmeload();
-        try{
-            const report_response = await getmyReports();
-            // if report_response. success true set the report collection to the report collection
-            if(report_response.success){
-                AuthContext.donewithload();
-                set_reports_collection(report_response.reports);
-            }else{
-                AuthContext.donewithload();
-                alert(report_response.message);
-            }
-        }catch(error){
-            AuthContext.donewithload();
-            console.log(error);
-        }
-        
-    }
-
     useEffect(()=>{
         getTransactions();
-        getAllmyReports();
     },[])
+
+    function edittoggle(){
+        setisEditing(!isEditing)
+    }
+    function canceledit(){
+        setisEditing(false)
+        alert("Changes not saved!")
+    }
 
     return (
         <ScrollView style={styles.container}>
@@ -230,7 +222,7 @@ const ClientProfile = observer((props) => {
                         style={{textAlign:'center'}}
                         right={(props) => 
                             <View>
-                                <TouchableOpacity style={{position:'absolute', top:-25, left:-40}} onPress={()=>setisEditing(!isEditing)}>
+                                <TouchableOpacity style={{position:'absolute', top:-25, left:-40}} onPress={()=>{isEditing ? canceledit() : edittoggle()}}>
                                     <Avatar.Icon icon={isEditing ? 'window-close' : 'pencil'} size={28} color='white' style={{backgroundColor: isEditing ? 'maroon' : '#9c6f6f'}}/>
                                 </TouchableOpacity>
                                 {
@@ -249,8 +241,8 @@ const ClientProfile = observer((props) => {
                             isEditing ? 
                             <View>
                             <RadioButton.Group
-                                onValueChange={(value) => UserContext.users[0].setGender(value)}
-                                value={UserContext.users[0]?.UserDetails?.gender}
+                                onValueChange={(value) => setGender(value)}
+                                value={gender}
                                 >
                                 <View style={{flexDirection:'row', justifyContent:'space-between'}}>
                                 <Text variant="titleLarge"
@@ -276,8 +268,8 @@ const ClientProfile = observer((props) => {
                                 label='Age'
                                 dense={true}
                                 placeholder='Age'
-                                value={UserContext.users[0]?.UserDetails?.age.toString()}
-                                onChangeText={(text) => (setvalidationErrors(''), text ? UserContext.users[0].setAge(text) : UserContext.users[0].setAge('0'))}
+                                value={age.toString()}
+                                onChangeText={(text) => (setAge(text))}
                                 maxLength={3}
                                 keyboardType='numeric'
                                 error={validationErrors.age}
@@ -290,8 +282,8 @@ const ClientProfile = observer((props) => {
                                 label='Contact'
                                 dense={true}
                                 placeholder='Contact'
-                                value={UserContext.users[0]?.UserDetails?.contact}
-                                onChangeText={(text) => (setvalidationErrors(''), UserContext.users[0].setContacts(text))}
+                                value={contact}
+                                onChangeText={(text) => (setContact(text))}
                                 maxLength={11}
                                 keyboardType='numeric'
                                 error={validationErrors.contact}
@@ -404,7 +396,7 @@ const ClientProfile = observer((props) => {
                             data={transaction_collection}
                             horizontal={transaction_collection.length > 1 ? true : false}
                             renderItem={({item}) => 
-                                <Card style={{borderWidth:1, borderColor:'green', minWidth: 250}}>
+                                <Card style={{borderWidth:1, borderColor:'green', minWidth: 250, marginHorizontal:2}}>
                                     <Card.Title 
                                         title={item.offer_id.service_id.title || item.offer_id.service_id.name} 
                                         subtitle={item.isPaid ? "Paid" : "Not Paid"} 

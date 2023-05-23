@@ -83,10 +83,9 @@ const FreelancerProjects = observer(() => {
                     }
                     if (searchquery) {
                         return (
-                            offer.request_id.requested_by.name.toLowerCase().includes(searchquery?.toLowerCase()) ||
-                            offer.request_id.description.toLowerCase().includes(searchquery?.toLowerCase()) ||
-                            offer.service_id.category.name.toLowerCase().includes(searchquery?.toLowerCase()) ||
-                            offer.service_id.title.toLowerCase().includes(searchquery?.toLowerCase()) ||
+                            offer.inquiry_id?.customer.name.toLowerCase().includes(searchquery?.toLowerCase()) ||
+                            offer.service_id?.category.name.toLowerCase().includes(searchquery?.toLowerCase()) ||
+                            offer.service_id?.name.toLowerCase().includes(searchquery?.toLowerCase()) ||
                             offer.description.toLowerCase().includes(searchquery?.toLowerCase())
                         );
                     } else {
@@ -117,10 +116,10 @@ const FreelancerProjects = observer(() => {
                         navigation.navigate('FreelancerProject', item);
                     }}>
                     {
-                        item.request_id ? 
+                        item.inquiry_id ? 
                         <Card key={item._id} style={{minWidth:300, maxWidth:350, marginVertical:2, borderColor: item.offer_status === 'waiting' ? '#9c6f6f' : item.offer_status === 'granted' ? 'green' : 'black', borderWidth: 1}}>
                             <Card.Title 
-                                title={item.request_id.requested_by.name} 
+                                title={item.inquiry_id.requested_by.name} 
                                 subtitle={
                                     <Text style={{
                                         color: item.offer_status === 'waiting' ? '#9c6f6f' : item.offer_status === 'granted' ? 'green' : 'red'
@@ -135,10 +134,10 @@ const FreelancerProjects = observer(() => {
                                         item.offer_status
                                         }
                                     </Text>}
-                                left={()=><Avatar.Image size={40} source={{uri: item.request_id.requested_by.avatar.url}}/>}
+                                left={()=><Avatar.Image size={40} source={{uri: item.inquiry_id.requested_by.avatar.url}}/>}
                                 />
                             <Card.Content>
-                                <Infoline label="Requested:" value={item.request_id.description} />
+                                <Infoline label="Requested:" value={item.inquiry_id.description} />
                                 <Infoline label="Category:" value={item.service_id.category.name} />
                                 <Infoline label="Service:" value={item.service_id.title} />
                                 <Infoline label="Price:" value={`₱ ${item.transactions[0]?.price || 'Not Set'}`} />

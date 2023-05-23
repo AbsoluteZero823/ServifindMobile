@@ -40,8 +40,7 @@ const ClientJobsRequest = observer(() => {
             const requestresponse = await createmyRequest({category, description});
             // This function is called when the request is successful.
             if(requestresponse.success){
-                setmainVisible(false);
-                const request = requestresponse.addeddata;
+                const request = requestresponse.request;
                 RequestContext.requests.push(Request.create({
                     _id: request._id,
                     category: Category.create(request.category),
@@ -51,6 +50,7 @@ const ClientJobsRequest = observer(() => {
                     requested_by: User.create(request.requested_by),
                 }));
                 navigation.navigate('ClientHome');
+                setmainVisible(false);
                 alert('Job Request Uploaded Successfully');
             }else{
                 alert('Something Went Wrong!');
