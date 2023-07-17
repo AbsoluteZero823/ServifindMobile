@@ -34,7 +34,10 @@ const FreelancerMessageTransactionOfferModal = ({route}) => {
     }
 
     useEffect(()=>{
-        fetchInquiry();
+        console.log("route.params", route.params);
+        if(route.params.inquiry_id){
+            fetchInquiry();
+        }
     },[]);
 
     async function fetchInquiry(){

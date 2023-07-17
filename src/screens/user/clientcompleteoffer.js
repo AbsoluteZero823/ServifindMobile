@@ -1,8 +1,8 @@
 import * as ImagePicker from 'expo-image-picker';
 import { observer } from 'mobx-react';
 import React, { useContext, useState } from 'react';
-import { View, StyleSheet, ImageBackground, Image} from 'react-native';
-import { Button, Card, Text, Avatar, Portal, Modal, TextInput, SegmentedButtons, HelperText, IconButton} from 'react-native-paper';
+import { View, Image, TouchableWithoutFeedback } from 'react-native';
+import { Button, Card, Text, Portal, Modal, TextInput, SegmentedButtons, HelperText, IconButton} from 'react-native-paper';
 
 import { completeanOffer, ratefreelancer, reportfreelancer } from '../../../services/apiendpoints';
 
@@ -21,6 +21,13 @@ const ClientCompleteOffer = observer(({route}) => {
     const [gcashreceipt, setgcashreceipt] = useState();
 
     const [appstate, setappstate] = useState('');
+
+    const [isModalVisible, setModalVisible] = useState(false);
+
+    const toggleModal = () => {
+      setModalVisible(!isModalVisible);
+      setmainVisible(!mainVisible);
+    };
 
     useEffect(()=>{
         if (item.transactions[0]?.isPaid === "true") {
@@ -184,6 +191,20 @@ const ClientCompleteOffer = observer(({route}) => {
 
     return (
         <Portal>
+            <Modal visible={isModalVisible} onDismiss={toggleModal} style={{height:"100%"}}>
+                <Card style={{ height: "100%" }} onPress={toggleModal}>
+                    <Card.Cover
+                    source={{
+                        uri:
+                        item.service_id?.freelancer_id?.qrCode?.url ||
+                        item.transactions[0]?.offer_id?.service_id?.freelancer_id?.qrCode.url,
+                    }}
+                    resizeMode="contain"
+                    resizeMethod="resize"
+                    style={{ height: "100%" }}
+                    />
+                </Card>
+            </Modal>
             <Loading/>
             <Modal visible={mainVisible} onDismiss={hideModal} contentContainerStyle={{marginHorizontal:10}}>
                 {
@@ -257,10 +278,12 @@ const ClientCompleteOffer = observer(({route}) => {
                                 {
                                     segmentedvalue === 'gcash' ? 
                                     <>
-                                    <Image
+                                    <TouchableWithoutFeedback onPress={toggleModal}>
+                                        <Image
                                         source={{uri: (item.service_id?.freelancer_id?.qrCode?.url || item.transactions[0]?.offer_id?.service_id?.freelancer_id?.qrCode.url)}}
-                                        style={{height: 300, width: 300, borderRadius: 10, marginVertical: 10}}
+                                        style={{ height: 300, width: 300, borderRadius: 10, marginVertical: 10 }}
                                         />
+                                    </TouchableWithoutFeedback>
                                         <Text variant='headlineSmall' style={{alignSelf:'center', textAlign:'center'}}>
                                             GCASH NUMBER: {item.service_id?.freelancer_id?.gcash_num || item.transactions[0]?.offer_id?.service_id?.freelancer_id?.gcash_num}
                                         </Text>
