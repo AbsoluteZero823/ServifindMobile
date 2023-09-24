@@ -94,6 +94,8 @@ const ClientCompleteOffer = observer(({route}) => {
                 AuthContext.letmeload();
                 const completeresponse = await completeanOffer({
                     offer_id: item._id,
+                    trans_id:item.transactions[0]?._id || item._id,
+                    workCompleted: item.transactions[0].transaction_done.workCompleted || item.transaction_done.workCompleted,
                     price: price,
                     expected_Date: new Date(),
                 })

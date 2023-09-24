@@ -40,13 +40,21 @@ const FreelancerProjects = observer(() => {
             const response = await myOffers();
             if(response.success){
                 OfferContext.offers = [];
-                console.log(response.myoffers);
+                // console.log(response.myoffers);
+             
                 response.myoffers.map((offer)=>{
                     OfferContext.offers.push(offer);
-                })
+                    
+                })  
+                // console.log(JSON.stringify(OfferContext.offers[0].inquiry_id, null, 2))
+                const numberOfItems = OfferContext.offers.length;
+console.log(`The list contains ${numberOfItems} items.`);
+            }
+            else{
+                console.log('awit')
             }
         }catch(error){
-            console.log(error);
+            console.log('awits');
         }
         AuthContext.donewithload();
     }
@@ -112,14 +120,17 @@ const FreelancerProjects = observer(() => {
                 }
                 showsVerticalScrollIndicator={false}
                 renderItem={({item}) => 
+                
                     <TouchableOpacity onPress={()=>{
                         navigation.navigate('FreelancerProject', item);
                     }}>
                     {
+                       
                         item.inquiry_id ? 
                         <Card key={item._id} style={{minWidth:300, maxWidth:350, marginVertical:2, borderColor: item.offer_status === 'waiting' ? '#9c6f6f' : item.offer_status === 'granted' ? 'green' : 'black', borderWidth: 1}}>
+                            {/* balik */}
                             <Card.Title 
-                                title={item.inquiry_id.requested_by.name} 
+                                title={item.inquiry_id?.customer.name || item.request_id?.requested_by.name} 
                                 subtitle={
                                     <Text style={{
                                         color: item.offer_status === 'waiting' ? '#9c6f6f' : item.offer_status === 'granted' ? 'green' : 'red'
@@ -134,11 +145,12 @@ const FreelancerProjects = observer(() => {
                                         item.offer_status
                                         }
                                     </Text>}
-                                left={()=><Avatar.Image size={40} source={{uri: item.inquiry_id.requested_by.avatar.url}}/>}
+                                left={()=><Avatar.Image size={40} source={{uri: item.inquiry_id?.customer.avatar.url}}/>}
                                 />
                             <Card.Content>
                                 <Infoline label="Requested:" value={item.inquiry_id.description} />
                                 <Infoline label="Category:" value={item.service_id.category.name} />
+                                <Infoline label="Category:" value='try' />
                                 <Infoline label="Service:" value={item.service_id.title} />
                                 <Infoline label="Price:" value={`₱ ${item.transactions[0]?.price || 'Not Set'}`} />
                                 <Infoline label="Paid:" value={item.transactions.length > 0 ? (
@@ -154,14 +166,26 @@ const FreelancerProjects = observer(() => {
                         </Card>
                         :
                         <Card key={item._id} style={{minWidth:300, maxWidth:350, marginVertical:2, borderColor: item.offer_status === 'waiting' ? '#9c6f6f' : item.offer_status === 'granted' ? 'green' : 'black', borderWidth: 1}}>
-                            <Card.Title 
-                                title={item.inquiry_id.customer.name} 
-                                subtitle={<Text style={{color: item.offer_status === 'waiting' ? '#9c6f6f' : item.offer_status === 'granted' ? 'green' : 'red'}}>{item.offer_status}</Text>}
-                                left={()=><Avatar.Image size={40} source={{uri: item.inquiry_id.customer.avatar.url}}/>}
-                                />
+                          
+                                <Card.Title 
+    // title={item.inquiry_id.customer.name} 
+    subtitle={
+        <Text style={{
+            color: item.offer_status === 'waiting' ? '#9c6f6f' : item.offer_status === 'granted' ? 'green' : 'red'
+        }}>
+            {item.offer_status}
+        </Text>
+    }
+    left={() => {
+        // console.log(JSON.stringify(item, null, 2));
+        return <Avatar.Image size={40} source={{uri: "https://res.cloudinary.com/dawhmjhu1/image/upload/v1694619036/servifind/freelancer/qrcode/hpt4mqko6opgwml0zy5o.png"}}/>;
+    }}
+/>
+
                             <Card.Content>
-                                <Infoline label="Inquiry:" value={item.inquiry_id.instruction} />
+                                <Infoline label="Inquiry:" value={item.inquiry_id?.instruction} />
                                 <Infoline label="Category:" value={item.service_id.category.name} />
+                                <Infoline label="Category:" value='try' />
                                 <Infoline label="Service:" value={item.service_id.title} />
                                 <Infoline label="Price:" value={`₱ ${item.transactions[0]?.price || 'Not Set'}`} />
                                 <Infoline label="Paid:" value={item.transactions.length > 0 ? (

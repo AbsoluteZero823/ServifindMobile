@@ -132,7 +132,7 @@ const FreelancerMessageTransactionOfferModal = ({route}) => {
                             mode='outlined'
                             label='Price'
                             editable={false}
-                            value={inquirydata.priceStarts_At}
+                            value={inquirydata.priceStarts_At.toString()}
                             />
                         }
                         <TextInput 

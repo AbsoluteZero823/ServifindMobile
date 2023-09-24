@@ -6,7 +6,7 @@ import { ServiceModel } from './service';
 export const Inquiry = types.model('Inquiry', {
   _id: types.identifier,
   instruction: types.string,
-  attachments: types.string,
+  // attachments: types.string,
   customer: User,
   freelancer: types.string,
   service: ServiceModel,

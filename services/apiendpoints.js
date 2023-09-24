@@ -3,6 +3,8 @@ import AuthStore from '../src/models/authentication';
 
 export const URL = 'https://servifind-app.onrender.com';
 // export const URL = 'http://192.168.176.99:4002';
+// export const URL = 'http://192.168.100.3:4002'; // laptop ken
+// export const URL = 'http://10.0.2.15:4002'; //vm machine
 
 const API_URL=`${URL}/api/v1`;
 
@@ -213,10 +215,11 @@ export async function getmyInquiries(){
 * @return { Promise } The inquiry or error if something goes wrong. See the axios. js docs for
 */
 export async function createanInquiry(props){
-  try{
+  try{//dito
     const inquiryresponse = await axios.post(`${API_URL}/inquiry/new`, props, AxiosConfig);
     return inquiryresponse.data;
   }catch(error){
+    console.log(error)
     return error;
   }
 }
@@ -677,15 +680,24 @@ export async function generateTransaction(props){
 * 
 * @return { Promise } Promise of the transaction data or error
 */
-export async function completeTransaction(props){
+export async function completeTransaction(props){//payment sent (kendrick)
   try{
     const transactionresponse = await axios.post(`${API_URL}/myfreelancertransactions/completetransaction`, props, AxiosConfig);
+    return transactionresponse.data;
+  }catch(error){
+    console.log(error)
+    return error;
+  }
+}
+
+export async function TransactionDone(id, formData){
+  try{
+    const transactionresponse = await axios.put(`${API_URL}/transaction/done/${id}`, formData, AxiosConfig);
     return transactionresponse.data;
   }catch(error){
     return error;
   }
 }
-
 /**
 * Reports a transaction to Freelancer. This is a POST request to the API
 * 

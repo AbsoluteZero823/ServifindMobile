@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "ServiFind",
-    "slug": "ServiFind",
+    "slug": "servifind",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -30,7 +30,7 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.zekis.ServiFind"
+      "bundleIdentifier": "com.drickz.servifind"
     },
     "android": {
       "softwareKeyboardLayoutMode": "pan",
@@ -38,22 +38,22 @@
         "foregroundImage": "./assets/icon.png",
         "backgroundColor": "#f0f0f0"
       },
-      "package": "com.zekis.ServiFind"
+      "package": "com.drickz.servifind"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "owner": "zekis",
+    "owner": "drickz",
     "extra": {
       "eas": {
-        "projectId": "c20fd6b4-f7e5-43be-9932-87904e5d32fa"
+        "projectId": "148c2961-7d78-4e1d-9bc7-0da77e814c6e"
       }
     },
     "runtimeVersion": {
       "policy": "sdkVersion"
     },
     "updates": {
-      "url": "https://u.expo.dev/c20fd6b4-f7e5-43be-9932-87904e5d32fa"
+      "url": "https://u.expo.dev/148c2961-7d78-4e1d-9bc7-0da77e814c6e"
     }
   }
 }

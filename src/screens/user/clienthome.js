@@ -43,11 +43,12 @@ const ClientHome = observer((props) => {
         const inquiriesCollection = await getmyInquiries();
         InquiryContext.inquiries = [];
         if(inquiriesCollection.success){
-          inquiriesCollection.inquiries?.map((inquiry) => {
+          // inquiriesCollection.inquiries?.map((inquiry) => {
+            inquiriesCollection.inquiries?.slice().map((inquiry) => {
             InquiryContext.inquiries.push(Inquiry.create({
               _id: inquiry._id,
               instruction: inquiry.instruction,
-              attachments: inquiry.attachments,
+              // attachments: inquiry.attachments,
               customer: User.create(inquiry.customer),
               freelancer: inquiry.freelancer,
               service: ServiceModel.create({...inquiry.service_id, freelancer_id: { ...inquiry.service_id.freelancer_id }}),

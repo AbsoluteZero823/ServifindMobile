@@ -7,10 +7,12 @@ import { createanInquiry, getChat, sendMessage } from '../../../services/apiendp
 import { format } from 'date-fns';
 import AuthStore from '../../models/authentication';
 import LoadingScreen from '../../components/loading';
+import UserStore from '../../models/user';
 
 const ClientSingleJob = observer(({route}) => {
     const AuthContext = useContext(AuthStore);
     const data = route.params.item;
+    const UserContext = useContext(UserStore);
     const navigation = useNavigation();
     const [mainvisible, setmainVisible] = useState(true);
     const [Inquirevalue, setInquirevalue] = useState('');
@@ -31,7 +33,8 @@ const ClientSingleJob = observer(({route}) => {
         AuthContext.letmeload();
         let body = {};
         body.instruction = Inquirevalue;
-        body.attachments = 'Placeholder';
+        // body.attachments = 'Placeholder';
+        body.customer = UserContext.users[0].UserDetails._id
         body.freelancer = data.freelancer_id;
         body.service_id = data._id;
         try{

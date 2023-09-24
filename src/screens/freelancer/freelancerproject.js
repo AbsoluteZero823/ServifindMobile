@@ -1,5 +1,5 @@
 import { observer } from 'mobx-react';
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState, useEffect, Fragment } from 'react';
 import { View, StyleSheet, ImageBackground, Alert, ToastAndroid} from 'react-native';
 import { Button, Card, Text, Avatar, Portal, Modal, Divider, IconButton, TextInput} from 'react-native-paper';
 import AuthStore from '../../models/authentication';
@@ -7,7 +7,7 @@ import Loading from '../../components/loading';
 import Infoline from '../../components/infoline';
 import { useNavigation } from '@react-navigation/native';
 import { format } from 'date-fns';
-import { generateTransaction, completeTransaction, reportTransaction } from '../../../services/apiendpoints';
+import { generateTransaction, completeTransaction, reportTransaction, TransactionDone } from '../../../services/apiendpoints';
 
 const FreelancerProject = observer(({route}) => {
     const item = route.params;
@@ -19,12 +19,49 @@ const FreelancerProject = observer(({route}) => {
     const [modalstate, setmodalstate] = useState('default');
 
 
-    async function completeHandler(){
+    async function completeHandler(id){
+        
         AuthContext.letmeload();
+        const formData = {};
+        formData.freelancer= 'true';
+        formData.client='false';
+        console.log(id)
+      
+      
+        try{
+            const completeResponse = await TransactionDone(id, formData)
+            if (completeResponse.success){
+                AuthContext.donewithload();
+                hideModal();
+                ToastAndroid.show(completeResponse.message, ToastAndroid.SHORT);
+            }else{
+                AuthContext.donewithload();
+                alert(completeResponse.message);
+            }
+        }catch(error){
+            AuthContext.donewithload();
+            console.log(error);
+        }
+    }
+    async function paymentReceivedHandler(id){
+        
+        AuthContext.letmeload();
+        const formData = {};
+   
+        // formData.workCompleted= item.transactions[0].transaction_done.workCompleted;
+        
+        
+        console.log(id)
+      
+      
         try{
             const completeResponse = await completeTransaction({
-                _id: item.transactions[0]?._id
-            })
+                // offer_id: item._id,
+                trans_id:id,
+                workCompleted: item.transactions[0].transaction_done.workCompleted || item.transaction_done.workCompleted,
+                transactionCompleted: new Date(),
+                expected_Date: new Date(),
+            })// payment sent to sa mobile
             if (completeResponse.success){
                 AuthContext.donewithload();
                 hideModal();
@@ -197,8 +234,11 @@ const FreelancerProject = observer(({route}) => {
                             Generate Payment Details
                         </Button>
                         :
-                        (item.transactions[0].status !== 'completed' ) ? 
-                        <Button
+                        // (item.transactions[0].status !== 'completed' ) ? 
+                        // (!item.transactions[0].transaction_done.workCompleted ) ? 
+                        <Fragment>
+                              {(item.transactions[0].paymentReceieved === "false") ? 
+                              <Button
                             mode='outlined'
                             textColor='green'
                             onPress={() =>
@@ -212,17 +252,44 @@ const FreelancerProject = observer(({route}) => {
                                 },
                                 {
                                     text: 'Yes',
-                                    onPress: () => completeHandler(),
+                                    onPress: () => paymentReceivedHandler((item.transactions[0]?._id)),
                                 },
                                 ],
                                 { cancelable: false },
                             )
                             }
                         >
-                            Completed
+                            Payment Received
                         </Button>
-                        :
-                        null
+                         : null}
+                        {(!item.transactions[0].transaction_done.workCompleted ) ? 
+                        <Button
+                            mode='outlined'
+                            textColor='green'
+                            onPress={() =>
+                            Alert.alert(
+                                'Work Done?',
+                                'Be Aware that this would complete the transaction and would not be possible to revert',
+                                [
+                                {
+                                    text: 'No',
+                                    style: 'cancel',
+                                },
+                                {
+                                    text: 'Yes',
+                                    onPress: () => completeHandler((item.transactions[0]?._id)),
+                                },
+                                ],
+                                { cancelable: false },
+                            )
+                            }
+                        >
+                            Work Done
+                        </Button>
+                        : null}
+                       
+                        </Fragment>
+                      
                         }
                         </Card.Actions>
                     </Card>
