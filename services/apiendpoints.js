@@ -1,10 +1,10 @@
 import axios from 'axios';
 import AuthStore from '../src/models/authentication';
 
-export const URL = 'https://servifind-app.onrender.com';
+// export const URL = 'https://servifind-app.onrender.com';
 // export const URL = 'http://192.168.176.99:4002';
 // export const URL = 'http://192.168.100.3:4002'; // laptop ken
-// export const URL = 'http://10.0.2.15:4002'; //vm machine
+export const URL = 'http://10.0.2.15:4002'; //vm machine
 
 const API_URL=`${URL}/api/v1`;
 
